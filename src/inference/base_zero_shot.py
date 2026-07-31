@@ -55,14 +55,18 @@ def run_base_zero_shot(
     dataset_key = dataset_key or config["dataset"]["development"]
     normalized_splits = _normalize_splits(splits or ["validation", "test"])
     output_dir = _output_dir(config, dataset_key)
-    scorer = build_scorer(mode)
+    scorer = build_scorer(mode, config=config)
     movie_lookup = load_movies(dataset_key, config)
 
     output_dir.mkdir(parents=True, exist_ok=True)
     write_yaml(output_dir / "config_snapshot.yaml", _config_snapshot(config))
     write_json(
         output_dir / "tokenization_report.json",
-        build_tokenization_report(mode=mode, tokenizer=None),
+        build_tokenization_report(
+            mode=mode,
+            tokenizer=getattr(scorer, "tokenizer", None),
+            answers=_answers_to_check(config),
+        ),
     )
 
     metrics_by_split = {}
@@ -246,6 +250,16 @@ def _config_snapshot(config: dict[str, Any]) -> dict[str, Any]:
     snapshot = dict(config)
     snapshot.pop("_repo_root", None)
     return snapshot
+
+
+def _answers_to_check(config: dict[str, Any]) -> list[str]:
+    answer_config = config.get("model", {}).get("answer_tokens_to_check", {})
+    answers = []
+    for answer in answer_config.get("yesno", []):
+        answers.append(str(answer))
+    for answer in answer_config.get("candidate_labels", []):
+        answers.append(str(answer))
+    return list(dict.fromkeys(answers))
 
 
 def _normalize_splits(splits: list[str]) -> list[str]:

@@ -10,7 +10,8 @@ from src.inference.prompts import (
     render_candidate_prompt,
     render_yesno_prompt,
 )
-from src.inference.scoring import MockScorer
+from src.inference.scoring import MockScorer, build_scorer
+from src.inference.tokenization_check import build_tokenization_report
 
 
 def test_yesno_prompt_does_not_leak_target_rating():
@@ -61,6 +62,37 @@ def test_mock_scorer_outputs_probabilities():
     assert abs(yesno["p_yes"] + yesno["p_no"] - 1.0) < 1e-9
     assert abs(sum(candidates["label_probabilities"].values()) - 1.0) < 1e-9
     assert candidates["predicted_label"] in {"A", "B", "C"}
+
+
+def test_real_scorer_requires_config_before_loading_model():
+    try:
+        build_scorer("real")
+    except ValueError as exc:
+        assert "配置" in str(exc)
+    else:
+        raise AssertionError("real 模式缺少配置时应直接失败")
+
+
+def test_tokenization_report_uses_loaded_tokenizer():
+    class FakeTokenizer:
+        def encode(self, text, add_special_tokens=False):
+            token_map = {
+                "Yes": [1],
+                "No": [2],
+                "Long": [3, 4],
+            }
+            return token_map[text]
+
+    report = build_tokenization_report(
+        mode="real",
+        tokenizer=FakeTokenizer(),
+        answers=["Yes", "No", "Long"],
+    )
+
+    assert report["checked"] is True
+    assert report["answers"]["Yes"]["single_token"] is True
+    assert report["answers"]["Long"]["token_count"] == 2
+    assert report["use_sequence_likelihood_for"] == ["Long"]
 
 
 def test_base_zero_shot_mock_writes_predictions_and_metrics():
