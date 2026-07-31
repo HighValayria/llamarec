@@ -1,0 +1,266 @@
+# MVP 统一实验契约
+#
+# 所有脚本都应读取本文件或继承本文件的任务配置外壳。
+# 本地开发不需要下载或加载 Llama；模型路径用于云端训练/推理。
+
+project:
+  name: llamarec-mvp
+  scope: mvp-k0-only
+  frozen_variants:
+    - base
+    - y_k0
+    - n_k0
+    - m_k0_yesno_inference
+    - m_k0_next_item_inference
+  excluded_until_phase_2:
+    - kar_knowledge_augmentation
+    - sasrec
+    - hard_negative
+    - candidate_bootstrap
+    - second_dataset
+    - lora_hyperparameter_search
+    - multi_seed_runs
+    - seven_b_models
+    - n_pos_next_positive_ablation
+
+seed:
+  random_seed: 42
+  deterministic_splits: true
+  deterministic_candidates: true
+
+paths:
+  raw_root: data/raw
+  processed_root: data/processed
+  candidates_root: data/candidates
+  outputs_root: outputs
+  raw_movielens_100k: data/raw/ml-100k
+  raw_movielens_32m: data/raw/ml-32m
+
+storage:
+  gzip_processed_datasets:
+    - movielens-32m
+
+raw_files:
+  movielens-100k:
+    ratings: data/raw/ml-100k/u.data
+    movies: data/raw/ml-100k/u.item
+    ratings_format: tab_separated_no_header
+    movies_format: pipe_separated_latin1
+    columns:
+      ratings:
+        - user_id
+        - movie_id
+        - rating
+        - timestamp
+  movielens-32m:
+    ratings: data/raw/ml-32m/ratings.csv
+    movies: data/raw/ml-32m/movies.csv
+    ratings_format: csv_with_header
+    movies_format: csv_with_header
+    columns:
+      ratings:
+        - user_id
+        - movie_id
+        - rating
+        - timestamp
+
+dataset:
+  development: movielens-100k
+  formal: movielens-32m
+  positive_rating_threshold: 4
+  full_sequence_order: timestamp_ascending
+  history_length: 10
+  minimum_interactions_for_eval: 3
+  sequence_sources:
+    primary: full_sequence
+    auxiliary_positive_sequence: statistics_and_phase_2_only
+  task_history_source:
+    y_preference: full_sequence
+    n_next_item: full_sequence
+
+tasks:
+  base:
+    name: Base
+    tuning: none
+  y:
+    name: Y-K0
+    task: yes_no_preference_prediction
+    objective: "P(Like | History, Item)"
+    label_rule:
+      yes: "rating >= positive_rating_threshold"
+      no: "rating < positive_rating_threshold"
+  n:
+    name: N-K0
+    task: full_sequence_next_item_prediction
+    objective: "P(Next Item | History, Candidate Set)"
+    ground_truth_source: next_interaction_in_full_sequence
+    note: "N 的 ground truth 是下一次实际交互，不等价于用户喜欢的电影。"
+  m:
+    name: M-K0
+    task: y_plus_n_multitask
+    task_schedule: alternating_y_n_batches
+    optimizer_step_ratio:
+      y: 1
+      n: 1
+
+processed_outputs:
+  full_sequences: data/processed/{dataset}/full_sequences.jsonl
+  positive_sequences_auxiliary: data/processed/{dataset}/positive_sequences.jsonl
+  split: data/processed/{dataset}/split.json
+  preference_samples:
+    all: data/processed/{dataset}/preference_samples.jsonl
+    train: data/processed/{dataset}/preference_train.jsonl
+    validation: data/processed/{dataset}/preference_valid.jsonl
+    test: data/processed/{dataset}/preference_test.jsonl
+  next_item_samples:
+    train: data/processed/{dataset}/next_item_train.jsonl
+    validation: data/processed/{dataset}/next_item_valid.jsonl
+    test: data/processed/{dataset}/next_item_test.jsonl
+  stats: data/processed/{dataset}/stats.json
+  inspection_samples: data/processed/{dataset}/inspection_samples.md
+
+split:
+  method: timestamp_bucket_strict_history_per_task
+  strict_history: timestamp_lt_target_timestamp
+  timestamp_tie_policy:
+    skip_entire_user_on_tie: false
+    y: same_timestamp_targets_share_strict_history
+    n: skip_ambiguous_next_item_sample_only
+  y_split:
+    validation_target: second_last_timestamp_bucket
+    test_target: last_timestamp_bucket
+    train_region: timestamp_buckets_before_validation_bucket
+  n_split:
+    validation_target: second_last_legal_next_item_sample
+    test_target: last_legal_next_item_sample
+    train_region: legal_next_item_samples_before_validation_sample
+    minimum_legal_next_item_samples_for_n: 2
+  leakage_invariants:
+    - max_history_timestamp_lt_target_timestamp
+    - target_not_in_own_history
+    - no_future_interaction_in_prompt
+    - fixed_y_validation_test_for_base_y_m_y
+    - fixed_n_validation_test_for_base_n_m_n
+
+negative_sampling:
+  method: random
+  pool: all_movies_minus_current_ground_truth_item
+  allow_user_rated_items_as_candidates: true
+  exclude_current_ground_truth_from_negatives: true
+  notes:
+    - "负候选只表示不是本样本真实 next item 的候选，不等价于用户不喜欢的电影。"
+    - "不要按用户正反馈序列过滤 N 的候选池。"
+
+candidates:
+  candidate_num: 5
+  ground_truth_num: 1
+  negative_num: 4
+  label_set:
+    - A
+    - B
+    - C
+    - D
+    - E
+  shuffle_order: true
+  save_files:
+    validation: data/candidates/{dataset}/valid.jsonl
+    test: data/candidates/{dataset}/test.jsonl
+  required_fields:
+    - user_id
+    - history
+    - candidate_movie_ids
+    - ground_truth_movie_id
+    - ground_truth_index
+
+model:
+  base_model:
+    name_or_path: meta-llama/Llama-3.2-3B-Instruct
+    model_family: llama
+    require_instruct_chat_format: true
+    local_download_required: false
+    access_check_stage: cloud_before_step_4
+  max_seq_length: 2048
+  answer_tokens_to_check:
+    yesno:
+      - "Yes"
+      - "No"
+    candidate_labels:
+      - A
+      - B
+      - C
+      - D
+      - E
+  tokenization_rule: use_sequence_likelihood_if_answer_is_not_single_token
+
+runtime:
+  device_profile: single_rtx_4090_24gb
+  gpu_memory_gb: 24
+  local_python: C:/Users/33967/AppData/Local/Programs/Python/Python312/python.exe
+  local_cpu_work:
+    - movielens_preprocessing
+    - candidate_generation
+    - dataset_building
+    - metric_tests
+    - prompt_generation
+  gpu_work:
+    - base_inference
+    - y_training_and_eval
+    - n_training_and_eval
+    - m_training_and_eval
+
+lora:
+  method: qlora
+  load_in_4bit: true
+  quant_type: nf4
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  gradient_checkpointing: true
+  bf16_when_supported: true
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+training:
+  smoke_test:
+    sample_min: 500
+    sample_max: 1000
+    required_before_formal_training: true
+  checkpointing:
+    save_strategy: steps
+    save_total_limit: 3
+    resume_from_checkpoint: true
+  validation_after_training: true
+  metrics_json_required: true
+  budget_tracking:
+    - samples
+    - tokens
+    - candidate_exposures
+    - optimizer_steps
+
+evaluation:
+  ranking_metrics:
+    - HR@1
+    - HR@5
+    - NDCG@5
+    - MRR
+  binary_metrics:
+    - AUC
+    - F1
+    - Accuracy
+  artificial_metric_cases_required: true
+  shared_candidate_set_required: true
+  interpretation_notes:
+    - "Ranking metrics 用于评估 next-item candidate 排序，不直接解释为喜欢程度排序。"
+
+outputs:
+  base: outputs/base/{dataset}
+  y: outputs/y/{dataset}
+  n: outputs/n/{dataset}
+  m: outputs/m/{dataset}
+  aggregate_results: outputs/results.csv

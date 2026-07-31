@@ -1,0 +1,12 @@
+# N-K0 任务配置外壳。共享实验语义位于 `configs/experiment.yaml`。
+
+inherits: configs/experiment.yaml
+variant: n_k0
+task: full_sequence_next_item_prediction
+output_dir: outputs/n
+train_dataset_path: data/processed/{dataset}/next_item_train.jsonl
+valid_candidates: data/candidates/{dataset}/valid.jsonl
+test_candidates: data/candidates/{dataset}/test.jsonl
+required_inference_modes:
+  - candidate_label_probability
+implementation_status: not_implemented

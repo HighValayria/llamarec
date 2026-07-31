@@ -1,0 +1,16 @@
+# M-K0 任务配置外壳。共享实验语义位于 `configs/experiment.yaml`。
+
+inherits: configs/experiment.yaml
+variant: m_k0
+task: y_plus_n_multitask
+output_dir: outputs/m
+preference_train_dataset_path: data/processed/{dataset}/preference_train.jsonl
+next_item_train_dataset_path: data/processed/{dataset}/next_item_train.jsonl
+task_schedule: alternating_y_n_batches
+optimizer_step_ratio:
+  y: 1
+  n: 1
+required_inference_modes:
+  - m_yesno_p_yes
+  - m_next_item_candidate_probability
+implementation_status: not_implemented

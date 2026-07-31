@@ -1,0 +1,13 @@
+# Y-K0 任务配置外壳。共享实验语义位于 `configs/experiment.yaml`。
+
+inherits: configs/experiment.yaml
+variant: y_k0
+task: yes_no_preference_prediction
+output_dir: outputs/y
+train_dataset_path: data/processed/{dataset}/preference_train.jsonl
+valid_dataset_path: data/processed/{dataset}/preference_valid.jsonl
+test_dataset_path: data/processed/{dataset}/preference_test.jsonl
+required_inference_modes:
+  - yesno_p_yes
+  - candidate_sort_by_p_yes
+implementation_status: not_implemented

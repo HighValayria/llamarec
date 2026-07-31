@@ -1,0 +1,43 @@
+# 数据与实验输出
+/data/
+/outputs/
+
+# Python 缓存与本地环境
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# 本地 IDE / 系统文件
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Agent / Wiki / 文档材料
+/wiki/
+/.agents/
+/.claude/
+/.codex/
+/tools/
+*.md
+AGENTS.md
+CLAUDE.md
+README*.md
+**/README.md
+PACKAGE_VERIFICATION.md
+task.md
+.gitignore.agent-wiki-example
+
+# 非代码归档或临时文件
+*.zip
+*.7z
+*.tar
+*.tar.gz
+*.tmp
+*.log
