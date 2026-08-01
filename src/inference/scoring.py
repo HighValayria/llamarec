@@ -386,31 +386,33 @@ class RealModelScorer:
                 attention_mask=attention_mask,
                 use_cache=False,
             )
-            hidden_states = outputs.last_hidden_state
-            row_indexes = self.torch.arange(
-                hidden_states.shape[0],
-                device=hidden_states.device,
-            )
-            position_indexes = self.torch.tensor(
-                last_positions,
-                dtype=self.torch.long,
-                device=hidden_states.device,
-            )
-            selected_hidden_states = hidden_states[row_indexes, position_indexes]
-            return self.model.lm_head(selected_hidden_states)
+            hidden_states = getattr(outputs, "last_hidden_state", None)
+            if hidden_states is not None:
+                return self.model.lm_head(
+                    self._select_last_positions(hidden_states, last_positions)
+                )
+            logits = getattr(outputs, "logits", None)
+            if logits is not None:
+                return self._select_last_positions(logits, last_positions)
 
         outputs = self.model(
             input_ids=input_ids,
             attention_mask=attention_mask,
             use_cache=False,
         )
-        row_indexes = self.torch.arange(outputs.logits.shape[0], device=outputs.logits.device)
+        logits = getattr(outputs, "logits", None)
+        if logits is None:
+            raise AttributeError("模型输出缺少 logits 或 last_hidden_state，无法计算答案概率。")
+        return self._select_last_positions(logits, last_positions)
+
+    def _select_last_positions(self, tensor: Any, last_positions: list[int]):
+        row_indexes = self.torch.arange(tensor.shape[0], device=tensor.device)
         position_indexes = self.torch.tensor(
             last_positions,
             dtype=self.torch.long,
-            device=outputs.logits.device,
+            device=tensor.device,
         )
-        return outputs.logits[row_indexes, position_indexes]
+        return tensor[row_indexes, position_indexes]
 
     def _scoring_mode(self, answers: list[str]) -> str:
         if all(len(self._answer_token_ids(answer)) == 1 for answer in answers):

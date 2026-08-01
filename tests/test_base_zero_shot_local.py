@@ -117,6 +117,67 @@ def test_real_scorer_normalizes_tokenizer_outputs():
     assert scorer._normalize_token_ids([[1, 2, 3]]) == [1, 2, 3]
 
 
+def test_real_scorer_accepts_wrapped_model_outputs_with_logits():
+    class FakeTensor:
+        device = "cpu"
+
+        def __init__(self, data):
+            self.data = data
+            if isinstance(data[0][0], list):
+                self.shape = (len(data), len(data[0]), len(data[0][0]))
+            else:
+                self.shape = (len(data), len(data[0]))
+
+        def __getitem__(self, key):
+            row_indexes, position_indexes = key
+            return FakeTensor(
+                [
+                    self.data[row_index][position_index]
+                    for row_index, position_index in zip(row_indexes, position_indexes)
+                ]
+            )
+
+    class FakeTorch:
+        long = "long"
+
+        def arange(self, size, device=None):
+            return list(range(size))
+
+        def tensor(self, values, dtype=None, device=None):
+            return list(values)
+
+    class FakeOutput:
+        def __init__(self):
+            self.logits = FakeTensor(
+                [
+                    [[0.1, 0.2], [0.3, 0.4]],
+                    [[0.5, 0.6], [0.7, 0.8]],
+                ]
+            )
+
+    class FakeInnerModel:
+        def __call__(self, input_ids, attention_mask, use_cache):
+            return FakeOutput()
+
+    class FakeWrappedModel:
+        model = FakeInnerModel()
+
+        def lm_head(self, hidden_states):
+            raise AssertionError("已有 logits 时不应再调用 lm_head")
+
+    scorer = RealModelScorer.__new__(RealModelScorer)
+    scorer.model = FakeWrappedModel()
+    scorer.torch = FakeTorch()
+
+    selected = scorer._last_token_logits(
+        input_ids=None,
+        attention_mask=None,
+        last_positions=[1, 0],
+    )
+
+    assert selected.data == [[0.3, 0.4], [0.5, 0.6]]
+
+
 def test_base_zero_shot_mock_writes_predictions_and_metrics():
     summary = run_base_zero_shot(
         config_path="configs/experiment.yaml",
