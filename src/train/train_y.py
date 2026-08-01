@@ -30,6 +30,9 @@ def run_y_training(args: argparse.Namespace) -> dict[str, Any]:
 
     config = load_training_config(args.config)
     dataset_key = args.dataset or config["dataset"]["formal"]
+    if getattr(args, "reload_only", False):
+        return _run_reload_only(args=args, config=config, dataset_key=dataset_key)
+
     output_dir = _resolve_output_dir(config, dataset_key, args)
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -122,6 +125,44 @@ def run_y_training(args: argparse.Namespace) -> dict[str, Any]:
         write_json(output_dir / "reload_check.json", reload_report)
 
     return metrics
+
+
+def _run_reload_only(
+    args: argparse.Namespace,
+    config: dict[str, Any],
+    dataset_key: str,
+) -> dict[str, Any]:
+    """只验证已保存的 Y adapter 能否重新加载并输出 P(Yes)/P(No)。"""
+
+    adapter_dir = _resolve_adapter_dir(config, dataset_key, args)
+    if not adapter_dir.exists():
+        raise FileNotFoundError(f"adapter 目录不存在：{adapter_dir}")
+
+    split_name = getattr(args, "reload_split", "validation")
+    valid_records = _load_preference_records(
+        config=config,
+        dataset_key=dataset_key,
+        split_name=split_name,
+        limit=1,
+    )
+    if not valid_records:
+        raise ValueError(f"Y {split_name} 记录为空，不能执行重载检查。")
+
+    reload_report = _run_reload_probability_check(
+        config=config,
+        adapter_dir=adapter_dir,
+        sample=valid_records[0],
+    )
+    output_dir = adapter_dir.parent if adapter_dir.name == "adapter" else adapter_dir
+    write_json(output_dir / "reload_check.json", reload_report)
+    return {
+        "model": "y_k0",
+        "dataset": dataset_key,
+        "mode": "reload_only",
+        "split": split_name,
+        "adapter_dir": str(adapter_dir),
+        "reload_check": reload_report,
+    }
 
 
 def load_training_config(config_path: str | Path) -> dict[str, Any]:
@@ -329,13 +370,32 @@ def _encode_prompt_for_inference(tokenizer: Any, prompt: str, use_chat_format: b
 
 
 def _normalize_token_ids(tokenizer: Any, encoded: Any) -> list[int]:
+    """把 tokenizer 的不同返回类型统一成 ``list[int]``。"""
+
     if isinstance(encoded, str):
         encoded = tokenizer.encode(encoded, add_special_tokens=False)
+    elif isinstance(encoded, dict):
+        encoded = encoded.get("input_ids")
+    elif hasattr(encoded, "input_ids"):
+        encoded = encoded.input_ids
+
+    if encoded is None:
+        raise ValueError("tokenizer 未返回 input_ids。")
     if hasattr(encoded, "tolist"):
         encoded = encoded.tolist()
+    if isinstance(encoded, tuple):
+        encoded = list(encoded)
     if encoded and isinstance(encoded[0], list):
+        if len(encoded) != 1:
+            raise ValueError("当前重载检查只支持单条 prompt。")
         encoded = encoded[0]
-    return [int(token_id) for token_id in encoded]
+
+    try:
+        return [int(token_id) for token_id in encoded]
+    except (TypeError, ValueError) as exc:
+        raise TypeError(
+            f"无法把 tokenizer 输出转换为 token id 列表: {type(encoded)!r}"
+        ) from exc
 
 
 def _write_run_inputs(
@@ -392,6 +452,20 @@ def _resolve_output_dir(
     if args.run_name:
         output_dir = output_dir / args.run_name
     return output_dir
+
+
+def _resolve_adapter_dir(
+    config: dict[str, Any],
+    dataset_key: str,
+    args: argparse.Namespace,
+) -> Path:
+    raw_adapter_dir = getattr(args, "adapter_dir", None)
+    if raw_adapter_dir:
+        adapter_dir = Path(raw_adapter_dir)
+        if not adapter_dir.is_absolute():
+            adapter_dir = Path(config["_repo_root"]) / adapter_dir
+        return adapter_dir
+    return _resolve_output_dir(config, dataset_key, args) / "adapter"
 
 
 def _trainable_parameter_summary(model: Any) -> dict[str, int | float]:
@@ -457,6 +531,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--fp16", action="store_true", help="启用 fp16 训练")
     parser.add_argument("--resume-from-checkpoint", default=None)
     parser.add_argument("--run-reload-check", action="store_true", help="训练后重载 adapter 并输出 P(Yes)")
+    parser.add_argument("--reload-only", action="store_true", help="不训练，只重载已有 adapter 并输出 P(Yes)")
+    parser.add_argument("--adapter-dir", default=None, help="reload-only 使用的 adapter 目录")
+    parser.add_argument("--reload-split", default="validation", choices=["validation", "test"], help="reload-only 取样 split")
     return parser.parse_args()
 
 

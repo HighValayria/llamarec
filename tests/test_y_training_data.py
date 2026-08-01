@@ -6,7 +6,7 @@ from src.train.preference_dataset import (
     encode_preference_record,
     summarize_encoded_examples,
 )
-from src.train.train_y import load_training_config
+from src.train.train_y import _normalize_token_ids, load_training_config
 
 
 class FakeTokenizer:
@@ -16,6 +16,10 @@ class FakeTokenizer:
     def encode(self, text, add_special_tokens=True):
         prefix = [101] if add_special_tokens else []
         return prefix + [(ord(char) % 89) + 10 for char in text]
+
+
+class FakeEncoding:
+    input_ids = [41, 42, 43]
 
 
 def _sample(label="Yes"):
@@ -99,3 +103,21 @@ def test_y_config_inherits_experiment_contract():
     assert config["tasks"]["y"]["task"] == "yes_no_preference_prediction"
     assert config["model"]["base_model"]["name_or_path"]
     assert config["_repo_root"].name == "llamarec"
+
+
+def test_y_reload_token_ids_accept_dict_return():
+    token_ids = _normalize_token_ids(FakeTokenizer(), {"input_ids": [31, 32, 33]})
+
+    assert token_ids == [31, 32, 33]
+
+
+def test_y_reload_token_ids_accept_input_ids_attribute():
+    token_ids = _normalize_token_ids(FakeTokenizer(), FakeEncoding())
+
+    assert token_ids == [41, 42, 43]
+
+
+def test_y_reload_token_ids_accept_single_batched_return():
+    token_ids = _normalize_token_ids(FakeTokenizer(), [[51, 52, 53]])
+
+    assert token_ids == [51, 52, 53]
