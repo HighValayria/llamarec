@@ -40,13 +40,13 @@ def run_y_training(args: argparse.Namespace) -> dict[str, Any]:
         config=config,
         dataset_key=dataset_key,
         split_name="train",
-        limit=args.max_train_samples,
+        limit=_normalize_sample_limit(args.max_train_samples),
     )
     valid_records = _load_preference_records(
         config=config,
         dataset_key=dataset_key,
         split_name="validation",
-        limit=args.max_valid_samples,
+        limit=_normalize_sample_limit(args.max_valid_samples),
     )
     if not train_records:
         raise ValueError("Y 训练记录为空，不能启动训练。")
@@ -210,6 +210,16 @@ def _load_preference_records(
             " 如果是 MovieLens-32M，请先在云端生成完整 STEP 2 train 数据。"
         )
     return read_jsonl(path, limit=limit)
+
+
+def _normalize_sample_limit(raw_limit: int | None) -> int | None:
+    """CLI 中用负数表示不限制样本数。"""
+
+    if raw_limit is None:
+        return None
+    if raw_limit < 0:
+        return None
+    return raw_limit
 
 
 def _load_tokenizer_and_model(config: dict[str, Any]):
@@ -516,8 +526,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", default=None, help="覆盖输出目录")
     parser.add_argument("--run-name", default=None, help="追加到输出目录下的运行名")
     parser.add_argument("--smoke", action="store_true", help="标记本次为 smoke/overfit 运行")
-    parser.add_argument("--max-train-samples", type=int, default=1000, help="最多读取训练样本数")
-    parser.add_argument("--max-valid-samples", type=int, default=1000, help="最多读取验证样本数")
+    parser.add_argument("--max-train-samples", type=int, default=1000, help="最多读取训练样本数；负数表示全量")
+    parser.add_argument("--max-valid-samples", type=int, default=1000, help="最多读取验证样本数；负数表示全量")
     parser.add_argument("--per-device-train-batch-size", type=int, default=1)
     parser.add_argument("--per-device-eval-batch-size", type=int, default=1)
     parser.add_argument("--gradient-accumulation-steps", type=int, default=8)

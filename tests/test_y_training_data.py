@@ -6,7 +6,11 @@ from src.train.preference_dataset import (
     encode_preference_record,
     summarize_encoded_examples,
 )
-from src.train.train_y import _normalize_token_ids, load_training_config
+from src.train.train_y import (
+    _normalize_sample_limit,
+    _normalize_token_ids,
+    load_training_config,
+)
 
 
 class FakeTokenizer:
@@ -121,3 +125,8 @@ def test_y_reload_token_ids_accept_single_batched_return():
     token_ids = _normalize_token_ids(FakeTokenizer(), [[51, 52, 53]])
 
     assert token_ids == [51, 52, 53]
+
+
+def test_y_training_negative_sample_limit_means_full_dataset():
+    assert _normalize_sample_limit(-1) is None
+    assert _normalize_sample_limit(1000) == 1000
