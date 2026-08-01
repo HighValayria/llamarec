@@ -219,8 +219,10 @@ def _build_sequential_trainer(
     from transformers import Trainer, TrainingArguments
 
     class SequentialTrainer(Trainer):
-        def _get_train_sampler(self):
-            return SequentialSampler(self.train_dataset)
+        def _get_train_sampler(self, train_dataset=None):
+            return SequentialSampler(
+                _select_train_sampler_dataset(train_dataset, self.train_dataset)
+            )
 
     training_kwargs = {
         "output_dir": str(output_dir / "checkpoints"),
@@ -257,6 +259,12 @@ def _build_sequential_trainer(
         eval_dataset=valid_dataset,
         data_collator=PreferenceDataCollator(tokenizer),
     )
+
+
+def _select_train_sampler_dataset(passed_dataset: Any, fallback_dataset: Any) -> Any:
+    """兼容不同 transformers 版本的 train sampler 参数。"""
+
+    return passed_dataset if passed_dataset is not None else fallback_dataset
 
 
 def _run_reload_multitask_check(

@@ -5,6 +5,7 @@ from src.train.multitask_dataset import (
     summarize_multitask_examples,
 )
 from src.train.preference_dataset import IGNORE_INDEX
+from src.train.train_m import _select_train_sampler_dataset
 from src.train.train_y import load_training_config
 
 
@@ -135,3 +136,11 @@ def test_m_config_inherits_experiment_contract():
     assert config["tasks"]["m"]["task"] == "y_plus_n_multitask"
     assert config["model"]["base_model"]["name_or_path"]
     assert config["_repo_root"].name == "llamarec"
+
+
+def test_train_sampler_dataset_compatibility():
+    passed_dataset = object()
+    fallback_dataset = object()
+
+    assert _select_train_sampler_dataset(passed_dataset, fallback_dataset) is passed_dataset
+    assert _select_train_sampler_dataset(None, fallback_dataset) is fallback_dataset
