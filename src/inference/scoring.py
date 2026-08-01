@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import math
+from pathlib import Path
 from typing import Any
 
 
@@ -417,6 +418,63 @@ class RealModelScorer:
         return "real_sequence_likelihood"
 
 
+class AdapterModelScorer(RealModelScorer):
+    """云端 PEFT adapter scorer，用于 Y-K0/M-K0 等微调模型评测。"""
+
+    def __init__(self, config: dict[str, Any], adapter_dir: str | Path) -> None:
+        try:
+            import torch
+            from peft import PeftModel
+            from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+        except ImportError as exc:
+            raise ImportError(
+                "adapter 评测需要先在云服务器安装 torch、transformers、peft 和 bitsandbytes。"
+            ) from exc
+
+        self.config = config
+        self.torch = torch
+        self.adapter_dir = Path(adapter_dir)
+        if not self.adapter_dir.exists():
+            raise FileNotFoundError(f"adapter 目录不存在: {self.adapter_dir}")
+
+        model_config = config.get("model", {})
+        base_model_config = model_config.get("base_model", {})
+        self.model_name_or_path = base_model_config.get("name_or_path")
+        if not self.model_name_or_path:
+            raise ValueError("配置缺少 model.base_model.name_or_path")
+
+        self.max_seq_length = int(model_config.get("max_seq_length", 2048))
+        self.use_chat_format = bool(
+            base_model_config.get("require_instruct_chat_format", False)
+        )
+        dtype = _resolve_torch_dtype(torch)
+
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            self.model_name_or_path,
+            use_fast=True,
+        )
+        if self.tokenizer.pad_token is None and self.tokenizer.eos_token is not None:
+            self.tokenizer.pad_token = self.tokenizer.eos_token
+
+        quant_config = BitsAndBytesConfig(
+            load_in_4bit=bool(config.get("lora", {}).get("load_in_4bit", True)),
+            bnb_4bit_quant_type=str(config.get("lora", {}).get("quant_type", "nf4")),
+            bnb_4bit_compute_dtype=dtype,
+            bnb_4bit_use_double_quant=True,
+        )
+        base_model = AutoModelForCausalLM.from_pretrained(
+            self.model_name_or_path,
+            quantization_config=quant_config,
+            device_map="auto",
+            dtype=dtype,
+            low_cpu_mem_usage=True,
+        )
+        self.model = PeftModel.from_pretrained(base_model, str(self.adapter_dir))
+        self.model.eval()
+        self.device = next(self.model.parameters()).device
+        self._answer_token_cache: dict[str, list[int]] = {}
+
+
 def build_scorer(mode: str, config: dict[str, Any] | None = None):
     if mode == "mock":
         return MockScorer()
@@ -425,6 +483,20 @@ def build_scorer(mode: str, config: dict[str, Any] | None = None):
             raise ValueError("real 模式必须传入实验配置。")
         return RealModelScorer(config)
     raise ValueError(f"未知推理模式: {mode}")
+
+
+def build_adapter_scorer(
+    mode: str,
+    config: dict[str, Any],
+    adapter_dir: str | Path | None,
+):
+    if mode == "mock":
+        return MockScorer()
+    if mode == "real":
+        if adapter_dir is None:
+            raise ValueError("real adapter 评测必须传入 --adapter-dir。")
+        return AdapterModelScorer(config, adapter_dir)
+    raise ValueError(f"未知 adapter 评测模式: {mode}")
 
 
 def _deterministic_scores(prompt: str, labels: list[str]) -> dict[str, float]:

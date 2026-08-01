@@ -78,12 +78,13 @@ def assert_no_target_rating_in_yesno_prompt(prompt: str, sample: dict[str, Any])
     """检查 Y prompt 的 target 区域没有泄漏 target rating。"""
 
     target_title = _movie_title(sample["target"])
-    target_rating = str(sample["target"]["rating"])
     target_section = prompt.split("Target movie:", 1)[-1]
 
     assert target_title in target_section
-    assert f"rating: {target_rating}" not in target_section
-    assert f"rating {target_rating}" not in target_section
+    if "rating" in sample["target"]:
+        target_rating = str(sample["target"]["rating"])
+        assert f"rating: {target_rating}" not in target_section
+        assert f"rating {target_rating}" not in target_section
 
 
 def assert_no_candidate_rating_in_candidate_prompt(prompt: str) -> None:
