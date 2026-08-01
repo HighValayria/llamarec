@@ -9,4 +9,12 @@ valid_candidates: data/candidates/{dataset}/valid.jsonl
 test_candidates: data/candidates/{dataset}/test.jsonl
 required_inference_modes:
   - candidate_label_probability
-implementation_status: not_implemented
+implementation_status: smoke_training_ready
+entrypoint: python -m src.train.train_n
+smoke_defaults:
+  max_train_samples: 1000
+  max_valid_samples: 1000
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 8
+  learning_rate: 0.0002
+  max_steps: 100
