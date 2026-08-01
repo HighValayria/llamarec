@@ -10,4 +10,12 @@ test_dataset_path: data/processed/{dataset}/preference_test.jsonl
 required_inference_modes:
   - yesno_p_yes
   - candidate_sort_by_p_yes
-implementation_status: not_implemented
+implementation_status: smoke_training_ready
+entrypoint: python -m src.train.train_y
+smoke_defaults:
+  max_train_samples: 1000
+  max_valid_samples: 1000
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 8
+  learning_rate: 0.0002
+  max_steps: 100

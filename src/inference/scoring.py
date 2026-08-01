@@ -36,6 +36,19 @@ class MockScorer:
             "scoring_mode": "mock",
         }
 
+    def score_yesno_batch(self, prompts: list[str]) -> list[dict[str, Any]]:
+        return [self.score_yesno(prompt) for prompt in prompts]
+
+    def score_candidates_batch(
+        self,
+        prompts: list[str],
+        label_sets: list[list[str]],
+    ) -> list[dict[str, Any]]:
+        return [
+            self.score_candidates(prompt, label_set)
+            for prompt, label_set in zip(prompts, label_sets)
+        ]
+
 
 class RealModelScorer:
     """云端真实模型 scorer。
@@ -78,7 +91,7 @@ class RealModelScorer:
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_name_or_path,
             device_map="auto",
-            torch_dtype=dtype,
+            dtype=dtype,
             low_cpu_mem_usage=True,
         )
         self.model.eval()
@@ -111,6 +124,50 @@ class RealModelScorer:
             "scoring_mode": self._scoring_mode(label_set),
         }
 
+    def score_yesno_batch(self, prompts: list[str]) -> list[dict[str, Any]]:
+        log_scores_batch = self._answer_log_scores_batch(prompts, ["Yes", "No"])
+        scores = []
+        for log_scores in log_scores_batch:
+            probabilities = _softmax(log_scores)
+            p_yes = probabilities["Yes"]
+            p_no = probabilities["No"]
+            scores.append(
+                {
+                    "p_yes": p_yes,
+                    "p_no": p_no,
+                    "predicted_label": "Yes" if p_yes >= p_no else "No",
+                    "scoring_mode": self._scoring_mode(["Yes", "No"]),
+                }
+            )
+        return scores
+
+    def score_candidates_batch(
+        self,
+        prompts: list[str],
+        label_sets: list[list[str]],
+    ) -> list[dict[str, Any]]:
+        results: list[dict[str, Any] | None] = [None] * len(prompts)
+        grouped_indexes: dict[tuple[str, ...], list[int]] = {}
+        for index, label_set in enumerate(label_sets):
+            grouped_indexes.setdefault(tuple(label_set), []).append(index)
+
+        for label_tuple, indexes in grouped_indexes.items():
+            labels = list(label_tuple)
+            grouped_prompts = [prompts[index] for index in indexes]
+            log_scores_batch = self._answer_log_scores_batch(grouped_prompts, labels)
+            for index, log_scores in zip(indexes, log_scores_batch):
+                probabilities = _softmax(log_scores)
+                predicted_label = max(labels, key=lambda label: probabilities[label])
+                results[index] = {
+                    "label_probabilities": probabilities,
+                    "predicted_label": predicted_label,
+                    "scoring_mode": self._scoring_mode(labels),
+                }
+
+        if any(result is None for result in results):
+            raise RuntimeError("批量候选打分结果数量与输入不一致。")
+        return [result for result in results if result is not None]
+
     def _answer_log_scores(
         self,
         prompt: str,
@@ -127,25 +184,64 @@ class RealModelScorer:
             for answer, token_ids in answer_token_ids.items()
         }
 
+    def _answer_log_scores_batch(
+        self,
+        prompts: list[str],
+        answers: list[str],
+    ) -> list[dict[str, float]]:
+        answer_token_ids = {
+            answer: self._answer_token_ids(answer)
+            for answer in answers
+        }
+        if all(len(token_ids) == 1 for token_ids in answer_token_ids.values()):
+            return self._single_token_log_scores_batch(prompts, answer_token_ids)
+        return [
+            self._answer_log_scores(prompt, answers)
+            for prompt in prompts
+        ]
+
     def _single_token_log_scores(
         self,
         prompt: str,
         answer_token_ids: dict[str, list[int]],
     ) -> dict[str, float]:
-        prompt_token_ids = self._encode_prompt(prompt)
-        prompt_token_ids = self._truncate_prompt_ids(
-            prompt_token_ids,
-            max_answer_tokens=1,
-            append_answer=False,
-        )
-        input_ids = self._tensor_from_ids(prompt_token_ids)
-        with self.torch.no_grad():
-            logits = self.model(input_ids=input_ids).logits[0, -1]
+        return self._single_token_log_scores_batch([prompt], answer_token_ids)[0]
 
-        return {
-            answer: float(logits[token_ids[0]].detach().float().cpu())
-            for answer, token_ids in answer_token_ids.items()
-        }
+    def _single_token_log_scores_batch(
+        self,
+        prompts: list[str],
+        answer_token_ids: dict[str, list[int]],
+    ) -> list[dict[str, float]]:
+        prompt_token_batches = []
+        for prompt in prompts:
+            prompt_token_ids = self._encode_prompt(prompt)
+            prompt_token_ids = self._truncate_prompt_ids(
+                prompt_token_ids,
+                max_answer_tokens=1,
+                append_answer=False,
+            )
+            prompt_token_batches.append(prompt_token_ids)
+
+        input_ids, attention_mask, last_positions = self._tensor_from_id_batches(
+            prompt_token_batches
+        )
+        with self.torch.no_grad():
+            logits = self._last_token_logits(
+                input_ids=input_ids,
+                attention_mask=attention_mask,
+                last_positions=last_positions,
+            )
+
+        scores_batch = []
+        for row_index in range(len(last_positions)):
+            row_logits = logits[row_index]
+            scores_batch.append(
+                {
+                    answer: float(row_logits[token_ids[0]].detach().float().cpu())
+                    for answer, token_ids in answer_token_ids.items()
+                }
+            )
+        return scores_batch
 
     def _sequence_log_likelihood(
         self,
@@ -178,13 +274,42 @@ class RealModelScorer:
         chat_format = getattr(self.tokenizer, chat_format_attr, None)
         chat_apply = getattr(self.tokenizer, chat_apply_attr, None)
         if self.use_chat_format and chat_format and chat_apply:
-            token_ids = chat_apply(
+            encoded = chat_apply(
                 [{"role": "user", "content": prompt}],
                 tokenize=True,
                 add_generation_prompt=True,
             )
-            return list(token_ids)
-        return self.tokenizer.encode(prompt, add_special_tokens=True)
+            return self._normalize_token_ids(encoded)
+        encoded = self.tokenizer.encode(prompt, add_special_tokens=True)
+        return self._normalize_token_ids(encoded)
+
+    def _normalize_token_ids(self, encoded: Any) -> list[int]:
+        """把 tokenizer 的不同返回类型统一成 ``list[int]``。"""
+
+        if isinstance(encoded, str):
+            encoded = self.tokenizer.encode(encoded, add_special_tokens=False)
+        elif isinstance(encoded, dict):
+            encoded = encoded.get("input_ids")
+        elif hasattr(encoded, "input_ids"):
+            encoded = encoded.input_ids
+
+        if encoded is None:
+            raise ValueError("tokenizer 未返回 input_ids。")
+        if hasattr(encoded, "tolist"):
+            encoded = encoded.tolist()
+        if isinstance(encoded, tuple):
+            encoded = list(encoded)
+        if encoded and isinstance(encoded[0], list):
+            if len(encoded) != 1:
+                raise ValueError("当前 scorer 只支持单条 prompt 推理。")
+            encoded = encoded[0]
+
+        try:
+            return [int(token_id) for token_id in encoded]
+        except (TypeError, ValueError) as exc:
+            raise TypeError(
+                f"无法把 tokenizer 输出转换为 token id 列表: {type(encoded)!r}"
+            ) from exc
 
     def _answer_token_ids(self, answer: str) -> list[int]:
         if answer not in self._answer_token_cache:
@@ -218,6 +343,73 @@ class RealModelScorer:
             dtype=self.torch.long,
             device=self.device,
         )
+
+    def _tensor_from_id_batches(self, token_id_batches: list[list[int]]):
+        if not token_id_batches:
+            raise ValueError("批量 prompt 为空，无法计算答案概率。")
+        if any(not token_ids for token_ids in token_id_batches):
+            raise ValueError("存在编码后为空的 prompt，无法计算答案概率。")
+
+        pad_token_id = self.tokenizer.pad_token_id
+        if pad_token_id is None:
+            pad_token_id = self.tokenizer.eos_token_id
+        if pad_token_id is None:
+            pad_token_id = 0
+
+        max_length = max(len(token_ids) for token_ids in token_id_batches)
+        padded_batches = []
+        mask_batches = []
+        last_positions = []
+        for token_ids in token_id_batches:
+            padding_length = max_length - len(token_ids)
+            padded_batches.append(token_ids + [pad_token_id] * padding_length)
+            mask_batches.append([1] * len(token_ids) + [0] * padding_length)
+            last_positions.append(len(token_ids) - 1)
+
+        input_ids = self.torch.tensor(
+            padded_batches,
+            dtype=self.torch.long,
+            device=self.device,
+        )
+        attention_mask = self.torch.tensor(
+            mask_batches,
+            dtype=self.torch.long,
+            device=self.device,
+        )
+        return input_ids, attention_mask, last_positions
+
+    def _last_token_logits(self, input_ids: Any, attention_mask: Any, last_positions: list[int]):
+        if hasattr(self.model, "model") and hasattr(self.model, "lm_head"):
+            outputs = self.model.model(
+                input_ids=input_ids,
+                attention_mask=attention_mask,
+                use_cache=False,
+            )
+            hidden_states = outputs.last_hidden_state
+            row_indexes = self.torch.arange(
+                hidden_states.shape[0],
+                device=hidden_states.device,
+            )
+            position_indexes = self.torch.tensor(
+                last_positions,
+                dtype=self.torch.long,
+                device=hidden_states.device,
+            )
+            selected_hidden_states = hidden_states[row_indexes, position_indexes]
+            return self.model.lm_head(selected_hidden_states)
+
+        outputs = self.model(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            use_cache=False,
+        )
+        row_indexes = self.torch.arange(outputs.logits.shape[0], device=outputs.logits.device)
+        position_indexes = self.torch.tensor(
+            last_positions,
+            dtype=self.torch.long,
+            device=outputs.logits.device,
+        )
+        return outputs.logits[row_indexes, position_indexes]
 
     def _scoring_mode(self, answers: list[str]) -> str:
         if all(len(self._answer_token_ids(answer)) == 1 for answer in answers):

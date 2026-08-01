@@ -16,7 +16,13 @@ from src.data.config import (
 from src.data.preprocess import load_movies
 from src.eval.binary_metrics import binary_metrics
 from src.eval.ranking_metrics import aggregate_ranking_metrics
-from src.inference.prediction_io import read_jsonl, write_json, write_jsonl, write_yaml
+from src.inference.prediction_io import (
+    append_jsonl,
+    read_jsonl,
+    write_json,
+    write_jsonl,
+    write_yaml,
+)
 from src.inference.prompts import (
     assert_no_candidate_rating_in_candidate_prompt,
     assert_no_target_rating_in_yesno_prompt,
@@ -45,6 +51,7 @@ def run_base_zero_shot(
     mode: str = "mock",
     splits: list[str] | None = None,
     limit: int | None = None,
+    batch_size: int = 1,
 ) -> dict[str, Any]:
     """运行 Base zero-shot 推理流程。
 
@@ -52,6 +59,9 @@ def run_base_zero_shot(
     """
 
     config = load_experiment_config(config_path)
+    if batch_size <= 0:
+        raise ValueError("batch_size 必须为正整数。")
+
     dataset_key = dataset_key or config["dataset"]["development"]
     normalized_splits = _normalize_splits(splits or ["validation", "test"])
     output_dir = _output_dir(config, dataset_key)
@@ -75,24 +85,39 @@ def run_base_zero_shot(
         y_samples = _read_y_samples(config, dataset_key, split_name, limit)
         n_records = _read_candidate_records(config, dataset_key, split_name, limit)
 
-        y_predictions = _predict_y_samples(y_samples, scorer, split_name)
-        n_predictions = _predict_n_records(n_records, scorer, movie_lookup, split_name)
-
         output_split = OUTPUT_SPLIT_NAMES[split_name]
-        write_jsonl(output_dir / f"y_{output_split}_predictions.jsonl", y_predictions)
-        write_jsonl(output_dir / f"n_{output_split}_predictions.jsonl", n_predictions)
+        y_prediction_path = output_dir / f"y_{output_split}_predictions.jsonl"
+        n_prediction_path = output_dir / f"n_{output_split}_predictions.jsonl"
+        write_jsonl(y_prediction_path, [])
+        write_jsonl(n_prediction_path, [])
+
+        y_metric_records = _predict_y_samples(
+            y_samples,
+            scorer,
+            split_name,
+            batch_size,
+            y_prediction_path,
+        )
+        n_metric_records = _predict_n_records(
+            n_records,
+            scorer,
+            movie_lookup,
+            split_name,
+            batch_size,
+            n_prediction_path,
+        )
 
         metrics = _metrics_for_split(
             dataset_key,
             split_name,
-            y_predictions,
-            n_predictions,
+            y_metric_records,
+            n_metric_records,
         )
         write_json(output_dir / f"{output_split}_metrics.json", metrics)
         metrics_by_split[split_name] = metrics
         run_counts[split_name] = {
-            "y_predictions": len(y_predictions),
-            "n_predictions": len(n_predictions),
+            "y_predictions": len(y_metric_records),
+            "n_predictions": len(n_metric_records),
         }
 
     run_summary = {
@@ -101,6 +126,7 @@ def run_base_zero_shot(
         "dataset": dataset_key,
         "splits": normalized_splits,
         "limit": limit,
+        "batch_size": batch_size,
         "counts": run_counts,
         "outputs_dir": str(output_dir),
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -111,6 +137,7 @@ def run_base_zero_shot(
     return {
         "dataset": dataset_key,
         "mode": mode,
+        "batch_size": batch_size,
         "outputs_dir": str(output_dir),
         "counts": run_counts,
         "metrics": metrics_by_split,
@@ -121,14 +148,25 @@ def _predict_y_samples(
     samples: list[dict[str, Any]],
     scorer: Any,
     split_name: str,
+    batch_size: int,
+    output_path: Path,
 ) -> list[dict[str, Any]]:
-    predictions = []
-    for sample in samples:
-        prompt = render_yesno_prompt(sample)
-        assert_no_target_rating_in_yesno_prompt(prompt, sample)
-        score = scorer.score_yesno(prompt)
-        predictions.append(
-            {
+    metric_records = []
+    batches = list(_batched(samples, batch_size))
+    for batch in _progress(batches, f"{split_name} Y"):
+        prompts = []
+        for sample in batch:
+            prompt = render_yesno_prompt(sample)
+            assert_no_target_rating_in_yesno_prompt(prompt, sample)
+            prompts.append(prompt)
+
+        scores = _score_yesno_batch(scorer, prompts)
+        if len(scores) != len(batch):
+            raise RuntimeError("Y 批量打分结果数量与输入样本不一致。")
+
+        predictions = []
+        for sample, prompt, score in zip(batch, prompts, scores):
+            prediction = {
                 "model": "base",
                 "task": "Y",
                 "split": split_name,
@@ -142,8 +180,12 @@ def _predict_y_samples(
                 "prompt_hash": prompt_hash(prompt),
                 "scoring_mode": score.get("scoring_mode"),
             }
-        )
-    return predictions
+            predictions.append(prediction)
+            metric_records.append(
+                {"score": prediction["p_yes"], "label": prediction["label"]}
+            )
+        append_jsonl(output_path, predictions)
+    return metric_records
 
 
 def _predict_n_records(
@@ -151,17 +193,34 @@ def _predict_n_records(
     scorer: Any,
     movie_lookup: dict[str, dict[str, str]],
     split_name: str,
+    batch_size: int,
+    output_path: Path,
 ) -> list[dict[str, Any]]:
-    predictions = []
-    for record in records:
-        prompt = render_candidate_prompt(record, movie_lookup)
-        assert_no_candidate_rating_in_candidate_prompt(prompt)
-        label_set = list(record.get("label_set", ["A", "B", "C", "D", "E"]))
-        score = scorer.score_candidates(prompt, label_set)
-        probabilities = score["label_probabilities"]
-        scores = [probabilities[label] for label in label_set]
-        predictions.append(
-            {
+    metric_records = []
+    batches = list(_batched(records, batch_size))
+    for batch in _progress(batches, f"{split_name} N"):
+        prompts = []
+        label_sets = []
+        for record in batch:
+            prompt = render_candidate_prompt(record, movie_lookup)
+            assert_no_candidate_rating_in_candidate_prompt(prompt)
+            prompts.append(prompt)
+            label_sets.append(list(record.get("label_set", ["A", "B", "C", "D", "E"])))
+
+        scored_batch = _score_candidates_batch(scorer, prompts, label_sets)
+        if len(scored_batch) != len(batch):
+            raise RuntimeError("N 批量打分结果数量与输入样本不一致。")
+
+        predictions = []
+        for record, prompt, label_set, score in zip(
+            batch,
+            prompts,
+            label_sets,
+            scored_batch,
+        ):
+            probabilities = score["label_probabilities"]
+            scores = [probabilities[label] for label in label_set]
+            prediction = {
                 "model": "base",
                 "task": "N",
                 "split": split_name,
@@ -176,27 +235,23 @@ def _predict_n_records(
                 "prompt_hash": prompt_hash(prompt),
                 "scoring_mode": score.get("scoring_mode"),
             }
-        )
-    return predictions
+            predictions.append(prediction)
+            metric_records.append(
+                {
+                    "scores": prediction["scores"],
+                    "ground_truth_index": prediction["ground_truth_index"],
+                }
+            )
+        append_jsonl(output_path, predictions)
+    return metric_records
 
 
 def _metrics_for_split(
     dataset_key: str,
     split_name: str,
-    y_predictions: list[dict[str, Any]],
-    n_predictions: list[dict[str, Any]],
+    y_metric_records: list[dict[str, Any]],
+    n_metric_records: list[dict[str, Any]],
 ) -> dict[str, Any]:
-    y_metric_records = [
-        {"score": prediction["p_yes"], "label": prediction["label"]}
-        for prediction in y_predictions
-    ]
-    n_metric_records = [
-        {
-            "scores": prediction["scores"],
-            "ground_truth_index": prediction["ground_truth_index"],
-        }
-        for prediction in n_predictions
-    ]
     binary = binary_metrics(y_metric_records)
     ranking = aggregate_ranking_metrics(n_metric_records)
 
@@ -204,9 +259,41 @@ def _metrics_for_split(
         "model": "base",
         "dataset": dataset_key,
         "split": split_name,
-        "binary": {**binary, "samples": len(y_predictions)},
-        "ranking": {**ranking, "samples": len(n_predictions)},
+        "binary": {**binary, "samples": len(y_metric_records)},
+        "ranking": {**ranking, "samples": len(n_metric_records)},
     }
+
+
+def _score_yesno_batch(scorer: Any, prompts: list[str]) -> list[dict[str, Any]]:
+    if hasattr(scorer, "score_yesno_batch"):
+        return scorer.score_yesno_batch(prompts)
+    return [scorer.score_yesno(prompt) for prompt in prompts]
+
+
+def _score_candidates_batch(
+    scorer: Any,
+    prompts: list[str],
+    label_sets: list[list[str]],
+) -> list[dict[str, Any]]:
+    if hasattr(scorer, "score_candidates_batch"):
+        return scorer.score_candidates_batch(prompts, label_sets)
+    return [
+        scorer.score_candidates(prompt, label_set)
+        for prompt, label_set in zip(prompts, label_sets)
+    ]
+
+
+def _batched(records: list[dict[str, Any]], batch_size: int):
+    for start in range(0, len(records), batch_size):
+        yield records[start:start + batch_size]
+
+
+def _progress(batches: list[list[dict[str, Any]]], description: str):
+    try:
+        from tqdm import tqdm
+    except ImportError:
+        return batches
+    return tqdm(batches, desc=description, unit="batch")
 
 
 def _read_y_samples(
@@ -304,6 +391,14 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="每个 split 每个任务最多处理多少条样本；本地 dry-run 建议 20。",
     )
+    parser.add_argument(
+        "--batch-size",
+        "--batch_size",
+        dest="batch_size",
+        type=int,
+        default=1,
+        help="推理 batch size；real 模式建议先试 8/16，再根据显存调整。",
+    )
     return parser.parse_args()
 
 
@@ -315,6 +410,7 @@ def main() -> None:
         mode=args.mode,
         splits=args.splits,
         limit=args.limit,
+        batch_size=args.batch_size,
     )
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 

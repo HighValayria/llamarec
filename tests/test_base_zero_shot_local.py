@@ -10,7 +10,7 @@ from src.inference.prompts import (
     render_candidate_prompt,
     render_yesno_prompt,
 )
-from src.inference.scoring import MockScorer, build_scorer
+from src.inference.scoring import MockScorer, RealModelScorer, build_scorer
 from src.inference.tokenization_check import build_tokenization_report
 
 
@@ -58,10 +58,17 @@ def test_mock_scorer_outputs_probabilities():
 
     yesno = scorer.score_yesno("prompt")
     candidates = scorer.score_candidates("prompt", ["A", "B", "C"])
+    yesno_batch = scorer.score_yesno_batch(["prompt 1", "prompt 2"])
+    candidate_batch = scorer.score_candidates_batch(
+        ["prompt 1", "prompt 2"],
+        [["A", "B"], ["A", "B"]],
+    )
 
     assert abs(yesno["p_yes"] + yesno["p_no"] - 1.0) < 1e-9
     assert abs(sum(candidates["label_probabilities"].values()) - 1.0) < 1e-9
     assert candidates["predicted_label"] in {"A", "B", "C"}
+    assert len(yesno_batch) == 2
+    assert len(candidate_batch) == 2
 
 
 def test_real_scorer_requires_config_before_loading_model():
@@ -95,20 +102,37 @@ def test_tokenization_report_uses_loaded_tokenizer():
     assert report["use_sequence_likelihood_for"] == ["Long"]
 
 
+def test_real_scorer_normalizes_tokenizer_outputs():
+    class FakeTokenizer:
+        def encode(self, text, add_special_tokens=False):
+            if text == "chat text":
+                return [7, 8, 9]
+            return [1, 2, 3]
+
+    scorer = RealModelScorer.__new__(RealModelScorer)
+    scorer.tokenizer = FakeTokenizer()
+
+    assert scorer._normalize_token_ids("chat text") == [7, 8, 9]
+    assert scorer._normalize_token_ids([1, 2, 3]) == [1, 2, 3]
+    assert scorer._normalize_token_ids([[1, 2, 3]]) == [1, 2, 3]
+
+
 def test_base_zero_shot_mock_writes_predictions_and_metrics():
     summary = run_base_zero_shot(
         config_path="configs/experiment.yaml",
         dataset_key="movielens-100k",
         mode="mock",
         splits=["validation"],
-        limit=2,
+        limit=3,
+        batch_size=2,
     )
 
     output_dir = Path(summary["outputs_dir"])
     y_predictions = read_jsonl(output_dir / "y_valid_predictions.jsonl")
     n_predictions = read_jsonl(output_dir / "n_valid_predictions.jsonl")
 
-    assert len(y_predictions) == 2
-    assert len(n_predictions) == 2
+    assert summary["batch_size"] == 2
+    assert len(y_predictions) == 3
+    assert len(n_predictions) == 3
     assert (output_dir / "valid_metrics.json").exists()
     assert (output_dir / "tokenization_report.json").exists()
