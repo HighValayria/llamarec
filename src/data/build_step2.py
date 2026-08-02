@@ -1,7 +1,7 @@
 """STEP 2 端到端入口：构建 MovieLens 数据层产物。
 
-本脚本只做本地 CPU 数据处理，不加载 LLM，不启动训练。生成 MovieLens-100K
-产物后应先人工检查 inspection samples，再处理 MovieLens-32M。
+本脚本只做本地 CPU 数据处理，不加载 LLM，不启动训练。生成任一数据集
+产物后都应先人工检查 inspection samples，再进入后续候选集和模型实验。
 """
 
 from __future__ import annotations

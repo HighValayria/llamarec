@@ -36,6 +36,8 @@ def iter_ratings(dataset_key: str, config: dict[str, Any]):
         row_iter = _iter_movielens_100k_ratings(paths["ratings_path"])
     elif ratings_format == "csv_with_header":
         row_iter = _iter_movielens_csv_ratings(paths["ratings_path"])
+    elif ratings_format == "double_colon_no_header":
+        row_iter = _iter_movielens_1m_ratings(paths["ratings_path"])
     else:
         raise ValueError(f"暂不支持的 ratings_format: {ratings_format}")
 
@@ -88,6 +90,8 @@ def load_movies(dataset_key: str, config: dict[str, Any]) -> dict[str, dict[str,
         return _read_movielens_100k_movies(paths["movies_path"])
     if movies_format == "csv_with_header":
         return _read_movielens_csv_movies(paths["movies_path"])
+    if movies_format == "double_colon_movies_dat":
+        return _read_movielens_1m_movies(paths["movies_path"])
 
     raise ValueError(f"暂不支持的 movies_format: {movies_format}")
 
@@ -187,6 +191,22 @@ def _iter_movielens_csv_ratings(ratings_path):
             }
 
 
+def _iter_movielens_1m_ratings(ratings_path):
+    """读取 MovieLens-1M 的 ``ratings.dat``。"""
+
+    with ratings_path.open("r", encoding="latin-1") as handle:
+        for line in handle:
+            if not line.strip():
+                continue
+            user_id, movie_id, rating, timestamp = _split_double_colon(line, 4)[:4]
+            yield {
+                "user_id": user_id,
+                "movie_id": movie_id,
+                "rating": float(rating),
+                "timestamp": int(timestamp),
+            }
+
+
 def _read_movielens_100k_movies(movies_path) -> dict[str, dict[str, str]]:
     movies = {}
     with movies_path.open("r", encoding="latin-1") as handle:
@@ -212,12 +232,38 @@ def _read_movielens_csv_movies(movies_path) -> dict[str, dict[str, str]]:
     return movies
 
 
+def _read_movielens_1m_movies(movies_path) -> dict[str, dict[str, str]]:
+    """读取 MovieLens-1M 的 ``movies.dat``。"""
+
+    movies = {}
+    with movies_path.open("r", encoding="latin-1") as handle:
+        for line in handle:
+            if not line.strip():
+                continue
+            movie_id, title, genres = _split_double_colon(line, 3)[:3]
+            movies[movie_id] = {
+                "movie_id": movie_id,
+                "title": title,
+                "genres": genres,
+            }
+    return movies
+
+
 def _first_present(row: dict[str, Any], *keys: str) -> str:
     for key in keys:
         value = row.get(key)
         if value is not None:
             return value
     raise KeyError(f"缺少字段，候选字段: {keys}")
+
+
+def _split_double_colon(line: str, expected_fields: int) -> list[str]:
+    parts = line.rstrip("\n").split("::")
+    if len(parts) < expected_fields:
+        raise ValueError(
+            f"MovieLens-1M 行字段数不足，期望至少 {expected_fields} 个字段: {line!r}"
+        )
+    return parts
 
 
 def _write_jsonl(path, sequences: dict[str, list[dict[str, Any]]]) -> None:

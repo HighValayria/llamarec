@@ -34,6 +34,7 @@ paths:
   candidates_root: data/candidates
   outputs_root: outputs
   raw_movielens_100k: data/raw/ml-100k
+  raw_movielens_1m: data/raw/ml-1m
   raw_movielens_32m: data/raw/ml-32m
 
 storage:
@@ -46,6 +47,17 @@ raw_files:
     movies: data/raw/ml-100k/u.item
     ratings_format: tab_separated_no_header
     movies_format: pipe_separated_latin1
+    columns:
+      ratings:
+        - user_id
+        - movie_id
+        - rating
+        - timestamp
+  movielens-1m:
+    ratings: data/raw/ml-1m/ratings.dat
+    movies: data/raw/ml-1m/movies.dat
+    ratings_format: double_colon_no_header
+    movies_format: double_colon_movies_dat
     columns:
       ratings:
         - user_id
@@ -66,7 +78,7 @@ raw_files:
 
 dataset:
   development: movielens-100k
-  formal: movielens-32m
+  formal: movielens-1m
   positive_rating_threshold: 4
   full_sequence_order: timestamp_ascending
   history_length: 10

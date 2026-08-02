@@ -207,7 +207,7 @@ def _load_preference_records(
     if not path.exists():
         raise FileNotFoundError(
             f"Y {split_name} 数据不存在: {path}。"
-            " 如果是 MovieLens-32M，请先在云端生成完整 STEP 2 train 数据。"
+            " 请先为当前数据集生成完整 STEP 2 产物。"
         )
     return read_jsonl(path, limit=limit)
 
