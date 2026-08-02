@@ -16,9 +16,15 @@ from src.inference.prompts import render_candidate_prompt, render_yesno_prompt
 from src.inference.scoring import build_adapter_scorer
 from src.train.multitask_dataset import (
     MultitaskTrainingDataset,
+    count_ratio_examples,
     summarize_multitask_examples,
 )
-from src.train.preference_dataset import PreferenceDataCollator
+from src.train.next_item_dataset import NextItemTrainingDataset
+from src.train.preference_dataset import (
+    PreferenceDataCollator,
+    PreferenceTrainingDataset,
+    summarize_encoded_examples,
+)
 from src.train.train_n import _load_next_item_records
 from src.train.train_y import (
     _load_preference_records,
@@ -38,6 +44,7 @@ def run_m_training(args: argparse.Namespace) -> dict[str, Any]:
     dataset_key = args.dataset or config["dataset"]["formal"]
     if getattr(args, "reload_only", False):
         return _run_reload_only(args=args, config=config, dataset_key=dataset_key)
+    task_ratio = _resolve_task_ratio(args, config)
 
     output_dir = _resolve_output_dir(config, dataset_key, args)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -77,6 +84,7 @@ def run_m_training(args: argparse.Namespace) -> dict[str, Any]:
         n_train_records=n_train_records,
         y_valid_records=y_valid_records,
         n_valid_records=n_valid_records,
+        task_ratio=task_ratio,
     )
 
     movie_lookup = load_movies(dataset_key, config)
@@ -88,10 +96,27 @@ def run_m_training(args: argparse.Namespace) -> dict[str, Any]:
         movie_lookup=movie_lookup,
         max_seq_length=int(config["model"]["max_seq_length"]),
         use_chat_format=_use_chat_format(config),
+        task_ratio_y=task_ratio["y"],
+        task_ratio_n=task_ratio["n"],
     )
     valid_dataset = MultitaskTrainingDataset(
         preference_records=y_valid_records,
         next_item_records=n_valid_records,
+        tokenizer=tokenizer,
+        movie_lookup=movie_lookup,
+        max_seq_length=int(config["model"]["max_seq_length"]),
+        use_chat_format=_use_chat_format(config),
+        task_ratio_y=task_ratio["y"],
+        task_ratio_n=task_ratio["n"],
+    )
+    y_valid_dataset = PreferenceTrainingDataset(
+        records=y_valid_records,
+        tokenizer=tokenizer,
+        max_seq_length=int(config["model"]["max_seq_length"]),
+        use_chat_format=_use_chat_format(config),
+    )
+    n_valid_dataset = NextItemTrainingDataset(
+        records=n_valid_records,
         tokenizer=tokenizer,
         movie_lookup=movie_lookup,
         max_seq_length=int(config["model"]["max_seq_length"]),
@@ -102,6 +127,9 @@ def run_m_training(args: argparse.Namespace) -> dict[str, Any]:
         {
             "train": summarize_multitask_examples(train_dataset.examples),
             "validation": summarize_multitask_examples(valid_dataset.examples),
+            "validation_y": summarize_encoded_examples(y_valid_dataset.examples),
+            "validation_n": summarize_encoded_examples(n_valid_dataset.examples),
+            "task_ratio": task_ratio,
         },
     )
 
@@ -112,6 +140,8 @@ def run_m_training(args: argparse.Namespace) -> dict[str, Any]:
         tokenizer=tokenizer,
         train_dataset=train_dataset,
         valid_dataset=valid_dataset,
+        y_valid_dataset=y_valid_dataset,
+        n_valid_dataset=n_valid_dataset,
         output_dir=output_dir,
     )
     train_result = trainer.train(
@@ -130,6 +160,7 @@ def run_m_training(args: argparse.Namespace) -> dict[str, Any]:
         "validation_samples": len(valid_dataset),
         "train_task_counts": train_dataset.task_counts,
         "validation_task_counts": valid_dataset.task_counts,
+        "task_ratio": task_ratio,
         "train": dict(train_result.metrics),
         "validation": validation_metrics,
         "trainable_parameters": _trainable_parameter_summary(model),
@@ -206,6 +237,24 @@ def _validate_multitask_inputs(
         raise ValueError("M validation 需要同时存在 Y validation 与 N validation。")
 
 
+def _resolve_task_ratio(args: argparse.Namespace, config: dict[str, Any]) -> dict[str, int]:
+    """从 CLI 或配置读取 M 的 Y/N 采样比例。"""
+
+    ratio_config = config.get("optimizer_step_ratio") or {}
+    if not ratio_config:
+        ratio_config = config.get("tasks", {}).get("m", {}).get("optimizer_step_ratio", {})
+    y_ratio = args.task_ratio_y if args.task_ratio_y is not None else ratio_config.get("y", 1)
+    n_ratio = args.task_ratio_n if args.task_ratio_n is not None else ratio_config.get("n", 1)
+    try:
+        y_ratio = int(y_ratio)
+        n_ratio = int(n_ratio)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("M 任务采样比例必须是正整数。") from exc
+    if y_ratio <= 0 or n_ratio <= 0:
+        raise ValueError("M 任务采样比例必须是正整数。")
+    return {"y": y_ratio, "n": n_ratio}
+
+
 def _build_sequential_trainer(
     args: argparse.Namespace,
     config: dict[str, Any],
@@ -213,6 +262,8 @@ def _build_sequential_trainer(
     tokenizer: Any,
     train_dataset: MultitaskTrainingDataset,
     valid_dataset: MultitaskTrainingDataset,
+    y_valid_dataset: PreferenceTrainingDataset,
+    n_valid_dataset: NextItemTrainingDataset,
     output_dir: Path,
 ):
     from torch.utils.data import SequentialSampler
@@ -223,6 +274,34 @@ def _build_sequential_trainer(
             return SequentialSampler(
                 _select_train_sampler_dataset(train_dataset, self.train_dataset)
             )
+
+        def evaluate(
+            self,
+            eval_dataset=None,
+            ignore_keys=None,
+            metric_key_prefix: str = "eval",
+        ):
+            metrics = super().evaluate(
+                eval_dataset=eval_dataset,
+                ignore_keys=ignore_keys,
+                metric_key_prefix=metric_key_prefix,
+            )
+            if not _should_run_per_task_validation(eval_dataset, metric_key_prefix):
+                return metrics
+
+            y_metrics = super().evaluate(
+                eval_dataset=self.y_valid_dataset,
+                ignore_keys=ignore_keys,
+                metric_key_prefix="eval_y",
+            )
+            n_metrics = super().evaluate(
+                eval_dataset=self.n_valid_dataset,
+                ignore_keys=ignore_keys,
+                metric_key_prefix="eval_n",
+            )
+            metrics.update(y_metrics)
+            metrics.update(n_metrics)
+            return metrics
 
     training_kwargs = {
         "output_dir": str(output_dir / "checkpoints"),
@@ -252,19 +331,28 @@ def _build_sequential_trainer(
         training_kwargs["fp16"] = args.fp16
 
     training_args = TrainingArguments(**training_kwargs)
-    return SequentialTrainer(
+    trainer = SequentialTrainer(
         model=model,
         args=training_args,
         train_dataset=train_dataset,
         eval_dataset=valid_dataset,
         data_collator=PreferenceDataCollator(tokenizer),
     )
+    trainer.y_valid_dataset = y_valid_dataset
+    trainer.n_valid_dataset = n_valid_dataset
+    return trainer
 
 
 def _select_train_sampler_dataset(passed_dataset: Any, fallback_dataset: Any) -> Any:
     """兼容不同 transformers 版本的 train sampler 参数。"""
 
     return passed_dataset if passed_dataset is not None else fallback_dataset
+
+
+def _should_run_per_task_validation(eval_dataset: Any, metric_key_prefix: str) -> bool:
+    """只在默认 mixed validation 时追加 Y-only/N-only validation。"""
+
+    return eval_dataset is None and metric_key_prefix == "eval"
 
 
 def _run_reload_multitask_check(
@@ -308,9 +396,22 @@ def _write_run_inputs(
     n_train_records: list[dict[str, Any]],
     y_valid_records: list[dict[str, Any]],
     n_valid_records: list[dict[str, Any]],
+    task_ratio: dict[str, int],
 ) -> None:
     snapshot = dict(config)
     snapshot.pop("_repo_root", None)
+    train_counts = count_ratio_examples(
+        y_count=len(y_train_records),
+        n_count=len(n_train_records),
+        task_ratio_y=task_ratio["y"],
+        task_ratio_n=task_ratio["n"],
+    )
+    valid_counts = count_ratio_examples(
+        y_count=len(y_valid_records),
+        n_count=len(n_valid_records),
+        task_ratio_y=task_ratio["y"],
+        task_ratio_n=task_ratio["n"],
+    )
     write_yaml(output_dir / "config_snapshot.yaml", snapshot)
     write_json(
         output_dir / "run_summary.json",
@@ -326,11 +427,22 @@ def _write_run_inputs(
             "n_train_records_loaded": len(n_train_records),
             "y_valid_records_loaded": len(y_valid_records),
             "n_valid_records_loaded": len(n_valid_records),
-            "interleaved_train_samples": 2 * min(len(y_train_records), len(n_train_records)),
-            "interleaved_valid_samples": 2 * min(len(y_valid_records), len(n_valid_records)),
+            "task_ratio": task_ratio,
+            "interleaved_train_samples": train_counts["total"],
+            "interleaved_valid_samples": valid_counts["total"],
+            "interleaved_train_task_counts": {
+                "Y": train_counts["Y"],
+                "N": train_counts["N"],
+            },
+            "interleaved_valid_task_counts": {
+                "Y": valid_counts["Y"],
+                "N": valid_counts["N"],
+            },
+            "interleaved_train_cycles": train_counts["cycle_count"],
+            "interleaved_valid_cycles": valid_counts["cycle_count"],
             "output_dir": str(output_dir),
             "smoke": args.smoke,
-            "task_schedule": "alternating_y_n_examples",
+            "task_schedule": "ratio_ordered_y_n_examples",
         },
     )
 
@@ -377,6 +489,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-n-train-samples", type=int, default=1000, help="最多读取 N train 样本数；负数表示全量")
     parser.add_argument("--max-y-valid-samples", type=int, default=1000, help="最多读取 Y validation 样本数；负数表示全量")
     parser.add_argument("--max-n-valid-samples", type=int, default=1000, help="最多读取 N validation 样本数；负数表示全量")
+    parser.add_argument("--task-ratio-y", type=int, default=None, help="M 训练中每个周期的 Y 样本数；默认读取配置")
+    parser.add_argument("--task-ratio-n", type=int, default=None, help="M 训练中每个周期的 N 样本数；默认读取配置")
     parser.add_argument("--per-device-train-batch-size", type=int, default=1)
     parser.add_argument("--per-device-eval-batch-size", type=int, default=1)
     parser.add_argument("--gradient-accumulation-steps", type=int, default=8)

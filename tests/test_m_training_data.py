@@ -2,10 +2,15 @@
 
 from src.train.multitask_dataset import (
     MultitaskTrainingDataset,
+    count_ratio_examples,
     summarize_multitask_examples,
 )
 from src.train.preference_dataset import IGNORE_INDEX
-from src.train.train_m import _select_train_sampler_dataset
+from src.train.train_m import (
+    _resolve_task_ratio,
+    _select_train_sampler_dataset,
+    _should_run_per_task_validation,
+)
 from src.train.train_y import load_training_config
 
 
@@ -111,6 +116,99 @@ def test_multitask_dataset_uses_balanced_pair_count():
     assert dataset.task_counts == {"Y": 1, "N": 1}
 
 
+def test_multitask_dataset_supports_y_heavy_ratio():
+    dataset = MultitaskTrainingDataset(
+        preference_records=[
+            _y_sample("u1"),
+            _y_sample("u2"),
+            _y_sample("u3"),
+            _y_sample("u4"),
+            _y_sample("u5"),
+        ],
+        next_item_records=[_n_sample("u1"), _n_sample("u2"), _n_sample("u3")],
+        tokenizer=FakeTokenizer(),
+        movie_lookup=_movie_lookup(),
+        max_seq_length=512,
+        use_chat_format=False,
+        task_ratio_y=2,
+        task_ratio_n=1,
+    )
+
+    assert [dataset[index]["task"] for index in range(len(dataset))] == [
+        "Y",
+        "Y",
+        "N",
+        "Y",
+        "Y",
+        "N",
+    ]
+    assert dataset.task_counts == {"Y": 4, "N": 2}
+    assert dataset.task_ratio == {"Y": 2, "N": 1}
+    assert dataset.cycle_count == 2
+
+
+def test_multitask_dataset_supports_n_heavy_ratio():
+    dataset = MultitaskTrainingDataset(
+        preference_records=[_y_sample("u1"), _y_sample("u2"), _y_sample("u3")],
+        next_item_records=[
+            _n_sample("u1"),
+            _n_sample("u2"),
+            _n_sample("u3"),
+            _n_sample("u4"),
+            _n_sample("u5"),
+        ],
+        tokenizer=FakeTokenizer(),
+        movie_lookup=_movie_lookup(),
+        max_seq_length=512,
+        use_chat_format=False,
+        task_ratio_y=1,
+        task_ratio_n=2,
+    )
+
+    assert [dataset[index]["task"] for index in range(len(dataset))] == [
+        "Y",
+        "N",
+        "N",
+        "Y",
+        "N",
+        "N",
+    ]
+    assert dataset.task_counts == {"Y": 2, "N": 4}
+    assert dataset.task_ratio == {"Y": 1, "N": 2}
+
+
+def test_multitask_dataset_rejects_invalid_ratio():
+    try:
+        MultitaskTrainingDataset(
+            preference_records=[_y_sample("u1")],
+            next_item_records=[_n_sample("u1")],
+            tokenizer=FakeTokenizer(),
+            movie_lookup=_movie_lookup(),
+            max_seq_length=512,
+            use_chat_format=False,
+            task_ratio_y=0,
+            task_ratio_n=1,
+        )
+    except ValueError as exc:
+        assert "正整数" in str(exc)
+    else:
+        raise AssertionError("非法 M 任务比例应触发 ValueError")
+
+
+def test_count_ratio_examples_reports_actual_encoded_counts():
+    assert count_ratio_examples(
+        y_count=200000,
+        n_count=200000,
+        task_ratio_y=2,
+        task_ratio_n=1,
+    ) == {
+        "cycle_count": 100000,
+        "Y": 200000,
+        "N": 100000,
+        "total": 300000,
+    }
+
+
 def test_multitask_summary_counts_tasks_and_supervised_tokens():
     dataset = MultitaskTrainingDataset(
         preference_records=[_y_sample("u1")],
@@ -138,9 +236,33 @@ def test_m_config_inherits_experiment_contract():
     assert config["_repo_root"].name == "llamarec"
 
 
+def test_resolve_task_ratio_uses_config_and_cli_override():
+    class Args:
+        task_ratio_y = None
+        task_ratio_n = None
+
+    assert _resolve_task_ratio(Args(), {"optimizer_step_ratio": {"y": 1, "n": 1}}) == {
+        "y": 1,
+        "n": 1,
+    }
+
+    Args.task_ratio_y = 2
+    Args.task_ratio_n = 1
+    assert _resolve_task_ratio(Args(), {"optimizer_step_ratio": {"y": 1, "n": 1}}) == {
+        "y": 2,
+        "n": 1,
+    }
+
+
 def test_train_sampler_dataset_compatibility():
     passed_dataset = object()
     fallback_dataset = object()
 
     assert _select_train_sampler_dataset(passed_dataset, fallback_dataset) is passed_dataset
     assert _select_train_sampler_dataset(None, fallback_dataset) is fallback_dataset
+
+
+def test_per_task_validation_only_runs_for_default_mixed_eval():
+    assert _should_run_per_task_validation(None, "eval") is True
+    assert _should_run_per_task_validation(object(), "eval") is False
+    assert _should_run_per_task_validation(None, "eval_y") is False
