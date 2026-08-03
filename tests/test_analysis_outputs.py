@@ -6,6 +6,7 @@ from pathlib import Path
 
 from src.analysis.basic_error_analysis import run_basic_error_analysis
 from src.analysis.summarize_results import run_result_summary
+from src.analysis.threshold_calibration import run_threshold_calibration
 
 
 def test_result_summary_writes_csv_and_report(tmp_path):
@@ -66,6 +67,34 @@ def test_basic_error_analysis_writes_summaries_and_examples(tmp_path):
     assert ranking_rows[0]["rank_distribution"] == '{"1": 1, "2": 1}'
     assert any(example["error_type"] == "ranking_miss" for example in examples)
     assert (output_dir / "test_error_analysis.md").exists()
+
+
+def test_threshold_calibration_uses_validation_threshold_on_test(tmp_path):
+    _write_config(tmp_path)
+    _write_prediction_tree(tmp_path)
+    _write_calibration_predictions(tmp_path)
+
+    summary = run_threshold_calibration(
+        config_path=tmp_path / "configs" / "experiment.yaml",
+        dataset_key="toy",
+        y_run="run_y",
+        m_runs=["run_m"],
+        m_labels=["M1"],
+        output_dir=tmp_path / "outputs" / "calibration" / "toy",
+    )
+
+    output_dir = Path(summary["output_dir"])
+    rows = list(csv.DictReader((output_dir / "threshold_calibration.csv").open()))
+    m_validation = next(row for row in rows if row["model"] == "M1" and row["split"] == "validation")
+    m_test = next(row for row in rows if row["model"] == "M1" and row["split"] == "test")
+
+    assert summary["models"] == 3
+    assert m_validation["threshold"] == "0.4"
+    assert m_validation["f1"] == "0.8"
+    assert m_test["threshold"] == "0.4"
+    assert m_test["f1"] == "1.0"
+    assert m_test["fp"] == "0"
+    assert (output_dir / "threshold_calibration.md").exists()
 
 
 def _write_config(root: Path) -> None:
@@ -153,6 +182,44 @@ def _write_prediction_tree(root: Path) -> None:
         root / "outputs" / "m" / "toy" / "run_m" / "m_n_test_predictions.jsonl",
         _ranking_predictions("m_k0"),
     )
+
+
+def _write_calibration_predictions(root: Path) -> None:
+    for path in [
+        root / "outputs" / "base" / "toy" / "y_valid_predictions.jsonl",
+        root / "outputs" / "y" / "toy" / "run_y" / "y_valid_predictions.jsonl",
+    ]:
+        _write_jsonl(path, _binary_predictions("calibration_ref"))
+
+    _write_jsonl(
+        root / "outputs" / "m" / "toy" / "run_m" / "m_y_valid_predictions.jsonl",
+        [
+            _binary_prediction("m_k0", "u1", "Yes", 0.4),
+            _binary_prediction("m_k0", "u2", "Yes", 0.45),
+            _binary_prediction("m_k0", "u3", "No", 0.3),
+            _binary_prediction("m_k0", "u4", "No", 0.6),
+        ],
+    )
+    _write_jsonl(
+        root / "outputs" / "m" / "toy" / "run_m" / "m_y_test_predictions.jsonl",
+        [
+            _binary_prediction("m_k0", "u5", "Yes", 0.42),
+            _binary_prediction("m_k0", "u6", "No", 0.35),
+        ],
+    )
+
+
+def _binary_prediction(model: str, user_id: str, label: str, p_yes: float):
+    return {
+        "model": model,
+        "task": "Y",
+        "split": "test",
+        "user_id": user_id,
+        "target_movie_id": f"m-{user_id}",
+        "label": label,
+        "p_yes": p_yes,
+        "predicted_label": "Yes" if p_yes >= 0.5 else "No",
+    }
 
 
 def _binary_predictions(model: str):
