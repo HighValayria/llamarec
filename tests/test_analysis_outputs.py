@@ -7,6 +7,7 @@ from pathlib import Path
 from src.analysis.basic_error_analysis import run_basic_error_analysis
 from src.analysis.summarize_results import run_result_summary
 from src.analysis.threshold_calibration import run_threshold_calibration
+from src.analysis.threshold_comparison import run_threshold_comparison
 
 
 def test_result_summary_writes_csv_and_report(tmp_path):
@@ -95,6 +96,39 @@ def test_threshold_calibration_uses_validation_threshold_on_test(tmp_path):
     assert m_test["f1"] == "1.0"
     assert m_test["fp"] == "0"
     assert (output_dir / "threshold_calibration.md").exists()
+
+
+def test_threshold_comparison_writes_three_binary_tables(tmp_path):
+    _write_config(tmp_path)
+    _write_prediction_tree(tmp_path)
+    _write_calibration_predictions(tmp_path)
+
+    summary = run_threshold_comparison(
+        config_path=tmp_path / "configs" / "experiment.yaml",
+        dataset_key="toy",
+        y_run="run_y",
+        m_runs=["run_m"],
+        m_labels=["M1"],
+        output_dir=tmp_path / "outputs" / "calibration" / "toy" / "comparison",
+    )
+
+    output_dir = Path(summary["output_dir"])
+    auc_rows = list(csv.DictReader((output_dir / "binary_auc.csv").open()))
+    fixed_rows = list(csv.DictReader((output_dir / "binary_fixed_0_5.csv").open()))
+    calibrated_rows = list(csv.DictReader((output_dir / "binary_calibrated.csv").open()))
+    m_fixed_test = next(row for row in fixed_rows if row["model"] == "M1" and row["split"] == "test")
+    m_calibrated_test = next(
+        row for row in calibrated_rows if row["model"] == "M1" and row["split"] == "test"
+    )
+
+    assert summary["models"] == 3
+    assert summary["rows"] == {"auc": 6, "fixed_0_5": 6, "validation_calibrated": 6}
+    assert len(auc_rows) == 6
+    assert m_fixed_test["threshold"] == "0.5"
+    assert m_fixed_test["f1"] == "0.0"
+    assert m_calibrated_test["threshold"] == "0.4"
+    assert m_calibrated_test["f1"] == "1.0"
+    assert (output_dir / "threshold_comparison.md").exists()
 
 
 def _write_config(root: Path) -> None:

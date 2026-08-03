@@ -95,7 +95,7 @@ M1 的主要结论：
 - M1 将 No 样本 Mean P(Yes) 从 M0 的 0.6054 降到 0.3830，说明 Yes 偏置得到明显缓解。
 - M2 的 No 样本 Mean P(Yes)=0.6966，并且 HR@1 降到 0.6548，说明简单提高 Y 采样比例不是有效缓解方案。
 
-Phase 1.5 的 STEP A 仓库检查已经固化到 [Phase 1.5 STEP A 仓库检查报告](reports/phase_1_5_step_a_repository_check.md)。下一步应进入 STEP B/C：统一 binary 阈值报告，并基于已有 prediction 文件做离线分组 error analysis。
+Phase 1.5 的 STEP A 仓库检查已经固化到 [Phase 1.5 STEP A 仓库检查报告](reports/phase_1_5_step_a_repository_check.md)。STEP B 的统一 binary 阈值比较入口已经建立为 `src/analysis/threshold_comparison.py`，可在包含完整云端 prediction 文件的环境中生成 AUC、固定 0.5 threshold、validation-calibrated threshold 三张表。下一步应运行 STEP B 正式报告，并继续开发 STEP C 离线分组 error analysis。
 
 ## 当前数据划分规范
 
@@ -157,7 +157,7 @@ Raw interactions
 
 ## 进行中
 
-- Phase 1.5 STEP B/C 准备：binary 阈值口径统一与分组 error analysis。当前不建议继续启动新的 M 长训练。
+- Phase 1.5 STEP B：`threshold_comparison.py` 已实现并通过本地 toy 测试，正式 MovieLens-1M 报告需要在云端完整 prediction 文件环境中运行。随后进入 STEP C 分组 error analysis。当前不建议继续启动新的 M 长训练。
 
 ## 已知问题 / 漂移
 
