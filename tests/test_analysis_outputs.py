@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 from src.analysis.basic_error_analysis import run_basic_error_analysis
+from src.analysis.grouped_error_analysis import run_grouped_error_analysis
 from src.analysis.summarize_results import run_result_summary
 from src.analysis.threshold_calibration import run_threshold_calibration
 from src.analysis.threshold_comparison import run_threshold_comparison
@@ -131,6 +132,52 @@ def test_threshold_comparison_writes_three_binary_tables(tmp_path):
     assert (output_dir / "threshold_comparison.md").exists()
 
 
+def test_grouped_error_analysis_joins_metadata_and_writes_group_tables(tmp_path):
+    _write_config(tmp_path)
+    _write_prediction_tree(tmp_path)
+    _write_grouped_metadata_tree(tmp_path)
+
+    summary = run_grouped_error_analysis(
+        config_path=tmp_path / "configs" / "experiment.yaml",
+        dataset_key="toy",
+        y_run="run_y",
+        n_run="run_n",
+        m_runs=["run_m"],
+        m_labels=["M1"],
+        split_name="test",
+        threshold_mode="fixed_0.5",
+        output_dir=tmp_path / "outputs" / "error_analysis" / "toy" / "grouped",
+    )
+
+    output_dir = Path(summary["output_dir"])
+    binary_rows = list(csv.DictReader((output_dir / "test_binary_group_metrics.csv").open()))
+    ranking_rows = list(csv.DictReader((output_dir / "test_ranking_group_metrics.csv").open()))
+    binary_all = next(row for row in binary_rows if row["model"] == "M1" and row["group_field"] == "all")
+    binary_rating_5 = next(
+        row
+        for row in binary_rows
+        if row["model"] == "M1"
+        and row["group_field"] == "target_rating"
+        and row["group_value"] == "5.0"
+    )
+    ranking_position_1 = next(
+        row
+        for row in ranking_rows
+        if row["model"] == "N-K0"
+        and row["group_field"] == "ground_truth_position"
+        and row["group_value"] == "1"
+    )
+
+    assert summary["binary_models"] == 3
+    assert summary["ranking_models"] == 4
+    assert binary_all["samples"] == "2"
+    assert binary_all["fp"] == "1"
+    assert binary_rating_5["yes_labels"] == "1"
+    assert ranking_position_1["samples"] == "1"
+    assert ranking_position_1["hr_at_1"] == "0.0"
+    assert (output_dir / "test_grouped_error_analysis.md").exists()
+
+
 def _write_config(root: Path) -> None:
     config_dir = root / "configs"
     config_dir.mkdir(parents=True)
@@ -145,6 +192,18 @@ def _write_config(root: Path) -> None:
                 "  n: outputs/n/{dataset}",
                 "  m: outputs/m/{dataset}",
                 "  aggregate_results: outputs/results.csv",
+                "processed_outputs:",
+                "  full_sequences: data/processed/{dataset}/full_sequences.jsonl",
+                "  preference_samples:",
+                "    validation: data/processed/{dataset}/preference_valid.jsonl",
+                "    test: data/processed/{dataset}/preference_test.jsonl",
+                "  next_item_samples:",
+                "    validation: data/processed/{dataset}/next_item_valid.jsonl",
+                "    test: data/processed/{dataset}/next_item_test.jsonl",
+                "candidates:",
+                "  save_files:",
+                "    validation: data/candidates/{dataset}/valid.jsonl",
+                "    test: data/candidates/{dataset}/test.jsonl",
             ]
         ),
         encoding="utf-8",
@@ -241,6 +300,86 @@ def _write_calibration_predictions(root: Path) -> None:
             _binary_prediction("m_k0", "u6", "No", 0.35),
         ],
     )
+
+
+def _write_grouped_metadata_tree(root: Path) -> None:
+    _write_jsonl(
+        root / "data" / "processed" / "toy" / "full_sequences.jsonl",
+        [
+            {
+                "user_id": "u1",
+                "interactions": [
+                    _interaction("h1", 4, 1, 0),
+                    _interaction("m1", 5, 2, 1),
+                    _interaction("a", 5, 3, 2),
+                ],
+            },
+            {
+                "user_id": "u2",
+                "interactions": [
+                    _interaction("h2", 2, 1, 0),
+                    _interaction("m2", 2, 2, 1),
+                    _interaction("d", 3, 3, 2),
+                ],
+            },
+        ],
+    )
+    _write_jsonl(
+        root / "data" / "processed" / "toy" / "preference_test.jsonl",
+        [
+            _preference_sample("u1", "m1", "Yes", 5, [_interaction("h1", 4, 1, 0)]),
+            _preference_sample("u2", "m2", "No", 2, [_interaction("h2", 2, 1, 0)]),
+        ],
+    )
+    _write_jsonl(
+        root / "data" / "candidates" / "toy" / "test.jsonl",
+        [
+            _candidate_sample("u1", ["a", "b"], "a", 0, 5),
+            _candidate_sample("u2", ["c", "d"], "d", 1, 3),
+        ],
+    )
+
+
+def _preference_sample(user_id: str, movie_id: str, label: str, rating: float, history: list[dict]):
+    return {
+        "task": "Y",
+        "user_id": user_id,
+        "split": "test",
+        "history": history,
+        "target": _interaction(movie_id, rating, 10, 2),
+        "label": label,
+    }
+
+
+def _candidate_sample(
+    user_id: str,
+    candidate_movie_ids: list[str],
+    ground_truth_movie_id: str,
+    ground_truth_index: int,
+    rating: float,
+):
+    return {
+        "task": "N",
+        "user_id": user_id,
+        "split": "test",
+        "history": [_interaction(f"h-{user_id}", 4, 1, 0)],
+        "target": _interaction(ground_truth_movie_id, rating, 10, 2),
+        "candidate_movie_ids": candidate_movie_ids,
+        "ground_truth_movie_id": ground_truth_movie_id,
+        "ground_truth_index": ground_truth_index,
+        "label": "A" if ground_truth_index == 0 else "B",
+    }
+
+
+def _interaction(movie_id: str, rating: float, timestamp: int, sequence_index: int):
+    return {
+        "user_id": "u",
+        "movie_id": movie_id,
+        "rating": float(rating),
+        "timestamp": timestamp,
+        "title": f"Movie {movie_id}",
+        "sequence_index": sequence_index,
+    }
 
 
 def _binary_prediction(model: str, user_id: str, label: str, p_yes: float):

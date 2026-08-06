@@ -1,19 +1,25 @@
-# 分析模块
+# Analysis Module
 
-`src/analysis` 保存 MVP 与 Phase 1.5 的离线分析入口。这里的脚本默认读取已经生成的
-`outputs/**/predictions.jsonl` 与 `metrics.json`，不重新训练模型。
+`src/analysis` contains offline analysis entry points for MVP and Phase 1.5.
+These scripts read existing `outputs/**/predictions.jsonl` and `metrics.json`
+artifacts. They do not train or re-run models.
 
-## 当前文件
+## Current Files
 
-- `summarize_results.py`：读取 Base、Y-K0、N-K0、M-K0 的 metrics，生成 `outputs/results.csv`
-  和 Markdown 主结果表。
-- `basic_error_analysis.py`：读取 prediction JSONL，生成 binary confusion、ranking rank/margin/position
-  sanity check 和代表性错误样本。
-- `threshold_calibration.py`：用 validation 的 best-F1 threshold 校准 Yes/No 二分类阈值，再把同一阈值应用到 test。
-- `threshold_comparison.py`：Phase 1.5 STEP B 入口，统一输出三张二分类口径表：
-  threshold-free AUC、固定阈值 0.5、validation-calibrated threshold。
+- `summarize_results.py`: reads Base, Y-K0, N-K0, and M-K0 metrics and writes
+  `outputs/results.csv` plus a Markdown summary.
+- `basic_error_analysis.py`: reads prediction JSONL files and writes binary
+  confusion summaries, ranking sanity checks, and representative errors.
+- `threshold_calibration.py`: selects a Yes/No best-F1 threshold on validation,
+  then applies the same threshold to test.
+- `threshold_comparison.py`: Phase 1.5 STEP B entry point. It writes separate
+  binary views for threshold-free AUC, fixed 0.5 threshold, and
+  validation-calibrated threshold.
+- `grouped_error_analysis.py`: Phase 1.5 STEP C entry point. It joins
+  predictions back to fixed Y samples, fixed N candidate records, and
+  full-sequence-derived user/movie statistics, then writes grouped diagnostics.
 
-## Phase 1.5 STEP B 示例
+## Phase 1.5 STEP B Example
 
 ```bash
 python -m src.analysis.threshold_comparison \
@@ -25,7 +31,7 @@ python -m src.analysis.threshold_comparison \
   --output-dir outputs/calibration/movielens-1m/threshold_comparison
 ```
 
-输出包括：
+Outputs:
 
 ```text
 binary_auc.csv
@@ -35,5 +41,33 @@ threshold_comparison.json
 threshold_comparison.md
 ```
 
-本脚本只比较 Y-task 的 Yes/No 二分类口径，不包含 N-task ranking 指标。正式 MovieLens-1M
-报告需要在包含完整云端 prediction 文件的环境中运行。
+This script compares only Y-task Yes/No binary metrics. It does not include
+N-task ranking metrics.
+
+## Phase 1.5 STEP C Example
+
+```bash
+python -m src.analysis.grouped_error_analysis \
+  --config configs/experiment.yaml \
+  --dataset movielens-1m \
+  --y-run pool200k_1m_y_1500 \
+  --n-run pool200k_1m_n_1500 \
+  --m-runs pool200k_1m_m_1500 diag_m1_1m_m_200k_3000 diag_m2_1m_m_y2n1_1500 \
+  --m-labels M0 M1 M2 \
+  --split test \
+  --threshold-mode validation_best_f1 \
+  --output-dir outputs/error_analysis/movielens-1m/grouped
+```
+
+Outputs:
+
+```text
+test_binary_group_metrics.csv
+test_ranking_group_metrics.csv
+test_grouped_error_analysis.json
+test_grouped_error_analysis.md
+```
+
+Use `--split validation` for validation diagnostics. Binary grouped metrics keep
+the threshold source explicit via `--threshold-mode`; ranking grouped metrics
+report HR@1, HR@5, NDCG@5, MRR, mean rank, and mean margin by group.
