@@ -1,57 +1,60 @@
 ---
-title: 项目 Wiki 索引
+title: "Project Wiki Index"
 type: index
 status: current
 authority: descriptive
 source: mixed
 created: 2026-07-28
-updated: 2026-08-03
-last_verified: 2026-08-03
+updated: 2026-08-06
+last_verified: 2026-08-06
 related_code: []
 ---
 
-# 项目 Wiki
+# Project Wiki
 
-本文档只负责导航，不作为 changelog，也不承载完整项目说明。
+This document is navigation only. It is not a changelog and does not carry the
+full project explanation.
 
-## 当前状态
+## Current State
 
-- [当前项目状态](current_state.md)
+- [Current Project State](current_state.md)
 
-## 架构
+## Architecture
 
-- [MVP 实验契约](architecture/mvp_experiment_contract.md)
+- [MVP Experiment Contract](architecture/mvp_experiment_contract.md)
 
-## 模块
+## Modules
 
-- [MovieLens 数据层](modules/movielens_data_layer.md)
-- [评测层](modules/evaluation_layer.md)
-- [推理层](modules/inference_layer.md)
-- [训练层](modules/training_layer.md)
+- [MovieLens Data Layer](modules/movielens_data_layer.md)
+- [Evaluation Layer](modules/evaluation_layer.md)
+- [Inference Layer](modules/inference_layer.md)
+- [Training Layer](modules/training_layer.md)
 
-## 决策
+## Decisions
 
-这里放置已接受或当前有效的 ADR 链接。
+Accepted or currently active ADR links should be listed here.
 
-## 指南
+## Guides
 
-- [MVP 开发步骤](guides/mvp_development_steps.md)
-- [STEP 2 数据层填充指南](guides/step2_data_layer_filling_guide.md)
-- [当前数据流说明](guides/current_data_flow.md)
-- [面向学习的当前工程讲解](guides/project_walkthrough_for_learning.md)
-- [STEP 4 Base Zero-shot 指南](guides/step4_base_zero_shot_guide.md)
+- [MVP Development Steps](guides/mvp_development_steps.md)
+- [STEP 2 Data Layer Filling Guide](guides/step2_data_layer_filling_guide.md)
+- [Current Data Flow](guides/current_data_flow.md)
+- [Project Walkthrough for Learning](guides/project_walkthrough_for_learning.md)
+- [STEP 4 Base Zero-shot Guide](guides/step4_base_zero_shot_guide.md)
 
-## 报告
+## Reports
 
-- [MovieLens-1M MVP 主结果报告](reports/movielens_1m_mvp_results.md)
-- [M 多任务干扰诊断结果](reports/m_multitask_interference_diagnosis_results.md)
-- [MVP 执行历程、当前现状与主要发现](reports/mvp_execution_status_and_findings.md)
-- [Phase 1.5 STEP A 仓库检查报告](reports/phase_1_5_step_a_repository_check.md)
+- [MovieLens-1M MVP Results](reports/movielens_1m_mvp_results.md)
+- [M Multi-task Interference Diagnosis Results](reports/m_multitask_interference_diagnosis_results.md)
+- [MVP Execution Status and Findings](reports/mvp_execution_status_and_findings.md)
+- [Phase 1.5 STEP A Repository Check](reports/phase_1_5_step_a_repository_check.md)
+- [Phase 1.5 Threshold and Grouped Diagnostics](reports/phase-1-5-threshold-and-grouped-diagnostics.md)
 
-## 历史
+## History
 
-- [2026-07 语义变更记录](history/2026-07.md)
-- [2026-08 语义变更记录](history/2026-08.md)
+- [2026-07 Semantic History](history/2026-07.md)
+- [2026-08 Semantic History](history/2026-08.md)
 
-历史材料和非活跃材料属于 `history/` 与 `archive/`；除必要索引入口外，
-通常不应出现在 active index 中。
+Historical and inactive materials live under `history/` and `archive/`; except
+for necessary index entry points, they should not usually appear in the active
+index.
