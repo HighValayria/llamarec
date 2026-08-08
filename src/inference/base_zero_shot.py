@@ -156,6 +156,12 @@ def run_base_zero_shot(
         "dataset": dataset_key,
         "mode": mode,
         "batch_size": batch_size,
+        "candidate_files": _resolved_candidate_files_for_summary(
+            config,
+            dataset_key,
+            normalized_splits,
+            candidate_files,
+        ),
         "outputs_dir": str(output_dir),
         "counts": run_counts,
         "metrics": metrics_by_split,
