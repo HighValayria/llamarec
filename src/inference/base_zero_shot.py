@@ -53,6 +53,7 @@ def run_base_zero_shot(
     limit: int | None = None,
     batch_size: int = 1,
     candidate_files: dict[str, str | Path] | None = None,
+    output_dir: str | Path | None = None,
 ) -> dict[str, Any]:
     """运行 Base zero-shot 推理流程。
 
@@ -65,7 +66,7 @@ def run_base_zero_shot(
 
     dataset_key = dataset_key or config["dataset"]["development"]
     normalized_splits = _normalize_splits(splits or ["validation", "test"])
-    output_dir = _output_dir(config, dataset_key)
+    output_dir = _output_dir(config, dataset_key, output_dir)
     scorer = build_scorer(mode, config=config)
     movie_lookup = load_movies(dataset_key, config)
 
@@ -372,7 +373,16 @@ def _candidate_path(
     )
 
 
-def _output_dir(config: dict[str, Any], dataset_key: str) -> Path:
+def _output_dir(
+    config: dict[str, Any],
+    dataset_key: str,
+    output_dir: str | Path | None = None,
+) -> Path:
+    if output_dir is not None:
+        path = Path(output_dir)
+        if path.is_absolute():
+            return path
+        return Path(config["_repo_root"]) / path
     raw_path = config.get("outputs", {}).get("base", "outputs/base")
     return resolve_repo_path_from_config(config, raw_path, dataset_key=dataset_key)
 
@@ -491,6 +501,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--valid-candidates", default=None)
     parser.add_argument("--test-candidates", default=None)
+    parser.add_argument("--output-dir", default=None)
     return parser.parse_args()
 
 
@@ -507,6 +518,7 @@ def main() -> None:
             args.valid_candidates,
             args.test_candidates,
         ),
+        output_dir=args.output_dir,
     )
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 

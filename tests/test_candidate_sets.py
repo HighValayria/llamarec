@@ -4,6 +4,7 @@ from random import Random
 
 from src.eval.candidate_sets import (
     _build_candidate_records,
+    _permute_candidate_record,
     spreadsheet_labels,
     validate_candidate_record,
 )
@@ -54,6 +55,24 @@ def test_candidate_records_support_twenty_candidate_variant():
     assert len(record["label_set"]) == 20
     assert record["candidate_generation"]["variant_name"] == "k20_seed42"
     assert record["candidate_generation"]["candidate_num"] == 20
+
+
+def test_permute_candidate_record_preserves_candidate_ids_and_updates_label(tmp_path):
+    record = _toy_candidate_records(seed=42)[0]
+    permuted = _permute_candidate_record(
+        record,
+        rng=Random(7),
+        variant_name="k5_perm_seed7",
+        seed=108,
+        source_path=tmp_path / "valid.jsonl",
+    )
+
+    validate_candidate_record(permuted, candidate_num=5)
+    assert set(permuted["candidate_movie_ids"]) == set(record["candidate_movie_ids"])
+    assert permuted["candidate_movie_ids"] != record["candidate_movie_ids"]
+    assert permuted["candidate_generation"]["method"] == "order_permutation"
+    assert permuted["candidate_generation"]["variant_name"] == "k5_perm_seed7"
+    assert permuted["candidate_generation"]["preserves_candidate_ids"] is True
 
 
 def _toy_candidate_records(seed):

@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 from pathlib import Path
 from random import Random
@@ -102,6 +103,62 @@ def build_fixed_candidate_sets(
     }
 
 
+def build_candidate_order_variant(
+    config_path: str | Path,
+    dataset_key: str | None = None,
+    variant_name: str | None = None,
+    source_candidate_files: dict[str, str | Path] | None = None,
+    output_dir: str | Path | None = None,
+    seed: int | None = None,
+) -> dict[str, Any]:
+    """Create a candidate-order variant from existing fixed candidate files."""
+
+    if not variant_name:
+        raise ValueError("variant_name is required for order variants")
+
+    config = load_experiment_config(config_path)
+    dataset_key = dataset_key or config["dataset"]["development"]
+    base_seed = int(seed if seed is not None else config["seed"]["random_seed"])
+
+    summaries = {}
+    for split_name in ("validation", "test"):
+        source_path = _source_candidate_path(
+            config,
+            dataset_key,
+            split_name,
+            source_candidate_files,
+        )
+        rng = Random(base_seed + SPLIT_SEED_OFFSETS[split_name])
+        records = [
+            _permute_candidate_record(
+                record,
+                rng,
+                variant_name=variant_name,
+                seed=base_seed + SPLIT_SEED_OFFSETS[split_name],
+                source_path=source_path,
+            )
+            for record in _read_jsonl(source_path)
+        ]
+        candidate_num = max((len(record["candidate_movie_ids"]) for record in records), default=0)
+        for record in records:
+            validate_candidate_record(record, candidate_num=candidate_num)
+        output_path = _candidate_output_path(
+            config,
+            dataset_key,
+            split_name,
+            variant_name=variant_name,
+            output_dir=output_dir,
+        )
+        _write_jsonl(output_path, records)
+        summaries[split_name] = _candidate_summary(records, output_path)
+
+    return {
+        "dataset": dataset_key,
+        "variant_name": variant_name,
+        "candidate_sets": summaries,
+    }
+
+
 def validate_candidate_record(
     record: dict[str, Any],
     candidate_num: int | None = None,
@@ -185,6 +242,42 @@ def _build_candidate_records(
     return records
 
 
+def _permute_candidate_record(
+    record: dict[str, Any],
+    rng: Random,
+    variant_name: str,
+    seed: int,
+    source_path: Path,
+) -> dict[str, Any]:
+    output = copy.deepcopy(record)
+    original_candidates = [str(movie_id) for movie_id in record["candidate_movie_ids"]]
+    candidate_movie_ids = list(original_candidates)
+    rng.shuffle(candidate_movie_ids)
+    if len(candidate_movie_ids) > 1 and candidate_movie_ids == original_candidates:
+        candidate_movie_ids = candidate_movie_ids[1:] + candidate_movie_ids[:1]
+
+    label_set = list(record["label_set"])
+    ground_truth_movie_id = str(record["ground_truth_movie_id"])
+    ground_truth_index = candidate_movie_ids.index(ground_truth_movie_id)
+    previous_generation = dict(record.get("candidate_generation", {}))
+
+    output["candidate_movie_ids"] = candidate_movie_ids
+    output["ground_truth_index"] = ground_truth_index
+    output["label"] = label_set[ground_truth_index]
+    output["label_set"] = label_set
+    output["candidate_generation"] = {
+        **previous_generation,
+        "method": "order_permutation",
+        "variant_name": variant_name,
+        "source_variant_name": previous_generation.get("variant_name", "canonical"),
+        "source_path": str(source_path),
+        "candidate_num": len(candidate_movie_ids),
+        "seed": seed,
+        "preserves_candidate_ids": True,
+    }
+    return output
+
+
 def _candidate_summary(records: list[dict[str, Any]], output_path: Path) -> dict[str, Any]:
     candidate_num = max((len(record["candidate_movie_ids"]) for record in records), default=0)
     position_counts = {str(index): 0 for index in range(candidate_num)}
@@ -231,6 +324,33 @@ def _candidate_output_path(
         dataset_key=dataset_key,
         split_name=split_name,
     )
+
+
+def _source_candidate_path(
+    config: dict[str, Any],
+    dataset_key: str,
+    split_name: str,
+    source_candidate_files: dict[str, str | Path] | None = None,
+) -> Path:
+    save_key = "validation" if split_name == "validation" else "test"
+    if source_candidate_files and save_key in source_candidate_files:
+        path = Path(source_candidate_files[save_key])
+        if path.is_absolute():
+            return path
+        return Path(config["_repo_root"]) / path
+    return _candidate_output_path(config, dataset_key, split_name)
+
+
+def _candidate_file_overrides(
+    valid_candidates: str | None,
+    test_candidates: str | None,
+) -> dict[str, str] | None:
+    overrides = {}
+    if valid_candidates:
+        overrides["validation"] = valid_candidates
+    if test_candidates:
+        overrides["test"] = test_candidates
+    return overrides or None
 
 
 def _candidate_variant_config(
@@ -331,21 +451,37 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", default=None)
     parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--no-shuffle-order", action="store_true")
+    parser.add_argument("--order-variant", action="store_true")
+    parser.add_argument("--source-valid-candidates", default=None)
+    parser.add_argument("--source-test-candidates", default=None)
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    summary = build_fixed_candidate_sets(
-        args.config,
-        dataset_key=args.dataset,
-        candidate_num=args.candidate_num,
-        label_set=args.label_set,
-        variant_name=args.variant_name,
-        output_dir=args.output_dir,
-        seed=args.seed,
-        shuffle_order=False if args.no_shuffle_order else None,
-    )
+    if args.order_variant:
+        summary = build_candidate_order_variant(
+            args.config,
+            dataset_key=args.dataset,
+            variant_name=args.variant_name,
+            source_candidate_files=_candidate_file_overrides(
+                args.source_valid_candidates,
+                args.source_test_candidates,
+            ),
+            output_dir=args.output_dir,
+            seed=args.seed,
+        )
+    else:
+        summary = build_fixed_candidate_sets(
+            args.config,
+            dataset_key=args.dataset,
+            candidate_num=args.candidate_num,
+            label_set=args.label_set,
+            variant_name=args.variant_name,
+            output_dir=args.output_dir,
+            seed=args.seed,
+            shuffle_order=False if args.no_shuffle_order else None,
+        )
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 
 
