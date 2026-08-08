@@ -669,10 +669,25 @@ def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     if not rows:
         path.write_text("", encoding="utf-8")
         return
+    fieldnames = _csv_fieldnames(rows)
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
+
+
+def _csv_fieldnames(rows: list[dict[str, Any]]) -> list[str]:
+    fieldnames = list(rows[0].keys())
+    known = set(fieldnames)
+    extras = sorted(
+        {
+            field
+            for row in rows[1:]
+            for field in row
+            if field not in known
+        }
+    )
+    return fieldnames + extras
 
 
 def _write_markdown_report(

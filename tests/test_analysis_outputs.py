@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 from src.analysis.basic_error_analysis import run_basic_error_analysis
-from src.analysis.grouped_error_analysis import run_grouped_error_analysis
+from src.analysis.grouped_error_analysis import run_grouped_error_analysis, _write_csv
 from src.analysis.summarize_results import run_result_summary
 from src.analysis.threshold_calibration import run_threshold_calibration
 from src.analysis.threshold_comparison import run_threshold_comparison
@@ -176,6 +176,24 @@ def test_grouped_error_analysis_joins_metadata_and_writes_group_tables(tmp_path)
     assert ranking_position_1["samples"] == "1"
     assert ranking_position_1["hr_at_1"] == "0.0"
     assert (output_dir / "test_grouped_error_analysis.md").exists()
+
+
+def test_write_csv_accepts_dynamic_fields_after_first_row(tmp_path):
+    output_path = tmp_path / "dynamic.csv"
+
+    _write_csv(
+        output_path,
+        [
+            {"model": "base", "hr_at_1": 0.1},
+            {"model": "n_k0", "hr_at_1": 0.2, "hr_at_10": 0.8},
+        ],
+    )
+
+    rows = list(csv.DictReader(output_path.open()))
+
+    assert "hr_at_10" in rows[0]
+    assert rows[0]["hr_at_10"] == ""
+    assert rows[1]["hr_at_10"] == "0.8"
 
 
 def _write_config(root: Path) -> None:
