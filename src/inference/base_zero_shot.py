@@ -15,7 +15,7 @@ from src.data.config import (
 )
 from src.data.preprocess import load_movies
 from src.eval.binary_metrics import binary_metrics
-from src.eval.ranking_metrics import aggregate_ranking_metrics
+from src.eval.ranking_metrics import aggregate_ranking_metrics, default_ranking_ks
 from src.inference.prediction_io import (
     append_jsonl,
     read_jsonl,
@@ -52,6 +52,7 @@ def run_base_zero_shot(
     splits: list[str] | None = None,
     limit: int | None = None,
     batch_size: int = 1,
+    candidate_files: dict[str, str | Path] | None = None,
 ) -> dict[str, Any]:
     """运行 Base zero-shot 推理流程。
 
@@ -75,7 +76,12 @@ def run_base_zero_shot(
         build_tokenization_report(
             mode=mode,
             tokenizer=getattr(scorer, "tokenizer", None),
-            answers=_answers_to_check(config),
+            answers=_answers_to_check_for_candidate_files(
+                config,
+                dataset_key,
+                normalized_splits,
+                candidate_files,
+            ),
         ),
     )
 
@@ -83,7 +89,13 @@ def run_base_zero_shot(
     run_counts = {}
     for split_name in normalized_splits:
         y_samples = _read_y_samples(config, dataset_key, split_name, limit)
-        n_records = _read_candidate_records(config, dataset_key, split_name, limit)
+        n_records = _read_candidate_records(
+            config,
+            dataset_key,
+            split_name,
+            limit,
+            candidate_files=candidate_files,
+        )
 
         output_split = OUTPUT_SPLIT_NAMES[split_name]
         y_prediction_path = output_dir / f"y_{output_split}_predictions.jsonl"
@@ -127,6 +139,12 @@ def run_base_zero_shot(
         "splits": normalized_splits,
         "limit": limit,
         "batch_size": batch_size,
+        "candidate_files": _resolved_candidate_files_for_summary(
+            config,
+            dataset_key,
+            normalized_splits,
+            candidate_files,
+        ),
         "counts": run_counts,
         "outputs_dir": str(output_dir),
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -229,6 +247,8 @@ def _predict_n_records(
                 "ground_truth_index": record["ground_truth_index"],
                 "ground_truth_movie_id": str(record["ground_truth_movie_id"]),
                 "label": record["label"],
+                "label_set": label_set,
+                "candidate_generation": record.get("candidate_generation"),
                 "label_probabilities": probabilities,
                 "scores": scores,
                 "predicted_label": score["predicted_label"],
@@ -253,7 +273,10 @@ def _metrics_for_split(
     n_metric_records: list[dict[str, Any]],
 ) -> dict[str, Any]:
     binary = binary_metrics(y_metric_records)
-    ranking = aggregate_ranking_metrics(n_metric_records)
+    ranking = aggregate_ranking_metrics(
+        n_metric_records,
+        ks=_ranking_metric_ks(n_metric_records),
+    )
 
     return {
         "model": "base",
@@ -316,16 +339,31 @@ def _read_candidate_records(
     dataset_key: str,
     split_name: str,
     limit: int | None,
+    candidate_files: dict[str, str | Path] | None = None,
 ) -> list[dict[str, Any]]:
+    path = _candidate_path(config, dataset_key, split_name, candidate_files)
+    return read_jsonl(path, limit=limit)
+
+
+def _candidate_path(
+    config: dict[str, Any],
+    dataset_key: str,
+    split_name: str,
+    candidate_files: dict[str, str | Path] | None = None,
+) -> Path:
     save_key = "validation" if split_name == "validation" else "test"
+    if candidate_files and save_key in candidate_files:
+        path = Path(candidate_files[save_key])
+        if path.is_absolute():
+            return path
+        return Path(config["_repo_root"]) / path
     raw_path = config["candidates"]["save_files"][save_key]
-    path = resolve_repo_path_from_config(
+    return resolve_repo_path_from_config(
         config,
         raw_path,
         dataset_key=dataset_key,
         split_name=split_name,
     )
-    return read_jsonl(path, limit=limit)
 
 
 def _output_dir(config: dict[str, Any], dataset_key: str) -> Path:
@@ -347,6 +385,52 @@ def _answers_to_check(config: dict[str, Any]) -> list[str]:
     for answer in answer_config.get("candidate_labels", []):
         answers.append(str(answer))
     return list(dict.fromkeys(answers))
+
+
+def _answers_to_check_for_candidate_files(
+    config: dict[str, Any],
+    dataset_key: str,
+    splits: list[str],
+    candidate_files: dict[str, str | Path] | None = None,
+) -> list[str]:
+    answers = _answers_to_check(config)
+    for split_name in splits:
+        try:
+            path = _candidate_path(config, dataset_key, split_name, candidate_files)
+            for record in read_jsonl(path, limit=1):
+                answers.extend(str(label) for label in record.get("label_set", []))
+        except FileNotFoundError:
+            continue
+    return list(dict.fromkeys(answers))
+
+
+def _ranking_metric_ks(records: list[dict[str, Any]]) -> list[int]:
+    candidate_count = max((len(record["scores"]) for record in records), default=5)
+    return default_ranking_ks(candidate_count) or [candidate_count]
+
+
+def _resolved_candidate_files_for_summary(
+    config: dict[str, Any],
+    dataset_key: str,
+    splits: list[str],
+    candidate_files: dict[str, str | Path] | None = None,
+) -> dict[str, str]:
+    return {
+        split_name: str(_candidate_path(config, dataset_key, split_name, candidate_files))
+        for split_name in splits
+    }
+
+
+def _candidate_file_overrides(
+    valid_candidates: str | None,
+    test_candidates: str | None,
+) -> dict[str, str] | None:
+    overrides = {}
+    if valid_candidates:
+        overrides["validation"] = valid_candidates
+    if test_candidates:
+        overrides["test"] = test_candidates
+    return overrides or None
 
 
 def _normalize_splits(splits: list[str]) -> list[str]:
@@ -399,6 +483,8 @@ def parse_args() -> argparse.Namespace:
         default=1,
         help="推理 batch size；real 模式建议先试 8/16，再根据显存调整。",
     )
+    parser.add_argument("--valid-candidates", default=None)
+    parser.add_argument("--test-candidates", default=None)
     return parser.parse_args()
 
 
@@ -411,6 +497,10 @@ def main() -> None:
         splits=args.splits,
         limit=args.limit,
         batch_size=args.batch_size,
+        candidate_files=_candidate_file_overrides(
+            args.valid_candidates,
+            args.test_candidates,
+        ),
     )
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 

@@ -21,7 +21,11 @@ from src.data.config import (
     resolve_configured_output_path,
     resolve_repo_path_from_config,
 )
-from src.eval.ranking_metrics import ground_truth_rank, ranking_metrics_for_rank
+from src.eval.ranking_metrics import (
+    default_ranking_ks,
+    ground_truth_rank,
+    ranking_metrics_for_rank,
+)
 from src.inference.prediction_io import read_jsonl, write_json
 
 
@@ -65,6 +69,7 @@ def run_grouped_error_analysis(
     threshold_mode: str = "validation_best_f1",
     output_dir: str | Path | None = None,
     min_group_samples: int = 1,
+    candidate_files: dict[str, str | Path] | None = None,
 ) -> dict[str, Any]:
     """Join predictions to fixed samples and write grouped diagnostic tables."""
 
@@ -77,7 +82,14 @@ def run_grouped_error_analysis(
 
     user_activity, movie_popularity = _load_sequence_stats(config, dataset_key)
     y_metadata = _load_y_metadata(config, dataset_key, split_name, user_activity, movie_popularity)
-    n_metadata = _load_n_metadata(config, dataset_key, split_name, user_activity, movie_popularity)
+    n_metadata = _load_n_metadata(
+        config,
+        dataset_key,
+        split_name,
+        user_activity,
+        movie_popularity,
+        candidate_files,
+    )
 
     binary_specs = _binary_specs(config, dataset_key, y_run, m_runs, m_labels)
     ranking_specs = _ranking_specs(config, dataset_key, y_run, n_run, m_runs, m_labels)
@@ -136,6 +148,12 @@ def run_grouped_error_analysis(
             "split": split_name,
             "created_at_utc": datetime.now(timezone.utc).isoformat(),
             "threshold_mode": threshold_mode,
+            "candidate_files": _candidate_files_for_summary(
+                config,
+                dataset_key,
+                split_name,
+                candidate_files,
+            ),
             "min_group_samples": min_group_samples,
             "join_summaries": join_summaries,
             "binary": binary_rows,
@@ -287,8 +305,9 @@ def _load_n_metadata(
     split_name: str,
     user_activity: dict[str, int],
     movie_popularity: Counter[str],
+    candidate_files: dict[str, str | Path] | None,
 ) -> dict[str, Any]:
-    path = _candidate_path(config, dataset_key, split_name)
+    path = _candidate_path(config, dataset_key, split_name, candidate_files)
     rows = [
         _sample_metadata(record, user_activity, movie_popularity)
         for record in _iter_jsonl(path)
@@ -296,16 +315,49 @@ def _load_n_metadata(
     return _metadata_indexes(rows, task="ranking")
 
 
-def _candidate_path(config: dict[str, Any], dataset_key: str, split_name: str) -> Path:
-    candidate_files = config.get("candidates", {}).get("save_files", {})
+def _candidate_path(
+    config: dict[str, Any],
+    dataset_key: str,
+    split_name: str,
+    candidate_files: dict[str, str | Path] | None = None,
+) -> Path:
     candidate_key = "validation" if split_name == "validation" else "test"
-    if candidate_key in candidate_files:
+    if candidate_files and candidate_key in candidate_files:
+        path = Path(candidate_files[candidate_key])
+        if path.is_absolute():
+            return path
+        return Path(config["_repo_root"]) / path
+    configured_candidate_files = config.get("candidates", {}).get("save_files", {})
+    if candidate_key in configured_candidate_files:
         return resolve_repo_path_from_config(
             config,
-            candidate_files[candidate_key],
+            configured_candidate_files[candidate_key],
             dataset_key=dataset_key,
         )
     return resolve_configured_output_path(config, dataset_key, "next_item_samples", split_name)
+
+
+def _candidate_files_for_summary(
+    config: dict[str, Any],
+    dataset_key: str,
+    split_name: str,
+    candidate_files: dict[str, str | Path] | None = None,
+) -> dict[str, str]:
+    return {
+        split_name: str(_candidate_path(config, dataset_key, split_name, candidate_files))
+    }
+
+
+def _candidate_file_overrides(
+    valid_candidates: str | None,
+    test_candidates: str | None,
+) -> dict[str, str] | None:
+    overrides = {}
+    if valid_candidates:
+        overrides["validation"] = valid_candidates
+    if test_candidates:
+        overrides["test"] = test_candidates
+    return overrides or None
 
 
 def _sample_metadata(
@@ -559,24 +611,35 @@ def _ranking_group_rows(
 
 
 def _ranking_metrics(records: list[dict[str, Any]]) -> dict[str, Any]:
-    totals = {"HR@1": 0.0, "HR@5": 0.0, "NDCG@5": 0.0, "MRR": 0.0}
+    candidate_count = max((len(record["scores"]) for record in records), default=5)
+    metric_ks = default_ranking_ks(candidate_count) or [candidate_count]
+    totals = {"HR@1": 0.0, "MRR": 0.0}
+    for metric_k in metric_ks:
+        totals[f"HR@{metric_k}"] = 0.0
+        totals[f"NDCG@{metric_k}"] = 0.0
     rank_counts = Counter()
     for record in records:
-        metrics = ranking_metrics_for_rank(int(record["rank"]), k=5)
+        metrics = ranking_metrics_for_rank(int(record["rank"]), ks=metric_ks)
         for key, value in metrics.items():
             totals[key] += value
         rank_counts[int(record["rank"])] += 1
     sample_count = len(records)
-    return {
+    output = {
         "samples": sample_count,
-        "hr_at_1": _round(totals["HR@1"] / sample_count if sample_count else 0.0),
-        "hr_at_5": _round(totals["HR@5"] / sample_count if sample_count else 0.0),
-        "ndcg_at_5": _round(totals["NDCG@5"] / sample_count if sample_count else 0.0),
         "mrr": _round(totals["MRR"] / sample_count if sample_count else 0.0),
         "mean_rank": _round(mean(record["rank"] for record in records)),
         "mean_margin": _round(mean(record["margin"] for record in records)),
         "rank_distribution": json.dumps({str(key): rank_counts[key] for key in sorted(rank_counts)}, sort_keys=True),
     }
+    for metric_k in metric_ks:
+        output[f"hr_at_{metric_k}"] = _round(
+            totals[f"HR@{metric_k}"] / sample_count if sample_count else 0.0
+        )
+        output[f"ndcg_at_{metric_k}"] = _round(
+            totals[f"NDCG@{metric_k}"] / sample_count if sample_count else 0.0
+        )
+    output["hr_at_1"] = _round(totals["HR@1"] / sample_count if sample_count else 0.0)
+    return output
 
 
 def _groups(records: list[dict[str, Any]], group_field: str) -> dict[str, list[dict[str, Any]]]:
@@ -776,6 +839,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--output-dir", default=None)
     parser.add_argument("--min-group-samples", type=int, default=1)
+    parser.add_argument("--valid-candidates", default=None)
+    parser.add_argument("--test-candidates", default=None)
     return parser.parse_args()
 
 
@@ -792,6 +857,10 @@ def main() -> None:
         threshold_mode=args.threshold_mode,
         output_dir=args.output_dir,
         min_group_samples=args.min_group_samples,
+        candidate_files=_candidate_file_overrides(
+            args.valid_candidates,
+            args.test_candidates,
+        ),
     )
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 

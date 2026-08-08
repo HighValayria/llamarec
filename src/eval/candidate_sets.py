@@ -37,11 +37,25 @@ SPLIT_SEED_OFFSETS = {"validation": 101, "test": 202}
 def build_fixed_candidate_sets(
     config_path: str | Path,
     dataset_key: str | None = None,
+    candidate_num: int | None = None,
+    label_set: list[str] | None = None,
+    variant_name: str | None = None,
+    output_dir: str | Path | None = None,
+    seed: int | None = None,
+    shuffle_order: bool | None = None,
 ) -> dict[str, Any]:
     """生成并写出 validation/test 固定候选集。"""
 
     config = load_experiment_config(config_path)
     dataset_key = dataset_key or config["dataset"]["development"]
+    config = _candidate_variant_config(
+        config,
+        candidate_num=candidate_num,
+        label_set=label_set,
+        variant_name=variant_name,
+        seed=seed,
+        shuffle_order=shuffle_order,
+    )
     all_movie_ids = sorted(str(movie_id) for movie_id in load_movies(dataset_key, config))
     base_seed = int(config["seed"]["random_seed"])
 
@@ -69,11 +83,23 @@ def build_fixed_candidate_sets(
                 record,
                 candidate_num=int(config["candidates"]["candidate_num"]),
             )
-        output_path = _candidate_output_path(config, dataset_key, split_name)
+        output_path = _candidate_output_path(
+            config,
+            dataset_key,
+            split_name,
+            variant_name=variant_name,
+            output_dir=output_dir,
+        )
         _write_jsonl(output_path, records)
         summaries[split_name] = _candidate_summary(records, output_path)
 
-    return {"dataset": dataset_key, "candidate_sets": summaries}
+    return {
+        "dataset": dataset_key,
+        "variant_name": variant_name or "canonical",
+        "candidate_num": int(config["candidates"]["candidate_num"]),
+        "label_set": list(config["candidates"]["label_set"]),
+        "candidate_sets": summaries,
+    }
 
 
 def validate_candidate_record(
@@ -109,7 +135,7 @@ def _build_candidate_records(
 ) -> list[dict[str, Any]]:
     candidate_num = int(config["candidates"]["candidate_num"])
     negative_num = candidate_num - 1
-    label_set = list(config["candidates"].get("label_set", ["A", "B", "C", "D", "E"]))
+    label_set = _candidate_label_set(config, candidate_num)
     shuffle_order = bool(config["candidates"].get("shuffle_order", True))
 
     if len(label_set) < candidate_num:
@@ -145,11 +171,13 @@ def _build_candidate_records(
                 "label_set": label_set[:candidate_num],
                 "candidate_generation": {
                     "method": config["negative_sampling"]["method"],
+                    "variant_name": config["candidates"].get("variant_name", "canonical"),
                     "candidate_num": candidate_num,
                     "negative_num": negative_num,
                     "seed": int(config["seed"]["random_seed"])
                     + SPLIT_SEED_OFFSETS[split_name],
                     "pool": config["negative_sampling"]["pool"],
+                    "shuffle_order": shuffle_order,
                 },
             }
         )
@@ -158,7 +186,8 @@ def _build_candidate_records(
 
 
 def _candidate_summary(records: list[dict[str, Any]], output_path: Path) -> dict[str, Any]:
-    position_counts = {str(index): 0 for index in range(5)}
+    candidate_num = max((len(record["candidate_movie_ids"]) for record in records), default=0)
+    position_counts = {str(index): 0 for index in range(candidate_num)}
     for record in records:
         key = str(record["ground_truth_index"])
         position_counts[key] = position_counts.get(key, 0) + 1
@@ -166,6 +195,7 @@ def _candidate_summary(records: list[dict[str, Any]], output_path: Path) -> dict
     return {
         "path": str(output_path),
         "records": len(records),
+        "candidate_num": candidate_num,
         "ground_truth_index_distribution": position_counts,
     }
 
@@ -174,7 +204,25 @@ def _candidate_output_path(
     config: dict[str, Any],
     dataset_key: str,
     split_name: str,
+    variant_name: str | None = None,
+    output_dir: str | Path | None = None,
 ) -> Path:
+    output_split = "valid" if split_name == "validation" else "test"
+    if output_dir is not None:
+        path = Path(output_dir)
+        if not path.is_absolute():
+            path = Path(config["_repo_root"]) / path
+        return path / f"{output_split}.jsonl"
+    if variant_name:
+        return (
+            Path(config["_repo_root"])
+            / "data"
+            / "candidates"
+            / dataset_key
+            / "variants"
+            / variant_name
+            / f"{output_split}.jsonl"
+        )
     save_key = "validation" if split_name == "validation" else "test"
     raw_path = config["candidates"]["save_files"][save_key]
     return resolve_repo_path_from_config(
@@ -183,6 +231,70 @@ def _candidate_output_path(
         dataset_key=dataset_key,
         split_name=split_name,
     )
+
+
+def _candidate_variant_config(
+    config: dict[str, Any],
+    candidate_num: int | None,
+    label_set: list[str] | None,
+    variant_name: str | None,
+    seed: int | None,
+    shuffle_order: bool | None,
+) -> dict[str, Any]:
+    copied = dict(config)
+    copied["seed"] = dict(config.get("seed", {}))
+    copied["candidates"] = dict(config.get("candidates", {}))
+
+    if candidate_num is not None:
+        if candidate_num <= 1:
+            raise ValueError("candidate_num must be greater than 1")
+        copied["candidates"]["candidate_num"] = int(candidate_num)
+        copied["candidates"]["negative_num"] = int(candidate_num) - 1
+
+    resolved_candidate_num = int(copied["candidates"]["candidate_num"])
+    labels = list(label_set) if label_set is not None else _candidate_label_set(
+        copied,
+        resolved_candidate_num,
+    )
+    if len(labels) < resolved_candidate_num:
+        raise ValueError("label_set length must be at least candidate_num")
+    copied["candidates"]["label_set"] = labels[:resolved_candidate_num]
+    copied["candidates"]["variant_name"] = variant_name or copied["candidates"].get(
+        "variant_name",
+        "canonical",
+    )
+
+    if seed is not None:
+        copied["seed"]["random_seed"] = int(seed)
+    if shuffle_order is not None:
+        copied["candidates"]["shuffle_order"] = bool(shuffle_order)
+    return copied
+
+
+def _candidate_label_set(config: dict[str, Any], candidate_num: int) -> list[str]:
+    configured = list(config.get("candidates", {}).get("label_set", []))
+    if len(configured) >= candidate_num:
+        return configured[:candidate_num]
+    return spreadsheet_labels(candidate_num)
+
+
+def spreadsheet_labels(count: int) -> list[str]:
+    """Return A, B, ..., Z, AA, AB style labels for candidate variants."""
+
+    if count <= 0:
+        raise ValueError("label count must be positive")
+    return [_spreadsheet_label(index) for index in range(count)]
+
+
+def _spreadsheet_label(index: int) -> str:
+    label = ""
+    value = index
+    while True:
+        value, remainder = divmod(value, 26)
+        label = chr(ord("A") + remainder) + label
+        if value == 0:
+            return label
+        value -= 1
 
 
 def _read_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -213,12 +325,27 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="数据集 key；默认使用配置中的 dataset.development",
     )
+    parser.add_argument("--candidate-num", type=int, default=None)
+    parser.add_argument("--label-set", nargs="+", default=None)
+    parser.add_argument("--variant-name", default=None)
+    parser.add_argument("--output-dir", default=None)
+    parser.add_argument("--seed", type=int, default=None)
+    parser.add_argument("--no-shuffle-order", action="store_true")
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    summary = build_fixed_candidate_sets(args.config, dataset_key=args.dataset)
+    summary = build_fixed_candidate_sets(
+        args.config,
+        dataset_key=args.dataset,
+        candidate_num=args.candidate_num,
+        label_set=args.label_set,
+        variant_name=args.variant_name,
+        output_dir=args.output_dir,
+        seed=args.seed,
+        shuffle_order=False if args.no_shuffle_order else None,
+    )
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 
 

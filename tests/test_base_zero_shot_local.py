@@ -1,5 +1,6 @@
 """STEP 4 测试：Base zero-shot 本地 dry-run。"""
 
+import json
 from pathlib import Path
 
 from src.inference.base_zero_shot import run_base_zero_shot
@@ -197,3 +198,60 @@ def test_base_zero_shot_mock_writes_predictions_and_metrics():
     assert len(n_predictions) == 3
     assert (output_dir / "valid_metrics.json").exists()
     assert (output_dir / "tokenization_report.json").exists()
+
+
+def test_base_zero_shot_mock_accepts_candidate_file_override(tmp_path):
+    candidate_path = tmp_path / "valid.jsonl"
+    labels = [chr(ord("A") + index) for index in range(20)]
+    record = {
+        "dataset": "movielens-100k",
+        "split": "validation",
+        "source_task": "N",
+        "source_sample_index": 0,
+        "user_id": "1",
+        "history": [
+            {
+                "movie_id": "1",
+                "title": "History Movie",
+                "rating": 5.0,
+                "timestamp": 1,
+                "sequence_index": 0,
+            }
+        ],
+        "target": {
+            "movie_id": "2",
+            "title": "Ground Truth",
+            "rating": 4.0,
+            "timestamp": 2,
+            "sequence_index": 1,
+        },
+        "candidate_movie_ids": [str(index) for index in range(2, 22)],
+        "ground_truth_movie_id": "2",
+        "ground_truth_index": 0,
+        "label": "A",
+        "label_set": labels,
+        "candidate_generation": {
+            "variant_name": "k20_test",
+            "candidate_num": 20,
+        },
+    }
+    candidate_path.write_text(json.dumps(record) + "\n", encoding="utf-8")
+
+    summary = run_base_zero_shot(
+        config_path="configs/experiment.yaml",
+        dataset_key="movielens-100k",
+        mode="mock",
+        splits=["validation"],
+        limit=1,
+        batch_size=1,
+        candidate_files={"validation": candidate_path},
+    )
+
+    output_dir = Path(summary["outputs_dir"])
+    n_predictions = read_jsonl(output_dir / "n_valid_predictions.jsonl")
+    metrics = summary["metrics"]["validation"]["ranking"]
+
+    assert len(n_predictions[0]["scores"]) == 20
+    assert n_predictions[0]["candidate_generation"]["variant_name"] == "k20_test"
+    assert "HR@20" in metrics
+    assert summary["candidate_files"]["validation"] == str(candidate_path)

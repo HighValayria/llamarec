@@ -2,7 +2,11 @@
 
 from random import Random
 
-from src.eval.candidate_sets import _build_candidate_records, validate_candidate_record
+from src.eval.candidate_sets import (
+    _build_candidate_records,
+    spreadsheet_labels,
+    validate_candidate_record,
+)
 
 
 def test_candidate_record_contains_ground_truth_once():
@@ -22,6 +26,34 @@ def test_ground_truth_position_is_not_forced_to_zero():
     positions = {record["ground_truth_index"] for record in records}
 
     assert positions != {0}
+
+
+def test_spreadsheet_labels_support_large_candidate_sets():
+    labels = spreadsheet_labels(28)
+
+    assert labels[:5] == ["A", "B", "C", "D", "E"]
+    assert labels[25:] == ["Z", "AA", "AB"]
+
+
+def test_candidate_records_support_twenty_candidate_variant():
+    config = _toy_config()
+    config["candidates"]["candidate_num"] = 20
+    config["candidates"]["label_set"] = spreadsheet_labels(20)
+    config["candidates"]["variant_name"] = "k20_seed42"
+    records = _build_candidate_records(
+        source_samples=[_sample("u1", "B", 2)],
+        all_movie_ids=[str(index) for index in range(30)] + ["B"],
+        config=config,
+        dataset_key="toy",
+        split_name="validation",
+        rng=Random(42),
+    )
+
+    record = records[0]
+    validate_candidate_record(record, candidate_num=20)
+    assert len(record["label_set"]) == 20
+    assert record["candidate_generation"]["variant_name"] == "k20_seed42"
+    assert record["candidate_generation"]["candidate_num"] == 20
 
 
 def _toy_candidate_records(seed):

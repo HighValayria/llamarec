@@ -16,10 +16,13 @@ from src.inference.base_zero_shot import (
     OUTPUT_SPLIT_NAMES,
     _answers_to_check,
     _batched,
+    _candidate_file_overrides,
     _config_snapshot,
     _normalize_splits,
     _progress,
     _read_candidate_records,
+    _ranking_metric_ks,
+    _resolved_candidate_files_for_summary,
     _read_y_samples,
     _score_yesno_batch,
 )
@@ -43,6 +46,7 @@ def run_y_adapter_evaluation(
     limit: int | None = None,
     batch_size: int = 1,
     output_dir: str | Path | None = None,
+    candidate_files: dict[str, str | Path] | None = None,
 ) -> dict[str, Any]:
     """评测 Y adapter 的偏好预测能力和候选排序能力。
 
@@ -82,7 +86,13 @@ def run_y_adapter_evaluation(
     run_counts = {}
     for split_name in normalized_splits:
         y_samples = _read_y_samples(config, dataset_key, split_name, limit)
-        n_records = _read_candidate_records(config, dataset_key, split_name, limit)
+        n_records = _read_candidate_records(
+            config,
+            dataset_key,
+            split_name,
+            limit,
+            candidate_files=candidate_files,
+        )
 
         output_split = OUTPUT_SPLIT_NAMES[split_name]
         y_prediction_path = output_path / f"y_{output_split}_predictions.jsonl"
@@ -130,6 +140,12 @@ def run_y_adapter_evaluation(
         "limit": limit,
         "batch_size": batch_size,
         "adapter_dir": str(resolved_adapter_dir) if resolved_adapter_dir else None,
+        "candidate_files": _resolved_candidate_files_for_summary(
+            config,
+            dataset_key,
+            normalized_splits,
+            candidate_files,
+        ),
         "counts": run_counts,
         "outputs_dir": str(output_path),
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -143,6 +159,12 @@ def run_y_adapter_evaluation(
         "mode": mode,
         "batch_size": batch_size,
         "adapter_dir": str(resolved_adapter_dir) if resolved_adapter_dir else None,
+        "candidate_files": _resolved_candidate_files_for_summary(
+            config,
+            dataset_key,
+            normalized_splits,
+            candidate_files,
+        ),
         "outputs_dir": str(output_path),
         "counts": run_counts,
         "metrics": metrics_by_split,
@@ -254,6 +276,8 @@ def _predict_n_records_by_preference(
                 "ground_truth_index": record["ground_truth_index"],
                 "ground_truth_movie_id": str(record["ground_truth_movie_id"]),
                 "label": record["label"],
+                "label_set": list(record.get("label_set", [])),
+                "candidate_generation": record.get("candidate_generation"),
                 "candidate_p_yes": scores_for_ranking,
                 "candidate_p_no": list(grouped["p_no"]),
                 "scores": scores_for_ranking,
@@ -280,7 +304,7 @@ def _metrics_for_split(
     adapter_dir: Path | None,
 ) -> dict[str, Any]:
     binary = binary_metrics(y_metric_records)
-    ranking = aggregate_ranking_metrics(n_metric_records)
+    ranking = aggregate_ranking_metrics(n_metric_records, ks=_ranking_metric_ks(n_metric_records))
 
     return {
         "model": "y_k0",
@@ -390,6 +414,8 @@ def parse_args() -> argparse.Namespace:
         help="推理 prompt batch size；N-by-Y 会把每个候选都计作一个 prompt。",
     )
     parser.add_argument("--output-dir", default=None, help="覆盖评测输出目录")
+    parser.add_argument("--valid-candidates", default=None)
+    parser.add_argument("--test-candidates", default=None)
     return parser.parse_args()
 
 
@@ -404,6 +430,10 @@ def main() -> None:
         limit=args.limit,
         batch_size=args.batch_size,
         output_dir=args.output_dir,
+        candidate_files=_candidate_file_overrides(
+            args.valid_candidates,
+            args.test_candidates,
+        ),
     )
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 

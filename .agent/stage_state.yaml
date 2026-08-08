@@ -1,0 +1,26 @@
+stage:
+  status: active
+  name: phase-2a-ranking-robustness-protocol
+  goal: Phase 2A ranking robustness protocol for candidate generation, ranking evaluation, tokenizer label checks, and analysis outputs.
+  scope: candidate generation, ranking evaluation, tokenizer label checks, analysis outputs
+  started: 2026-08-08
+  closed:
+
+wiki_access:
+  read_authorized: false
+  read_authorized_by: user
+  read_authorized_at: 2026-08-08
+  read_revoked_at: 2026-08-08
+  write_authorized: false
+  write_authorized_by:
+  write_authorized_at:
+  write_revoked_at:
+
+current_task: .agent/current_task.md
+template: .agent/templates/current_task.md
+max_current_task_chars: 12000
+
+notes:
+  - Direct wiki read was used once for Phase 2A stage setup and compressed into current_task.
+  - Formal wiki reads are disabled for the active stage unless the user grants new stage-level read authorization.
+  - Formal wiki writes are disabled unless the user grants one-time stage-end write authorization.

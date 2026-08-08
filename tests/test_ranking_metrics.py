@@ -36,3 +36,17 @@ def test_aggregate_ranking_metrics():
     assert metrics["HR@1"] == 0.5
     assert metrics["HR@5"] == 1.0
     assert metrics["MRR"] == (1.0 + 1 / 3) / 2
+
+
+def test_aggregate_ranking_metrics_supports_multiple_top_ks():
+    records = [
+        {"scores": [1.0 - index * 0.01 for index in range(20)], "ground_truth_index": 9},
+        {"scores": [1.0 - index * 0.01 for index in range(20)], "ground_truth_index": 14},
+    ]
+
+    metrics = aggregate_ranking_metrics(records, ks=[5, 10, 20])
+
+    assert metrics["HR@5"] == 0.0
+    assert metrics["HR@10"] == 0.5
+    assert metrics["HR@20"] == 1.0
+    assert "NDCG@10" in metrics

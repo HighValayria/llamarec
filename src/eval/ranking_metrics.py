@@ -25,32 +25,46 @@ def ground_truth_rank(scores: list[float], ground_truth_index: int) -> int:
     return ranked_indices.index(ground_truth_index) + 1
 
 
-def ranking_metrics_for_rank(rank: int, k: int = 5) -> dict[str, float]:
+def ranking_metrics_for_rank(
+    rank: int,
+    k: int = 5,
+    ks: list[int] | tuple[int, ...] | None = None,
+) -> dict[str, float]:
     """基于单个 ground truth rank 计算 HR/NDCG/MRR。"""
 
     if rank <= 0:
         raise ValueError("rank 必须是 1-based 正整数")
 
-    return {
+    metric_ks = _normalize_ks(ks if ks is not None else [k])
+    metrics = {
         "HR@1": 1.0 if rank <= 1 else 0.0,
-        f"HR@{k}": 1.0 if rank <= k else 0.0,
-        f"NDCG@{k}": (1.0 / math.log2(rank + 1)) if rank <= k else 0.0,
         "MRR": 1.0 / rank,
     }
+    for metric_k in metric_ks:
+        metrics[f"HR@{metric_k}"] = 1.0 if rank <= metric_k else 0.0
+        metrics[f"NDCG@{metric_k}"] = (
+            1.0 / math.log2(rank + 1)
+        ) if rank <= metric_k else 0.0
+    return metrics
 
 
 def ranking_metrics_for_scores(
     scores: list[float],
     ground_truth_index: int,
     k: int = 5,
+    ks: list[int] | tuple[int, ...] | None = None,
 ) -> dict[str, float]:
     """基于候选分数计算单条样本的 ranking 指标。"""
 
     rank = ground_truth_rank(scores, ground_truth_index)
-    return ranking_metrics_for_rank(rank, k=k)
+    return ranking_metrics_for_rank(rank, k=k, ks=ks)
 
 
-def aggregate_ranking_metrics(records: list[dict[str, Any]], k: int = 5) -> dict[str, float]:
+def aggregate_ranking_metrics(
+    records: list[dict[str, Any]],
+    k: int = 5,
+    ks: list[int] | tuple[int, ...] | None = None,
+) -> dict[str, float]:
     """聚合多条预测记录的 ranking 指标。
 
     每条记录需要包含：
@@ -58,17 +72,43 @@ def aggregate_ranking_metrics(records: list[dict[str, Any]], k: int = 5) -> dict
     - `ground_truth_index`: 正确候选位置。
     """
 
+    metric_ks = _normalize_ks(ks if ks is not None else [k])
     if not records:
-        return {"HR@1": 0.0, f"HR@{k}": 0.0, f"NDCG@{k}": 0.0, "MRR": 0.0}
+        totals = {"HR@1": 0.0, "MRR": 0.0}
+        for metric_k in metric_ks:
+            totals[f"HR@{metric_k}"] = 0.0
+            totals[f"NDCG@{metric_k}"] = 0.0
+        return totals
 
-    totals = {"HR@1": 0.0, f"HR@{k}": 0.0, f"NDCG@{k}": 0.0, "MRR": 0.0}
+    totals = {"HR@1": 0.0, "MRR": 0.0}
+    for metric_k in metric_ks:
+        totals[f"HR@{metric_k}"] = 0.0
+        totals[f"NDCG@{metric_k}"] = 0.0
     for record in records:
         metrics = ranking_metrics_for_scores(
             [float(score) for score in record["scores"]],
             int(record["ground_truth_index"]),
             k=k,
+            ks=metric_ks,
         )
         for key, value in metrics.items():
             totals[key] += value
 
     return {key: value / len(records) for key, value in totals.items()}
+
+
+def default_ranking_ks(candidate_count: int) -> list[int]:
+    """Default top-k cutoffs for candidate sets while preserving HR@5."""
+
+    return [metric_k for metric_k in (5, 10, 20, 50) if metric_k <= candidate_count]
+
+
+def _normalize_ks(ks: list[int] | tuple[int, ...]) -> list[int]:
+    normalized = []
+    for metric_k in ks:
+        value = int(metric_k)
+        if value <= 0:
+            raise ValueError("ranking k values must be positive")
+        if value not in normalized:
+            normalized.append(value)
+    return normalized
