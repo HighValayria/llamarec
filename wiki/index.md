@@ -5,8 +5,8 @@ status: current
 authority: descriptive
 source: mixed
 created: 2026-07-28
-updated: 2026-08-06
-last_verified: 2026-08-06
+updated: 2026-08-09
+last_verified: 2026-08-09
 related_code: []
 ---
 
@@ -49,6 +49,7 @@ Accepted or currently active ADR links should be listed here.
 - [MVP Execution Status and Findings](reports/mvp_execution_status_and_findings.md)
 - [Phase 1.5 STEP A Repository Check](reports/phase_1_5_step_a_repository_check.md)
 - [Phase 1.5 Threshold and Grouped Diagnostics](reports/phase-1-5-threshold-and-grouped-diagnostics.md)
+- [Phase 2A Ranking Robustness](reports/phase-2a-ranking-robustness.md)
 
 ## History
 

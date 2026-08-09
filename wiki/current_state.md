@@ -5,28 +5,29 @@ status: current
 authority: descriptive
 source: mixed
 created: 2026-07-28
-updated: 2026-08-06
-last_verified: 2026-08-06
+updated: 2026-08-09
+last_verified: 2026-08-09
 related_code:
   - task.md
   - README.md
   - configs/experiment.yaml
-  - src/analysis/threshold_comparison.py
+  - src/eval/candidate_sets.py
+  - src/eval/ranking_metrics.py
+  - src/inference/base_zero_shot.py
+  - src/inference/evaluate_y_adapter.py
+  - src/inference/evaluate_n_adapter.py
+  - src/inference/evaluate_m_adapter.py
+  - src/inference/tokenization_check.py
   - src/analysis/grouped_error_analysis.py
-  - src/analysis/threshold_calibration.py
-  - src/analysis/summarize_results.py
-  - src/analysis/basic_error_analysis.py
+  - src/analysis/phase2a_robustness_report.py
+  - tests/test_candidate_sets.py
+  - tests/test_ranking_metrics.py
+  - tests/test_base_zero_shot_local.py
+  - tests/test_n_m_adapter_evaluation.py
   - tests/test_analysis_outputs.py
-  - wiki/architecture/mvp_experiment_contract.md
-  - wiki/modules/movielens_data_layer.md
   - wiki/modules/evaluation_layer.md
-  - wiki/modules/inference_layer.md
-  - wiki/modules/training_layer.md
-  - wiki/reports/movielens_1m_mvp_results.md
-  - wiki/reports/m_multitask_interference_diagnosis_results.md
-  - wiki/reports/mvp_execution_status_and_findings.md
-  - wiki/reports/phase_1_5_step_a_repository_check.md
   - wiki/reports/phase-1-5-threshold-and-grouped-diagnostics.md
+  - wiki/reports/phase-2a-ranking-robustness.md
 ---
 
 # Current Project State
@@ -36,7 +37,7 @@ related_code:
 The project builds a reliable and reproducible LLM recommendation fine-tuning
 MVP on MovieLens. MovieLens-1M is the current formal result dataset.
 MovieLens-100K is used for development and workflow validation. MovieLens-32M is
-deferred to Phase 2 or stress-test work.
+deferred to later stress-test work.
 
 The active task definitions are:
 
@@ -59,84 +60,75 @@ Core reports are:
 - [MVP Execution Status and Findings](reports/mvp_execution_status_and_findings.md)
 - [Phase 1.5 STEP A Repository Check](reports/phase_1_5_step_a_repository_check.md)
 - [Phase 1.5 Threshold and Grouped Diagnostics](reports/phase-1-5-threshold-and-grouped-diagnostics.md)
+- [Phase 2A Ranking Robustness](reports/phase-2a-ranking-robustness.md)
 
 The current best dedicated binary model is Y-K0. The current best dedicated
 ranking model is N-K0. The current best multi-task diagnostic model is M1
 (`diag_m1_1m_m_200k_3000`).
 
-## Phase 1.5 STEP B/C Status
+## Phase 2A Status
 
-Phase 1.5 STEP B/C is complete for the current Stage 1 scope.
+Phase 2A ranking robustness is complete for Base, N-K0, and M1 on MovieLens-1M.
+The implemented protocol covers:
 
-STEP B created the unified binary threshold comparison entry point:
+- candidate-size variants `k20_seed42` and `k50_seed42`;
+- order-permutation variants `k5_perm_seed43` and `k20_perm_seed43`;
+- explicit candidate-file overrides for Base/Y/N/M evaluation;
+- dynamic ranking metrics for larger candidate sets;
+- tokenizer label checks from actual candidate files;
+- explicit-variant CSV/JSON/Markdown reporting through
+  `src/analysis/phase2a_robustness_report.py`.
 
-- `src/analysis/threshold_comparison.py`
+Cloud output:
 
-It writes separate tables for:
+- `/root/llamarec/outputs/phase2a/ranking_robustness/phase2a_ranking_robustness_report.md`
 
-- threshold-free AUC;
-- fixed threshold `0.5`;
-- validation-calibrated best-F1 threshold.
+Main Phase 2A findings:
 
-STEP C created the grouped diagnostics entry point:
+- Order sensitivity is small. At k20, HR@1 changes are Base `-0.0010572687`,
+  N-K0 `+0.0065198238`, and M1 `+0.0047577093`.
+- Candidate-size expansion is the dominant stressor. HR@1 drops sharply from
+  k5 permutation to k20 and again from k20 to k50.
+- N-K0 remains above M1 for every tested robustness variant. The N-K0 minus M1
+  HR@1 gap grows from `+0.0218502203` on k5 permutation to `+0.0775330396` on
+  k50.
+- k50 labels `A` through `AX` are single-token for the configured Llama
+  tokenizer, so k50 can use the same single-token candidate-label logits path as
+  k5/k20.
+- Popularity remains a major robustness axis. On k20 test, N-K0 HR@1 is
+  `0.0769230769` for popularity `<=10` and `0.5327525008` for popularity
+  `>500`; M1 has the same cold-item weakness and lower popular-item HR@1.
 
-- `src/analysis/grouped_error_analysis.py`
+## Prior Findings
 
-It joins predictions back to fixed Y samples, fixed N candidate records, and
-full-sequence-derived user/movie statistics.
+Phase 1.5 showed:
 
-Cloud outputs:
-
-- `/root/llamarec/outputs/calibration/movielens-1m/threshold_comparison/threshold_comparison.md`
-- `/root/llamarec/outputs/error_analysis/movielens-1m/grouped/test_grouped_error_analysis.md`
-- `/root/llamarec/outputs/error_analysis/movielens-1m/grouped/valid_grouped_error_analysis.md`
-
-## Current Findings
-
-Binary findings:
-
-- On test, calibrated F1 is Y-K0 `0.7830635118`, M1 `0.7817788523`, M2
-  `0.7734258800`, M0 `0.7687245753`, Base `0.7414450771`.
-- On validation, calibrated F1 is Y-K0 `0.7857975746`, M1 `0.7816474504`, M2
-  `0.7748727441`, M0 `0.7659929848`, Base `0.7422829168`.
-- M1 nearly matches Y-K0 after validation threshold calibration.
-- M1's fixed `0.5` threshold underestimates its binary capacity; its calibrated
-  threshold is `0.3208213008`.
-
-Ranking findings:
-
-- On test, HR@1 is N-K0 `0.7189427313`, M1 `0.6949779736`, M0 `0.6717180617`,
-  M2 `0.6548017621`, Base `0.3166519824`, Y-K0 `0.3048458150`.
-- On validation, HR@1 is N-K0 `0.7215859031`, M1 `0.7064317181`, M0
-  `0.6747136564`, M2 `0.6650220264`, Y-K0 `0.3171806167`, Base
-  `0.3170044053`.
-- M1 is the strongest multi-task ranking variant but remains below N-K0.
+- On binary calibrated F1, Y-K0 is best and M1 nearly matches it.
+- On canonical 5-candidate ranking, N-K0 is best and M1 is the strongest M
+  variant but remains below N-K0.
 - Y-K0 ranking behaves like preference scoring, not next-interaction prediction.
-
-Grouped diagnostic findings:
-
-- Target popularity is a major ranking axis. N-K0 test HR@1 is `0.8167150694`
-  for popularity `>500` but `0.1923076923` for popularity `<=10`.
-- Validation confirms the same direction: N-K0 HR@1 is `0.8156407035` for
-  popularity `>500` but `0.0666666667` for popularity `<=10`.
-- Y-K0 ranking is rating-sensitive: validation HR@1 rises from `0.1077844311`
-  for rating `1.0` to `0.4990006662` for rating `5.0`.
+- Target popularity is a major ranking diagnostic axis.
 
 ## Current Interpretation
 
 M1 is the best current multi-task tradeoff. It nearly matches Y-K0 on calibrated
 binary metrics and is the strongest M variant on ranking, but it does not exceed
-N-K0. Therefore the current result is a useful multi-task compromise, not a claim
-that M has fully surpassed the dedicated single-task models.
+N-K0. Phase 2A strengthens this interpretation: as candidate sets become larger,
+the dedicated next-item model N-K0 is more robust than M1.
 
 ## Current Boundaries
 
 Do not start M3, KAR, hard negatives, SASRec, 7B models, multi-seed experiments,
-MovieLens-32M full training, candidate_num=20/50, or candidate-order robustness
-inside this stage.
+or MovieLens-32M full training without a new scoped stage.
 
-Future ranking robustness work should first define explicit candidate-size and
-candidate-order protocols, separate output paths, and tokenizer label checks.
+Reasonable next work:
+
+- write the paper/report interpretation around M1 as a tradeoff rather than a
+  replacement for N-K0;
+- optionally run Y-K0 explicit-variant robustness as a preference-ranking
+  control;
+- design a later phase focused on cold-item robustness or stronger next-item
+  supervision.
 
 ## Data Split Contract
 
@@ -150,7 +142,8 @@ Y and N do not require the exact same user set:
 
 ```text
 Base-Y / Y-K0 / M-Y share the fixed Y validation/test set.
-Base-N / N-K0 / M-N share the fixed N validation/test candidate set.
+Base-N / N-K0 / M-N share the fixed N validation/test candidate set for each
+evaluated candidate variant.
 ```
 
 Y can produce multiple targets in the same timestamp bucket with the same strict
