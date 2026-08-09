@@ -7,6 +7,7 @@ from pathlib import Path
 from src.analysis.basic_error_analysis import run_basic_error_analysis
 from src.analysis.grouped_error_analysis import run_grouped_error_analysis, _write_csv
 from src.analysis.phase2a_robustness_report import run_phase2a_robustness_report
+from src.analysis.phase2b_result_synthesis import run_phase2b_result_synthesis
 from src.analysis.summarize_results import run_result_summary
 from src.analysis.threshold_calibration import run_threshold_calibration
 from src.analysis.threshold_comparison import run_threshold_comparison
@@ -222,6 +223,36 @@ def test_phase2a_robustness_report_writes_variant_metrics_and_deltas(tmp_path):
     assert (input_dir / "phase2a_ranking_robustness_report.md").exists()
 
 
+def test_phase2b_result_synthesis_writes_paper_ready_tables(tmp_path):
+    inputs = _write_phase2b_inputs(tmp_path)
+
+    summary = run_phase2b_result_synthesis(
+        threshold_json=inputs["threshold_json"],
+        grouped_json=inputs["grouped_json"],
+        phase2a_metrics_json=inputs["phase2a_metrics_json"],
+        phase2a_comparison_csv=inputs["phase2a_comparison_csv"],
+        output_dir=tmp_path / "outputs" / "phase2b" / "result_synthesis",
+        dataset_key="toy",
+    )
+
+    output_dir = Path(summary["output_dir"])
+    binary_rows = list(csv.DictReader((output_dir / "phase2b_binary_calibrated_test.csv").open()))
+    ranking_rows = list(csv.DictReader((output_dir / "phase2b_canonical_ranking_test.csv").open()))
+    robustness_rows = list(csv.DictReader((output_dir / "phase2b_robustness_test.csv").open()))
+    claims = json.loads((output_dir / "phase2b_paper_ready_claims.json").read_text(encoding="utf-8"))
+    report = (output_dir / "phase2b_result_synthesis.md").read_text(encoding="utf-8")
+
+    assert summary["rows"]["binary_calibrated_test"] == 2
+    assert summary["rows"]["canonical_ranking_test"] == 2
+    assert summary["rows"]["robustness_test"] == 4
+    assert binary_rows[0]["model"] == "Y-K0"
+    assert ranking_rows[0]["model"] == "N-K0"
+    assert robustness_rows[0]["variant"] == "k20_seed42"
+    assert any(claim["topic"] == "multi_task_ranking_boundary" for claim in claims)
+    assert "Phase 2B Result Synthesis" in report
+    assert "Do not claim that M1 surpasses" in report
+
+
 def _write_config(root: Path) -> None:
     config_dir = root / "configs"
     config_dir.mkdir(parents=True)
@@ -291,6 +322,144 @@ def _write_phase2a_metrics(root: Path) -> None:
             },
         }
         _write_json(root / run_dir / "test_metrics.json", payload)
+
+
+def _write_phase2b_inputs(root: Path) -> dict[str, Path]:
+    threshold_json = root / "threshold_comparison.json"
+    grouped_json = root / "test_grouped_error_analysis.json"
+    phase2a_metrics_json = root / "phase2a_ranking_robustness_metrics.json"
+    phase2a_comparison_csv = root / "phase2a_ranking_robustness_comparison.csv"
+
+    _write_json(
+        threshold_json,
+        {
+            "dataset": "toy",
+            "tables": {
+                "validation_calibrated": [
+                    {
+                        "model": "Y-K0",
+                        "run_name": "run_y",
+                        "split": "test",
+                        "threshold": 0.4,
+                        "auc": 0.78,
+                        "f1": 0.80,
+                        "accuracy": 0.70,
+                        "precision": 0.72,
+                        "recall": 0.89,
+                        "fp": 3,
+                        "fn": 1,
+                    },
+                    {
+                        "model": "M1",
+                        "run_name": "run_m1",
+                        "split": "test",
+                        "threshold": 0.32,
+                        "auc": 0.77,
+                        "f1": 0.79,
+                        "accuracy": 0.71,
+                        "precision": 0.74,
+                        "recall": 0.86,
+                        "fp": 2,
+                        "fn": 2,
+                    },
+                ]
+            },
+        },
+    )
+    _write_json(
+        grouped_json,
+        {
+            "dataset": "toy",
+            "split": "test",
+            "ranking": [
+                {
+                    "model": "N-K0",
+                    "run_name": "run_n",
+                    "split": "test",
+                    "group_field": "all",
+                    "group_value": "ALL",
+                    "samples": 2,
+                    "hr_at_1": 0.72,
+                    "hr_at_5": 1.0,
+                    "ndcg_at_5": 0.88,
+                    "mrr": 0.84,
+                    "mean_rank": 1.4,
+                    "mean_margin": 0.37,
+                },
+                {
+                    "model": "M1",
+                    "run_name": "run_m1",
+                    "split": "test",
+                    "group_field": "all",
+                    "group_value": "ALL",
+                    "samples": 2,
+                    "hr_at_1": 0.69,
+                    "hr_at_5": 1.0,
+                    "ndcg_at_5": 0.86,
+                    "mrr": 0.82,
+                    "mean_rank": 1.5,
+                    "mean_margin": 0.33,
+                },
+            ],
+        },
+    )
+    _write_json(
+        phase2a_metrics_json,
+        [
+            _phase2a_metric_row("n_k0", "k20_seed42", 0.42, 0.79, 0.58),
+            _phase2a_metric_row("m1", "k20_seed42", 0.37, 0.70, 0.53),
+            _phase2a_metric_row("n_k0", "k50_seed42", 0.20, 0.44, 0.32),
+            _phase2a_metric_row("m1", "k50_seed42", 0.12, 0.31, 0.23),
+        ],
+    )
+    _write_csv_rows(
+        phase2a_comparison_csv,
+        [
+            {
+                "comparison": "n_k0_minus_m1",
+                "variant": "k20_seed42",
+                "delta_HR@1": 0.05,
+                "delta_HR@5": 0.09,
+                "delta_NDCG@5": 0.07,
+                "delta_MRR": 0.05,
+            },
+            {
+                "comparison": "n_k0_k50_minus_k20",
+                "variant": "candidate_size",
+                "delta_HR@1": -0.22,
+                "delta_HR@5": -0.35,
+                "delta_NDCG@5": -0.29,
+                "delta_MRR": -0.26,
+            },
+        ],
+    )
+    return {
+        "threshold_json": threshold_json,
+        "grouped_json": grouped_json,
+        "phase2a_metrics_json": phase2a_metrics_json,
+        "phase2a_comparison_csv": phase2a_comparison_csv,
+    }
+
+
+def _phase2a_metric_row(model_key: str, variant: str, hr_at_1: float, hr_at_5: float, mrr: float):
+    return {
+        "model_key": model_key,
+        "variant": variant,
+        "split": "test",
+        "samples": 2,
+        "HR@1": hr_at_1,
+        "HR@5": hr_at_5,
+        "NDCG@5": hr_at_5 - 0.1,
+        "MRR": mrr,
+    }
+
+
+def _write_csv_rows(path: Path, rows: list[dict]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
+        writer.writeheader()
+        writer.writerows(rows)
 
 
 def _metrics(binary_auc, hr_at_1):

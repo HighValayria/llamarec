@@ -21,6 +21,9 @@ artifacts. They do not train or re-run models.
 - `phase2a_robustness_report.py`: Phase 2A ranking robustness entry point. It
   reads explicit candidate-variant metric directories and writes CSV/JSON plus a
   Markdown report without mixing canonical output paths into variant analysis.
+- `phase2b_result_synthesis.py`: Phase 2B synthesis entry point. It reads
+  existing Phase 1.5 and Phase 2A analysis artifacts and writes paper-ready
+  CSV/JSON/Markdown tables plus cautious interpretation text.
 
 ## Phase 1.5 STEP B Example
 
@@ -90,4 +93,27 @@ phase2a_ranking_robustness_metrics.csv
 phase2a_ranking_robustness_metrics.json
 phase2a_ranking_robustness_comparison.csv
 phase2a_ranking_robustness_report.md
+```
+
+## Phase 2B Result Synthesis Example
+
+```bash
+python -m src.analysis.phase2b_result_synthesis \
+  --dataset movielens-1m \
+  --threshold-json outputs/calibration/movielens-1m/threshold_comparison/threshold_comparison.json \
+  --grouped-json outputs/error_analysis/movielens-1m/grouped/test_grouped_error_analysis.json \
+  --phase2a-metrics-json outputs/phase2a/ranking_robustness/phase2a_ranking_robustness_metrics.json \
+  --phase2a-comparison-csv outputs/phase2a/ranking_robustness/phase2a_ranking_robustness_comparison.csv \
+  --output-dir outputs/phase2b/result_synthesis
+```
+
+Outputs:
+
+```text
+phase2b_binary_calibrated_test.csv
+phase2b_canonical_ranking_test.csv
+phase2b_robustness_test.csv
+phase2b_robustness_key_deltas.csv
+phase2b_paper_ready_claims.json
+phase2b_result_synthesis.md
 ```
