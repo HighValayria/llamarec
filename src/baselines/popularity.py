@@ -11,6 +11,7 @@ from typing import Any
 
 from src.data.config import (
     load_experiment_config,
+    open_text_auto,
     resolve_configured_output_path,
     resolve_repo_path_from_config,
 )
@@ -38,8 +39,9 @@ def run_popularity_baseline(
     limit: int | None = None,
     output_dir: str | Path | None = None,
     candidate_files: dict[str, str | Path] | None = None,
+    popularity_source: str = "n_train_targets",
 ) -> dict[str, Any]:
-    """Score candidates by item frequency in N train targets."""
+    """Score candidates by item frequency in a training-only source."""
 
     config = load_experiment_config(config_path)
     dataset_key = dataset_key or config["dataset"]["formal"]
@@ -47,7 +49,7 @@ def run_popularity_baseline(
     output_path = _resolve_output_dir(config, dataset_key, output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
 
-    popularity = _load_n_train_target_popularity(config, dataset_key)
+    popularity = _load_popularity(config, dataset_key, popularity_source)
     write_yaml(output_path / "config_snapshot.yaml", _config_snapshot(config))
 
     metrics_by_split = {}
@@ -66,6 +68,7 @@ def run_popularity_baseline(
             records=records,
             popularity=popularity,
             split_name=split_name,
+            popularity_source=popularity_source,
         )
         write_jsonl(prediction_path, predictions)
 
@@ -73,6 +76,7 @@ def run_popularity_baseline(
             dataset_key=dataset_key,
             split_name=split_name,
             metric_records=metric_records,
+            popularity_source=popularity_source,
         )
         write_json(output_path / f"{output_split}_metrics.json", metrics)
         metrics_by_split[split_name] = metrics
@@ -92,9 +96,9 @@ def run_popularity_baseline(
         "outputs_dir": str(output_path),
         "counts": counts_by_split,
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
-        "popularity_source": "next_item_train.target",
+        "popularity_source": popularity_source,
         "unique_popularity_items": len(popularity),
-        "ranking_scoring": "n_train_target_popularity",
+        "ranking_scoring": f"{popularity_source}_popularity",
     }
     write_json(output_path / "run_summary.json", run_summary)
 
@@ -107,18 +111,30 @@ def run_popularity_baseline(
     }
 
 
-def _load_n_train_target_popularity(
+def _load_popularity(
     config: dict[str, Any],
     dataset_key: str,
+    source: str,
 ) -> Counter[str]:
-    train_path = resolve_configured_output_path(
-        config,
-        dataset_key,
-        "next_item_samples",
-        "train",
-    )
+    if source == "n_train_targets":
+        train_path = resolve_configured_output_path(
+            config,
+            dataset_key,
+            "next_item_samples",
+            "train",
+        )
+    elif source == "preference_train_targets":
+        train_path = resolve_configured_output_path(
+            config,
+            dataset_key,
+            "preference_samples",
+            "train",
+        )
+    else:
+        raise ValueError(f"Unsupported popularity_source: {source}")
+
     popularity: Counter[str] = Counter()
-    for record in read_jsonl(train_path):
+    for record in _iter_jsonl(train_path):
         target = record.get("target", {})
         movie_id = target.get("movie_id", record.get("ground_truth_movie_id"))
         popularity[str(movie_id)] += 1
@@ -129,6 +145,7 @@ def _predict_records(
     records: list[dict[str, Any]],
     popularity: Counter[str],
     split_name: str,
+    popularity_source: str,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     predictions = []
     metric_records = []
@@ -144,7 +161,7 @@ def _predict_records(
         prediction = {
             "model": "popularity",
             "task": "N",
-            "inference_mode": "n_train_target_popularity",
+            "inference_mode": f"{popularity_source}_popularity",
             "split": split_name,
             "user_id": record["user_id"],
             "candidate_movie_ids": [str(movie_id) for movie_id in record["candidate_movie_ids"]],
@@ -156,7 +173,8 @@ def _predict_records(
             "label_scores": dict(zip(label_set, scores)),
             "scores": scores,
             "predicted_label": label_set[best_index],
-            "scoring_mode": "n_train_target_popularity",
+            "popularity_source": popularity_source,
+            "scoring_mode": f"{popularity_source}_popularity",
         }
         predictions.append(prediction)
         metric_records.append(
@@ -172,6 +190,7 @@ def _metrics_for_split(
     dataset_key: str,
     split_name: str,
     metric_records: list[dict[str, Any]],
+    popularity_source: str,
 ) -> dict[str, Any]:
     ranking = aggregate_ranking_metrics(metric_records, ks=_ranking_metric_ks(metric_records))
     return {
@@ -179,8 +198,15 @@ def _metrics_for_split(
         "dataset": dataset_key,
         "split": split_name,
         "ranking": {**ranking, "samples": len(metric_records)},
-        "ranking_scoring": "n_train_target_popularity",
+        "ranking_scoring": f"{popularity_source}_popularity",
     }
+
+
+def _iter_jsonl(path: str | Path):
+    with open_text_auto(path, "rt", encoding="utf-8") as handle:
+        for line in handle:
+            if line.strip():
+                yield json.loads(line)
 
 
 def _ranking_metric_ks(records: list[dict[str, Any]]) -> list[int]:
@@ -285,6 +311,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", default=None)
     parser.add_argument("--valid-candidates", default=None)
     parser.add_argument("--test-candidates", default=None)
+    parser.add_argument(
+        "--popularity-source",
+        choices=["n_train_targets", "preference_train_targets"],
+        default="n_train_targets",
+    )
     return parser.parse_args()
 
 
@@ -300,6 +331,7 @@ def main() -> None:
             args.valid_candidates,
             args.test_candidates,
         ),
+        popularity_source=args.popularity_source,
     )
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 

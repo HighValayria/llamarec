@@ -12,8 +12,10 @@ from src.data.config import load_experiment_config
 
 
 DEFAULT_RUNS = {
-    "Popularity canonical k5": "popularity_canonical_k5/test_metrics.json",
-    "Popularity popmatch k5": "popularity_k5_popmatch_seed42/test_metrics.json",
+    "Popularity N-train canonical k5": "popularity_canonical_k5/test_metrics.json",
+    "Popularity N-train popmatch k5": "popularity_k5_popmatch_seed42/test_metrics.json",
+    "Popularity preference-train canonical k5": "popularity_preftrain_canonical_k5/test_metrics.json",
+    "Popularity preference-train popmatch k5": "popularity_preftrain_k5_popmatch_seed42/test_metrics.json",
 }
 
 
@@ -87,20 +89,25 @@ def _metric_rows(base_dir: Path, runs: dict[str, str | Path]) -> list[dict[str, 
 
 
 def _condition_deltas(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    if len(rows) < 2:
-        return []
-    first, second = rows[0], rows[1]
     output = []
-    for metric in ["HR@1", "NDCG@5", "MRR"]:
-        if first.get(metric) is None or second.get(metric) is None:
+    by_baseline = {row["baseline"]: row for row in rows}
+    for canonical_label, canonical_row in by_baseline.items():
+        if " canonical " not in canonical_label:
             continue
-        output.append(
-            {
-                "comparison": f"{second['baseline']} minus {first['baseline']}",
-                "metric": metric,
-                "delta": round(float(second[metric]) - float(first[metric]), 10),
-            }
-        )
+        popmatch_label = canonical_label.replace(" canonical ", " popmatch ")
+        popmatch_row = by_baseline.get(popmatch_label)
+        if not popmatch_row:
+            continue
+        for metric in ["HR@1", "NDCG@5", "MRR"]:
+            if canonical_row.get(metric) is None or popmatch_row.get(metric) is None:
+                continue
+            output.append(
+                {
+                    "comparison": f"{popmatch_label} minus {canonical_label}",
+                    "metric": metric,
+                    "delta": round(float(popmatch_row[metric]) - float(canonical_row[metric]), 10),
+                }
+            )
     return output
 
 
@@ -154,7 +161,8 @@ def _write_markdown(path: Path, payload: dict[str, Any]) -> None:
         "",
         "## Interpretation",
         "",
-        "- Popularity is a non-LLM ranking baseline scored from N train targets.",
+        "- Popularity is a non-LLM ranking baseline scored from training-only item counts.",
+        "- `N-train` counts next-item train targets; `preference-train` counts Y train targets as train-region interactions.",
         "- A large canonical-to-popmatch drop indicates that random candidates expose a popularity shortcut.",
         "- Compare these rows with LLM metrics only when the same candidate files and splits are used.",
         "",

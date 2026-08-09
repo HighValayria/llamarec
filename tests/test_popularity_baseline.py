@@ -43,6 +43,7 @@ def test_popularity_baseline_scores_fixed_candidates_from_n_train_targets(tmp_pa
 
     assert predictions[0]["scores"] == [0.0, 2.0, 0.0]
     assert predictions[0]["predicted_label"] == "B"
+    assert predictions[0]["popularity_source"] == "n_train_targets"
     assert predictions[1]["scores"] == [3.0, 0.0, 2.0]
     assert metrics["ranking"]["samples"] == 2
     assert metrics["ranking"]["HR@1"] == 0.5
@@ -74,6 +75,45 @@ def test_popularity_baseline_accepts_candidate_file_overrides(tmp_path):
     assert summary["metrics"]["test"]["ranking"]["HR@1"] == 1.0
 
 
+def test_popularity_baseline_can_score_from_preference_train_targets(tmp_path):
+    _write_config(tmp_path)
+    _write_jsonl(
+        tmp_path / "data" / "processed" / "toy" / "next_item_train.jsonl",
+        [_train_sample("n-only")],
+    )
+    _write_jsonl(
+        tmp_path / "data" / "processed" / "toy" / "preference_train.jsonl",
+        [
+            _train_sample("target"),
+            _train_sample("target"),
+            _train_sample("cold"),
+        ],
+    )
+    _write_jsonl(
+        tmp_path / "data" / "candidates" / "toy" / "test.jsonl",
+        [_candidate_sample("u1", ["cold", "target"], "target", 1)],
+    )
+
+    summary = run_popularity_baseline(
+        config_path=tmp_path / "configs" / "experiment.yaml",
+        dataset_key="toy",
+        splits=["test"],
+        output_dir=tmp_path / "outputs" / "pref_popularity",
+        popularity_source="preference_train_targets",
+    )
+
+    output_dir = Path(summary["outputs_dir"])
+    prediction = json.loads(
+        (output_dir / "n_test_predictions.jsonl").read_text(encoding="utf-8").splitlines()[0]
+    )
+    metrics = json.loads((output_dir / "test_metrics.json").read_text(encoding="utf-8"))
+
+    assert prediction["scores"] == [1.0, 2.0]
+    assert prediction["popularity_source"] == "preference_train_targets"
+    assert metrics["ranking_scoring"] == "preference_train_targets_popularity"
+    assert summary["metrics"]["test"]["ranking"]["HR@1"] == 1.0
+
+
 def _write_config(root: Path) -> None:
     config_dir = root / "configs"
     config_dir.mkdir(parents=True)
@@ -83,6 +123,8 @@ def _write_config(root: Path) -> None:
                 "dataset:",
                 "  formal: toy",
                 "processed_outputs:",
+                "  preference_samples:",
+                "    train: data/processed/{dataset}/preference_train.jsonl",
                 "  next_item_samples:",
                 "    train: data/processed/{dataset}/next_item_train.jsonl",
                 "candidates:",
