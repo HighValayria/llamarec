@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 from src.analysis.basic_error_analysis import run_basic_error_analysis
+from src.analysis.candidate_set_diagnostics import run_candidate_set_diagnostics
 from src.analysis.grouped_error_analysis import run_grouped_error_analysis, _write_csv
 from src.analysis.phase2a_robustness_report import run_phase2a_robustness_report
 from src.analysis.phase2b_result_synthesis import run_phase2b_result_synthesis
@@ -178,6 +179,33 @@ def test_grouped_error_analysis_joins_metadata_and_writes_group_tables(tmp_path)
     assert ranking_position_1["samples"] == "1"
     assert ranking_position_1["hr_at_1"] == "0.0"
     assert (output_dir / "test_grouped_error_analysis.md").exists()
+
+
+def test_candidate_set_diagnostics_writes_popularity_gap_summary(tmp_path):
+    _write_config(tmp_path)
+    _write_grouped_metadata_tree(tmp_path)
+
+    summary = run_candidate_set_diagnostics(
+        config_path=tmp_path / "configs" / "experiment.yaml",
+        dataset_key="toy",
+        output_dir=tmp_path / "outputs" / "phase2c" / "toy" / "candidate_set_diagnostics",
+        variant_name="toy_variant",
+        splits=["test"],
+    )
+
+    output_dir = Path(summary["output_dir"])
+    rows = list(csv.DictReader((output_dir / "candidate_set_diagnostics.csv").open()))
+    payload = json.loads(
+        (output_dir / "candidate_set_diagnostics.json").read_text(encoding="utf-8")
+    )
+
+    assert summary["rows"] == 1
+    assert rows[0]["split"] == "test"
+    assert rows[0]["variant_name"] == "toy_variant"
+    assert rows[0]["samples"] == "2"
+    assert rows[0]["mean_abs_popularity_gap"] == "1.0"
+    assert payload["diagnostics"][0]["target_popularity_buckets"] == '{"<=10": 2}'
+    assert (output_dir / "candidate_set_diagnostics.md").exists()
 
 
 def test_write_csv_accepts_dynamic_fields_after_first_row(tmp_path):

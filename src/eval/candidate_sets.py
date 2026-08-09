@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 import copy
 import json
 from pathlib import Path
@@ -44,6 +45,7 @@ def build_fixed_candidate_sets(
     output_dir: str | Path | None = None,
     seed: int | None = None,
     shuffle_order: bool | None = None,
+    candidate_method: str | None = None,
 ) -> dict[str, Any]:
     """生成并写出 validation/test 固定候选集。"""
 
@@ -56,9 +58,16 @@ def build_fixed_candidate_sets(
         variant_name=variant_name,
         seed=seed,
         shuffle_order=shuffle_order,
+        candidate_method=candidate_method,
     )
     all_movie_ids = sorted(str(movie_id) for movie_id in load_movies(dataset_key, config))
     base_seed = int(config["seed"]["random_seed"])
+    method = str(config.get("negative_sampling", {}).get("method", "random"))
+    movie_popularity = (
+        _load_movie_popularity(config, dataset_key)
+        if method == "popularity_matched"
+        else Counter()
+    )
 
     summaries = {}
     for split_name in ("validation", "test"):
@@ -78,6 +87,7 @@ def build_fixed_candidate_sets(
             dataset_key=dataset_key,
             split_name=split_name,
             rng=rng,
+            movie_popularity=movie_popularity,
         )
         for record in records:
             validate_candidate_record(
@@ -189,11 +199,14 @@ def _build_candidate_records(
     dataset_key: str,
     split_name: str,
     rng: Random,
+    movie_popularity: Counter[str] | None = None,
 ) -> list[dict[str, Any]]:
     candidate_num = int(config["candidates"]["candidate_num"])
     negative_num = candidate_num - 1
     label_set = _candidate_label_set(config, candidate_num)
     shuffle_order = bool(config["candidates"].get("shuffle_order", True))
+    method = str(config.get("negative_sampling", {}).get("method", "random"))
+    movie_popularity = movie_popularity or Counter()
 
     if len(label_set) < candidate_num:
         raise ValueError("label_set 长度必须不小于 candidate_num")
@@ -201,11 +214,13 @@ def _build_candidate_records(
     records = []
     for sample_index, sample in enumerate(source_samples):
         ground_truth_movie_id = str(sample["ground_truth_movie_id"])
-        negatives = sample_random_negatives_from_all_movies(
-            all_movie_ids,
-            target_movie_id=ground_truth_movie_id,
-            n=negative_num,
+        negatives = _sample_negatives(
+            method=method,
+            all_movie_ids=all_movie_ids,
+            ground_truth_movie_id=ground_truth_movie_id,
+            negative_num=negative_num,
             rng=rng,
+            movie_popularity=movie_popularity,
         )
         candidate_movie_ids = [ground_truth_movie_id, *negatives]
         if shuffle_order:
@@ -227,7 +242,7 @@ def _build_candidate_records(
                 "label": label_set[ground_truth_index],
                 "label_set": label_set[:candidate_num],
                 "candidate_generation": {
-                    "method": config["negative_sampling"]["method"],
+                    "method": method,
                     "variant_name": config["candidates"].get("variant_name", "canonical"),
                     "candidate_num": candidate_num,
                     "negative_num": negative_num,
@@ -235,11 +250,119 @@ def _build_candidate_records(
                     + SPLIT_SEED_OFFSETS[split_name],
                     "pool": config["negative_sampling"]["pool"],
                     "shuffle_order": shuffle_order,
+                    **_negative_sampling_metadata(
+                        method,
+                        ground_truth_movie_id,
+                        negatives,
+                        movie_popularity,
+                    ),
                 },
             }
         )
 
     return records
+
+
+def sample_popularity_matched_negatives(
+    all_movie_ids: list[str],
+    target_movie_id: str,
+    n: int,
+    rng: Random,
+    movie_popularity: Counter[str] | dict[str, int],
+    candidate_pool_multiplier: int = 10,
+) -> list[str]:
+    """Sample negatives from movies with popularity closest to the target item."""
+
+    target_movie_id = str(target_movie_id)
+    if n < 0:
+        raise ValueError("n must be non-negative")
+    if n == 0:
+        return []
+
+    pool = [str(movie_id) for movie_id in all_movie_ids if str(movie_id) != target_movie_id]
+    if len(pool) < n:
+        raise ValueError(f"negative pool too small: need={n}, available={len(pool)}")
+
+    target_popularity = int(movie_popularity.get(target_movie_id, 0))
+    ranked_pool = sorted(
+        pool,
+        key=lambda movie_id: (
+            abs(int(movie_popularity.get(movie_id, 0)) - target_popularity),
+            str(movie_id),
+        ),
+    )
+    hard_pool_size = min(len(ranked_pool), max(n, n * int(candidate_pool_multiplier)))
+    return rng.sample(ranked_pool[:hard_pool_size], n)
+
+
+def _sample_negatives(
+    method: str,
+    all_movie_ids: list[str],
+    ground_truth_movie_id: str,
+    negative_num: int,
+    rng: Random,
+    movie_popularity: Counter[str],
+) -> list[str]:
+    if method == "random":
+        return sample_random_negatives_from_all_movies(
+            all_movie_ids,
+            target_movie_id=ground_truth_movie_id,
+            n=negative_num,
+            rng=rng,
+        )
+    if method == "popularity_matched":
+        return sample_popularity_matched_negatives(
+            all_movie_ids,
+            target_movie_id=ground_truth_movie_id,
+            n=negative_num,
+            rng=rng,
+            movie_popularity=movie_popularity,
+        )
+    raise ValueError(f"Unsupported candidate negative sampling method: {method}")
+
+
+def _negative_sampling_metadata(
+    method: str,
+    ground_truth_movie_id: str,
+    negatives: list[str],
+    movie_popularity: Counter[str],
+) -> dict[str, Any]:
+    if method != "popularity_matched":
+        return {}
+
+    target_popularity = int(movie_popularity.get(str(ground_truth_movie_id), 0))
+    negative_popularities = [
+        int(movie_popularity.get(str(movie_id), 0))
+        for movie_id in negatives
+    ]
+    mean_negative_popularity = (
+        sum(negative_popularities) / len(negative_popularities)
+        if negative_popularities
+        else 0.0
+    )
+    return {
+        "target_popularity": target_popularity,
+        "negative_popularity_mean": round(mean_negative_popularity, 10),
+        "negative_popularity_min": min(negative_popularities, default=0),
+        "negative_popularity_max": max(negative_popularities, default=0),
+    }
+
+
+def _load_movie_popularity(config: dict[str, Any], dataset_key: str) -> Counter[str]:
+    full_sequences_path = resolve_configured_output_path(
+        config,
+        dataset_key,
+        "full_sequences",
+    )
+    popularity: Counter[str] = Counter()
+    with open_text_auto(full_sequences_path, "rt", encoding="utf-8") as handle:
+        for line in handle:
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            for interaction in record.get("interactions", []):
+                popularity[str(interaction["movie_id"])] += 1
+    return popularity
 
 
 def _permute_candidate_record(
@@ -360,10 +483,12 @@ def _candidate_variant_config(
     variant_name: str | None,
     seed: int | None,
     shuffle_order: bool | None,
+    candidate_method: str | None,
 ) -> dict[str, Any]:
     copied = dict(config)
     copied["seed"] = dict(config.get("seed", {}))
     copied["candidates"] = dict(config.get("candidates", {}))
+    copied["negative_sampling"] = dict(config.get("negative_sampling", {}))
 
     if candidate_num is not None:
         if candidate_num <= 1:
@@ -388,6 +513,8 @@ def _candidate_variant_config(
         copied["seed"]["random_seed"] = int(seed)
     if shuffle_order is not None:
         copied["candidates"]["shuffle_order"] = bool(shuffle_order)
+    if candidate_method is not None:
+        copied["negative_sampling"]["method"] = str(candidate_method)
     return copied
 
 
@@ -451,6 +578,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", default=None)
     parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--no-shuffle-order", action="store_true")
+    parser.add_argument(
+        "--candidate-method",
+        choices=["random", "popularity_matched"],
+        default=None,
+    )
     parser.add_argument("--order-variant", action="store_true")
     parser.add_argument("--source-valid-candidates", default=None)
     parser.add_argument("--source-test-candidates", default=None)
@@ -481,6 +613,7 @@ def main() -> None:
             output_dir=args.output_dir,
             seed=args.seed,
             shuffle_order=False if args.no_shuffle_order else None,
+            candidate_method=args.candidate_method,
         )
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 

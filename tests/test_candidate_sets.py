@@ -1,10 +1,12 @@
 """STEP 3 测试：固定候选集生成。"""
 
+from collections import Counter
 from random import Random
 
 from src.eval.candidate_sets import (
     _build_candidate_records,
     _permute_candidate_record,
+    sample_popularity_matched_negatives,
     spreadsheet_labels,
     validate_candidate_record,
 )
@@ -55,6 +57,51 @@ def test_candidate_records_support_twenty_candidate_variant():
     assert len(record["label_set"]) == 20
     assert record["candidate_generation"]["variant_name"] == "k20_seed42"
     assert record["candidate_generation"]["candidate_num"] == 20
+
+
+def test_popularity_matched_negatives_prefer_nearest_popularity():
+    popularity = Counter(
+        {
+            "target": 10,
+            "near-low": 9,
+            "near-same": 10,
+            "near-high": 11,
+            "far": 100,
+        }
+    )
+
+    negatives = sample_popularity_matched_negatives(
+        ["target", "near-low", "near-same", "near-high", "far"],
+        target_movie_id="target",
+        n=3,
+        rng=Random(42),
+        movie_popularity=popularity,
+        candidate_pool_multiplier=1,
+    )
+
+    assert set(negatives) == {"near-low", "near-same", "near-high"}
+
+
+def test_candidate_records_support_popularity_matched_variant():
+    config = _toy_config()
+    config["negative_sampling"]["method"] = "popularity_matched"
+    config["candidates"]["variant_name"] = "k5_popmatch_seed42"
+    records = _build_candidate_records(
+        source_samples=[_sample("u1", "B", 2)],
+        all_movie_ids=[str(index) for index in range(50)] + ["A", "B", "C", "D", "E"],
+        config=config,
+        dataset_key="toy",
+        split_name="validation",
+        rng=Random(42),
+        movie_popularity=Counter({"B": 10, "C": 9, "D": 10, "E": 11, "A": 0}),
+    )
+
+    record = records[0]
+    validate_candidate_record(record, candidate_num=5)
+    assert record["candidate_generation"]["method"] == "popularity_matched"
+    assert record["candidate_generation"]["variant_name"] == "k5_popmatch_seed42"
+    assert record["candidate_generation"]["target_popularity"] == 10
+    assert "negative_popularity_mean" in record["candidate_generation"]
 
 
 def test_permute_candidate_record_preserves_candidate_ids_and_updates_label(tmp_path):
