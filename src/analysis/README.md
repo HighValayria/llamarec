@@ -18,6 +18,9 @@ artifacts. They do not train or re-run models.
 - `grouped_error_analysis.py`: Phase 1.5 STEP C entry point. It joins
   predictions back to fixed Y samples, fixed N candidate records, and
   full-sequence-derived user/movie statistics, then writes grouped diagnostics.
+- `phase2a_robustness_report.py`: Phase 2A ranking robustness entry point. It
+  reads explicit candidate-variant metric directories and writes CSV/JSON plus a
+  Markdown report without mixing canonical output paths into variant analysis.
 
 ## Phase 1.5 STEP B Example
 
@@ -71,3 +74,20 @@ test_grouped_error_analysis.md
 Use `--split validation` for validation diagnostics. Binary grouped metrics keep
 the threshold source explicit via `--threshold-mode`; ranking grouped metrics
 report HR@1, HR@5, NDCG@5, MRR, mean rank, and mean margin by group.
+
+## Phase 2A Ranking Robustness Example
+
+```bash
+python -m src.analysis.phase2a_robustness_report \
+  --input-dir outputs/phase2a/ranking_robustness \
+  --dataset movielens-1m
+```
+
+Outputs:
+
+```text
+phase2a_ranking_robustness_metrics.csv
+phase2a_ranking_robustness_metrics.json
+phase2a_ranking_robustness_comparison.csv
+phase2a_ranking_robustness_report.md
+```

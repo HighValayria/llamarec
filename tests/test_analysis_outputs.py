@@ -6,6 +6,7 @@ from pathlib import Path
 
 from src.analysis.basic_error_analysis import run_basic_error_analysis
 from src.analysis.grouped_error_analysis import run_grouped_error_analysis, _write_csv
+from src.analysis.phase2a_robustness_report import run_phase2a_robustness_report
 from src.analysis.summarize_results import run_result_summary
 from src.analysis.threshold_calibration import run_threshold_calibration
 from src.analysis.threshold_comparison import run_threshold_comparison
@@ -196,6 +197,31 @@ def test_write_csv_accepts_dynamic_fields_after_first_row(tmp_path):
     assert rows[1]["hr_at_10"] == "0.8"
 
 
+def test_phase2a_robustness_report_writes_variant_metrics_and_deltas(tmp_path):
+    input_dir = tmp_path / "outputs" / "phase2a" / "ranking_robustness"
+    _write_phase2a_metrics(input_dir)
+
+    summary = run_phase2a_robustness_report(
+        input_dir=input_dir,
+        dataset_key="toy",
+    )
+
+    metrics_rows = list(csv.DictReader((input_dir / "phase2a_ranking_robustness_metrics.csv").open()))
+    comparison_rows = list(csv.DictReader((input_dir / "phase2a_ranking_robustness_comparison.csv").open()))
+    n_minus_m1 = next(
+        row
+        for row in comparison_rows
+        if row["comparison"] == "n_k0_minus_m1"
+        and row["variant"] == "k20_seed42"
+    )
+
+    assert summary["rows"] == 6
+    assert metrics_rows[0]["model_key"] == "base"
+    assert metrics_rows[0]["variant"] == "k20_seed42"
+    assert n_minus_m1["delta_HR@1"] == "0.05"
+    assert (input_dir / "phase2a_ranking_robustness_report.md").exists()
+
+
 def _write_config(root: Path) -> None:
     config_dir = root / "configs"
     config_dir.mkdir(parents=True)
@@ -239,6 +265,32 @@ def _write_metrics_tree(root: Path) -> None:
     _write_json(root / "outputs" / "y" / "toy" / "run_y" / "test_metrics.json", metrics["y"])
     _write_json(root / "outputs" / "n" / "toy" / "run_n" / "test_metrics.json", metrics["n"])
     _write_json(root / "outputs" / "m" / "toy" / "run_m" / "test_metrics.json", metrics["m"])
+
+
+def _write_phase2a_metrics(root: Path) -> None:
+    rows = {
+        "base_k20_seed42": (0.10, 0.30, 0.20),
+        "base_k50_seed42": (0.05, 0.15, 0.10),
+        "n_k0_k20_seed42": (0.40, 0.80, 0.60),
+        "n_k0_k50_seed42": (0.20, 0.45, 0.32),
+        "m1_k20_seed42": (0.35, 0.70, 0.53),
+        "m1_k50_seed42": (0.12, 0.30, 0.23),
+    }
+    for run_dir, values in rows.items():
+        hr_at_1, hr_at_5, mrr = values
+        payload = {
+            "model": run_dir.split("_k", 1)[0],
+            "dataset": "toy",
+            "split": "test",
+            "ranking": {
+                "HR@1": hr_at_1,
+                "HR@5": hr_at_5,
+                "NDCG@5": hr_at_5 - 0.1,
+                "MRR": mrr,
+                "samples": 2,
+            },
+        }
+        _write_json(root / run_dir / "test_metrics.json", payload)
 
 
 def _metrics(binary_auc, hr_at_1):
