@@ -9,6 +9,7 @@ from src.analysis.candidate_set_diagnostics import run_candidate_set_diagnostics
 from src.analysis.grouped_error_analysis import run_grouped_error_analysis, _write_csv
 from src.analysis.phase2a_robustness_report import run_phase2a_robustness_report
 from src.analysis.phase2b_result_synthesis import run_phase2b_result_synthesis
+from src.analysis.phase2c_popmatch_grouped import run_phase2c_popmatch_grouped
 from src.analysis.summarize_results import run_result_summary
 from src.analysis.threshold_calibration import run_threshold_calibration
 from src.analysis.threshold_comparison import run_threshold_comparison
@@ -206,6 +207,33 @@ def test_candidate_set_diagnostics_writes_popularity_gap_summary(tmp_path):
     assert rows[0]["mean_abs_popularity_gap"] == "1.0"
     assert payload["diagnostics"][0]["target_popularity_buckets"] == '{"<=10": 2}'
     assert (output_dir / "candidate_set_diagnostics.md").exists()
+
+
+def test_phase2c_popmatch_grouped_writes_bucketed_ranking(tmp_path):
+    _write_config(tmp_path)
+    _write_grouped_metadata_tree(tmp_path)
+    eval_dir = tmp_path / "outputs" / "phase2c" / "movielens-1m" / "popmatch_eval"
+    _write_popmatch_eval_predictions(eval_dir)
+
+    summary = run_phase2c_popmatch_grouped(
+        config_path=tmp_path / "configs" / "experiment.yaml",
+        dataset_key="toy",
+        split_name="test",
+        candidate_file=tmp_path / "data" / "candidates" / "toy" / "test.jsonl",
+        eval_dir=eval_dir,
+        output_dir=tmp_path / "outputs" / "phase2c" / "toy" / "popmatch_grouped",
+    )
+
+    output_dir = Path(summary["paths"]["csv"]).parent
+    rows = list(csv.DictReader((output_dir / "test_ranking_by_target_popularity.csv").open()))
+    n_row = next(row for row in rows if row["model"] == "N-K0" and row["group_value"] == "<=10")
+    m1_row = next(row for row in rows if row["model"] == "M1" and row["group_value"] == "<=10")
+
+    assert summary["models"] == 4
+    assert n_row["samples"] == "2"
+    assert n_row["HR@1"] == "1.0"
+    assert m1_row["HR@1"] == "0.5"
+    assert (output_dir / "test_ranking_by_target_popularity.md").exists()
 
 
 def test_write_csv_accepts_dynamic_fields_after_first_row(tmp_path):
@@ -607,6 +635,29 @@ def _write_grouped_metadata_tree(root: Path) -> None:
     )
 
 
+def _write_popmatch_eval_predictions(root: Path) -> None:
+    rows_by_run = {
+        "base_k5_popmatch_seed42/n_test_predictions.jsonl": [
+            _ranking_prediction_with_scores("base", "u1", ["a", "b"], "a", 0, [0.8, 0.2]),
+            _ranking_prediction_with_scores("base", "u2", ["c", "d"], "d", 1, [0.7, 0.3]),
+        ],
+        "n_k0_k5_popmatch_seed42/n_test_predictions.jsonl": [
+            _ranking_prediction_with_scores("n_k0", "u1", ["a", "b"], "a", 0, [0.8, 0.2]),
+            _ranking_prediction_with_scores("n_k0", "u2", ["c", "d"], "d", 1, [0.3, 0.7]),
+        ],
+        "m1_k5_popmatch_seed42/m_n_test_predictions.jsonl": [
+            _ranking_prediction_with_scores("m1", "u1", ["a", "b"], "a", 0, [0.8, 0.2]),
+            _ranking_prediction_with_scores("m1", "u2", ["c", "d"], "d", 1, [0.7, 0.3]),
+        ],
+        "y_k0_k5_popmatch_seed42/n_test_predictions.jsonl": [
+            _ranking_prediction_with_scores("y_k0", "u1", ["a", "b"], "a", 0, [0.2, 0.8]),
+            _ranking_prediction_with_scores("y_k0", "u2", ["c", "d"], "d", 1, [0.7, 0.3]),
+        ],
+    }
+    for path, rows in rows_by_run.items():
+        _write_jsonl(root / path, rows)
+
+
 def _preference_sample(user_id: str, movie_id: str, label: str, rating: float, history: list[dict]):
     return {
         "task": "Y",
@@ -710,6 +761,26 @@ def _ranking_predictions(model: str):
             "scores": [0.7, 0.3],
         },
     ]
+
+
+def _ranking_prediction_with_scores(
+    model: str,
+    user_id: str,
+    candidate_movie_ids: list[str],
+    ground_truth_movie_id: str,
+    ground_truth_index: int,
+    scores: list[float],
+):
+    return {
+        "model": model,
+        "task": "N",
+        "split": "test",
+        "user_id": user_id,
+        "candidate_movie_ids": candidate_movie_ids,
+        "ground_truth_movie_id": ground_truth_movie_id,
+        "ground_truth_index": ground_truth_index,
+        "scores": scores,
+    }
 
 
 def _write_json(path: Path, payload: dict) -> None:
