@@ -10,6 +10,7 @@ from src.analysis.grouped_error_analysis import run_grouped_error_analysis, _wri
 from src.analysis.phase2a_robustness_report import run_phase2a_robustness_report
 from src.analysis.phase2b_result_synthesis import run_phase2b_result_synthesis
 from src.analysis.phase2c_popmatch_grouped import run_phase2c_popmatch_grouped
+from src.analysis.phase2c_result_summary import run_phase2c_result_summary
 from src.analysis.prediction_file_clean import run_prediction_file_clean
 from src.analysis.prediction_file_audit import run_prediction_file_audit
 from src.analysis.summarize_results import run_result_summary
@@ -236,6 +237,53 @@ def test_phase2c_popmatch_grouped_writes_bucketed_ranking(tmp_path):
     assert n_row["HR@1"] == "1.0"
     assert m1_row["HR@1"] == "0.5"
     assert (output_dir / "test_ranking_by_target_popularity.md").exists()
+
+
+def test_phase2c_result_summary_writes_final_report(tmp_path):
+    _write_config(tmp_path)
+    eval_dir = tmp_path / "outputs" / "phase2c" / "toy" / "popmatch_eval_clean"
+    grouped_dir = tmp_path / "outputs" / "phase2c" / "toy" / "popmatch_grouped"
+    diagnostics_path = (
+        tmp_path
+        / "outputs"
+        / "phase2c"
+        / "toy"
+        / "candidate_set_diagnostics"
+        / "k5_popmatch_seed42"
+        / "candidate_set_diagnostics.json"
+    )
+    _write_popmatch_metrics(eval_dir)
+    _write_popmatch_grouped_csv(grouped_dir / "test_ranking_by_target_popularity.csv")
+    _write_json(
+        diagnostics_path,
+        {
+            "diagnostics": [
+                {
+                    "split": "test",
+                    "method": "popularity_matched",
+                    "samples": 2,
+                    "mean_abs_popularity_gap": 4.5,
+                }
+            ]
+        },
+    )
+
+    summary = run_phase2c_result_summary(
+        config_path=tmp_path / "configs" / "experiment.yaml",
+        dataset_key="toy",
+        eval_dir=eval_dir,
+        candidate_diagnostics_json=diagnostics_path,
+        grouped_csv=grouped_dir / "test_ranking_by_target_popularity.csv",
+        output_dir=tmp_path / "outputs" / "phase2c" / "toy" / "result_summary",
+    )
+
+    payload = json.loads(Path(summary["paths"]["json"]).read_text(encoding="utf-8"))
+    report = Path(summary["paths"]["markdown"]).read_text(encoding="utf-8")
+
+    assert payload["n_k0_minus_m1"][0]["delta"] == 0.1
+    assert payload["bucket_n_k0_minus_m1"][0]["delta_HR@1"] == 0.2
+    assert "Phase 2C is a diagnosis and consolidation stage" in report
+    assert "N-K0 remains the strongest" in report
 
 
 def test_prediction_file_audit_detects_safe_duplicates_and_rank_conflicts(tmp_path):
@@ -757,6 +805,51 @@ def _write_popmatch_eval_predictions(root: Path) -> None:
     }
     for path, rows in rows_by_run.items():
         _write_jsonl(root / path, rows)
+
+
+def _write_popmatch_metrics(root: Path) -> None:
+    rows = {
+        "base_k5_popmatch_seed42/test_metrics.json": (0.3, 0.6, 0.5, 0.62, 0.70),
+        "n_k0_k5_popmatch_seed42/test_metrics.json": (0.6, 0.8, 0.7, None, None),
+        "m1_k5_popmatch_seed42/test_metrics.json": (0.5, 0.75, 0.65, 0.76, 0.73),
+        "y_k0_k5_popmatch_seed42/test_metrics.json": (0.2, 0.55, 0.4, 0.77, 0.78),
+    }
+    for path, values in rows.items():
+        hr_at_1, ndcg_at_5, mrr, auc, f1 = values
+        payload = {
+            "ranking": {
+                "HR@1": hr_at_1,
+                "NDCG@5": ndcg_at_5,
+                "MRR": mrr,
+            }
+        }
+        if auc is not None:
+            payload["binary"] = {"AUC": auc, "F1": f1}
+        _write_json(root / path, payload)
+
+
+def _write_popmatch_grouped_csv(path: Path) -> None:
+    _write_csv_rows(
+        path,
+        [
+            {
+                "model": "N-K0",
+                "group_value": "<=10",
+                "samples": 2,
+                "HR@1": 0.7,
+                "NDCG@5": 0.8,
+                "MRR": 0.75,
+            },
+            {
+                "model": "M1",
+                "group_value": "<=10",
+                "samples": 2,
+                "HR@1": 0.5,
+                "NDCG@5": 0.7,
+                "MRR": 0.65,
+            },
+        ],
+    )
 
 
 def _preference_sample(user_id: str, movie_id: str, label: str, rating: float, history: list[dict]):
