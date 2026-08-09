@@ -10,6 +10,7 @@ from src.analysis.grouped_error_analysis import run_grouped_error_analysis, _wri
 from src.analysis.phase2a_robustness_report import run_phase2a_robustness_report
 from src.analysis.phase2b_result_synthesis import run_phase2b_result_synthesis
 from src.analysis.phase2c_popmatch_grouped import run_phase2c_popmatch_grouped
+from src.analysis.prediction_file_audit import run_prediction_file_audit
 from src.analysis.summarize_results import run_result_summary
 from src.analysis.threshold_calibration import run_threshold_calibration
 from src.analysis.threshold_comparison import run_threshold_comparison
@@ -234,6 +235,53 @@ def test_phase2c_popmatch_grouped_writes_bucketed_ranking(tmp_path):
     assert n_row["HR@1"] == "1.0"
     assert m1_row["HR@1"] == "0.5"
     assert (output_dir / "test_ranking_by_target_popularity.md").exists()
+
+
+def test_prediction_file_audit_detects_safe_duplicates_and_rank_conflicts(tmp_path):
+    input_dir = tmp_path / "outputs" / "phase2c" / "popmatch_eval"
+    safe = [
+        _ranking_prediction_with_scores("n_k0", "u1", ["a", "b"], "a", 0, [0.8, 0.2]),
+        _ranking_prediction_with_scores("n_k0", "u1", ["a", "b"], "a", 0, [0.7, 0.3]),
+    ]
+    conflict = [
+        _ranking_prediction_with_scores("m1", "u2", ["c", "d"], "d", 1, [0.8, 0.2]),
+        _ranking_prediction_with_scores("m1", "u2", ["c", "d"], "d", 1, [0.2, 0.8]),
+    ]
+    binary = [
+        _binary_prediction("base", "u3", "Yes", 0.9),
+        _binary_prediction("base", "u3", "Yes", 0.8),
+    ]
+    _write_jsonl(input_dir / "n" / "n_test_predictions.jsonl", safe)
+    _write_jsonl(input_dir / "m" / "m_n_test_predictions.jsonl", conflict)
+    _write_jsonl(input_dir / "base" / "y_test_predictions.jsonl", binary)
+
+    summary = run_prediction_file_audit(input_dir)
+
+    rows = list(csv.DictReader((input_dir / "audit" / "prediction_file_audit.csv").open()))
+    safe_row = next(
+        row
+        for row in rows
+        if row["relative_path"].replace("\\", "/") == "n/n_test_predictions.jsonl"
+    )
+    conflict_row = next(
+        row
+        for row in rows
+        if row["relative_path"].replace("\\", "/") == "m/m_n_test_predictions.jsonl"
+    )
+    binary_row = next(
+        row
+        for row in rows
+        if row["relative_path"].replace("\\", "/") == "base/y_test_predictions.jsonl"
+    )
+
+    assert summary["files"] == 3
+    assert safe_row["rows"] == "2"
+    assert safe_row["unique_keys"] == "1"
+    assert safe_row["rank_conflicts"] == "0"
+    assert safe_row["safe_exact_rank_duplicates"] == "True"
+    assert conflict_row["rank_conflicts"] == "1"
+    assert binary_row["binary_rows"] == "2"
+    assert (input_dir / "audit" / "prediction_file_audit.md").exists()
 
 
 def test_write_csv_accepts_dynamic_fields_after_first_row(tmp_path):
