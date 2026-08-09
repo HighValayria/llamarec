@@ -10,6 +10,7 @@ from src.analysis.grouped_error_analysis import run_grouped_error_analysis, _wri
 from src.analysis.phase2a_robustness_report import run_phase2a_robustness_report
 from src.analysis.phase2b_result_synthesis import run_phase2b_result_synthesis
 from src.analysis.phase2c_popmatch_grouped import run_phase2c_popmatch_grouped
+from src.analysis.prediction_file_clean import run_prediction_file_clean
 from src.analysis.prediction_file_audit import run_prediction_file_audit
 from src.analysis.summarize_results import run_result_summary
 from src.analysis.threshold_calibration import run_threshold_calibration
@@ -282,6 +283,58 @@ def test_prediction_file_audit_detects_safe_duplicates_and_rank_conflicts(tmp_pa
     assert conflict_row["rank_conflicts"] == "1"
     assert binary_row["binary_rows"] == "2"
     assert (input_dir / "audit" / "prediction_file_audit.md").exists()
+
+
+def test_prediction_file_clean_writes_deduplicated_copy(tmp_path):
+    input_dir = tmp_path / "outputs" / "phase2c" / "popmatch_eval"
+    output_dir = tmp_path / "outputs" / "phase2c" / "popmatch_eval_clean"
+    _write_jsonl(
+        input_dir / "n" / "n_test_predictions.jsonl",
+        [
+            _ranking_prediction_with_scores("n_k0", "u1", ["a", "b"], "a", 0, [0.8, 0.2]),
+            _ranking_prediction_with_scores("n_k0", "u1", ["a", "b"], "a", 0, [0.7, 0.3]),
+        ],
+    )
+    _write_jsonl(
+        input_dir / "base" / "y_test_predictions.jsonl",
+        [
+            _binary_prediction("base", "u3", "Yes", 0.9),
+            _binary_prediction("base", "u3", "Yes", 0.9),
+        ],
+    )
+
+    summary = run_prediction_file_clean(input_dir, output_dir)
+
+    n_rows = [
+        json.loads(line)
+        for line in (output_dir / "n" / "n_test_predictions.jsonl").read_text(
+            encoding="utf-8"
+        ).splitlines()
+        if line.strip()
+    ]
+    manifest_rows = list(csv.DictReader((output_dir / "prediction_file_clean_manifest.csv").open()))
+
+    assert summary["files"] == 2
+    assert len(n_rows) == 1
+    assert sum(int(row["removed_rows"]) for row in manifest_rows) == 2
+
+
+def test_prediction_file_clean_rejects_binary_score_conflicts(tmp_path):
+    input_dir = tmp_path / "outputs" / "phase2c" / "popmatch_eval"
+    _write_jsonl(
+        input_dir / "base" / "y_test_predictions.jsonl",
+        [
+            _binary_prediction("base", "u3", "Yes", 0.9),
+            _binary_prediction("base", "u3", "Yes", 0.8),
+        ],
+    )
+
+    try:
+        run_prediction_file_clean(input_dir, tmp_path / "clean")
+    except ValueError as exc:
+        assert "conflicting predictions" in str(exc)
+    else:
+        raise AssertionError("Expected binary duplicate score conflict")
 
 
 def test_write_csv_accepts_dynamic_fields_after_first_row(tmp_path):
