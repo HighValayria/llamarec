@@ -18,7 +18,12 @@ related_code:
   - src/inference/evaluate_m_adapter.py
   - src/inference/tokenization_check.py
   - src/analysis/grouped_error_analysis.py
+  - src/analysis/candidate_set_diagnostics.py
+  - src/analysis/prediction_file_audit.py
+  - src/analysis/prediction_file_clean.py
   - src/analysis/phase2a_robustness_report.py
+  - src/analysis/phase2c_popmatch_grouped.py
+  - src/analysis/phase2c_result_summary.py
   - tests/test_candidate_sets.py
   - tests/test_ranking_metrics.py
   - tests/test_base_zero_shot_local.py
@@ -89,6 +94,27 @@ model comparison must use the same explicit variant files:
 Base also accepts `--output-dir` so variant outputs do not overwrite canonical
 Base results.
 
+## Phase 2C Popularity-Matched Candidates
+
+Phase 2C added a `popularity_matched` candidate method for hard-candidate
+diagnosis. It writes named variants under the same explicit variant path as
+Phase 2A and does not overwrite canonical candidate files.
+
+The generator keeps the same fixed N validation/test samples, but selects
+negative candidates whose popularity is close to the target item. Generated
+records preserve the standard candidate schema and include candidate-generation
+metadata describing the method and popularity matching.
+
+The validated MovieLens-1M Phase 2C variant is:
+
+```text
+k5_popmatch_seed42
+```
+
+Each validation/test split has 5675 candidate records. Candidate diagnostics
+recorded mean absolute target-negative popularity gaps of `50.8842731278` on
+validation and `44.0282819383` on test.
+
 ## Tokenizer Label Checks
 
 Real-mode inference writes tokenization reports from the actual answer labels
@@ -152,6 +178,24 @@ phase2a_ranking_robustness_report.md
 This report avoids mixing canonical Base/Y outputs into candidate-variant
 comparisons.
 
+`src/analysis/candidate_set_diagnostics.py` summarizes candidate-set
+popularity gaps for canonical or variant files.
+
+`src/analysis/prediction_file_audit.py` audits prediction JSONL outputs for row
+counts, unique candidate keys, duplicate writes, split counts, and rank
+conflicts.
+
+`src/analysis/prediction_file_clean.py` writes de-duplicated prediction copies
+to a separate output directory and rejects files with conflicting duplicate
+scores or ranks.
+
+`src/analysis/phase2c_popmatch_grouped.py` reports popmatch ranking metrics by
+target-popularity bucket.
+
+`src/analysis/phase2c_result_summary.py` consolidates Phase 2C candidate
+diagnostics, overall metrics, and grouped deltas into final JSON and Markdown
+artifacts.
+
 ## Current Validated State
 
 MovieLens-1M Phase 2A generated:
@@ -164,3 +208,13 @@ MovieLens-1M Phase 2A generated:
 Each validation/test split has 5675 candidate records. Phase 2A robustness
 results are recorded in
 [Phase 2A Ranking Robustness](../reports/phase-2a-ranking-robustness.md).
+
+MovieLens-1M Phase 2C generated:
+
+- `k5_popmatch_seed42`
+
+Each validation/test split has 5675 candidate records. Phase 2C popmatch
+results are recorded in
+[Phase 2C Popmatch Hard-Candidate Diagnosis](../reports/phase-2c-popmatch-hard-candidate-diagnosis.md).
+Under this popularity-matched candidate stress test, N-K0 remains above M1 on
+next-item ranking.

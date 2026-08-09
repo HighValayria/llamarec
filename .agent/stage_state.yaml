@@ -1,20 +1,20 @@
 stage:
-  status: active
+  status: closed
   name: phase-2c-experimental-consolidation-hard-candidate-diagnosis
   goal: Phase 2C Experimental Consolidation and Hard-Candidate Diagnosis.
   scope: hard-negative evaluation design, traditional recommender baseline planning, multi-seed preparation, candidate-set diagnostics, artifact naming, budget estimates, stop conditions
   started: 2026-08-09
-  closed: null
+  closed: 2026-08-09
 
 wiki_access:
   read_authorized: false
   read_authorized_by: user
   read_authorized_at: 2026-08-09
   read_revoked_at: 2026-08-09
-  write_authorized: false
+  write_authorized: true
   write_authorized_by: user
   write_authorized_at: 2026-08-09
-  write_revoked_at: 2026-08-09
+  write_revoked_at: null
 
 current_task: .agent/current_task.md
 template: .agent/templates/current_task.md
@@ -25,3 +25,5 @@ notes:
   - Formal wiki reads are disabled unless the user grants a new stage-level read authorization.
   - One-time Phase 2B wiki write authorization was granted by the user on 2026-08-09 and revoked after the sync.
   - Phase 2A wiki sync was applied on 2026-08-09 after one-time user write authorization.
+  - Phase 2C wiki sync was applied on 2026-08-09 after one-time user write authorization.
+  - Leave write_authorized true while the authorized wiki diff remains uncommitted, as required by tools/stage_guard.py.

@@ -19,8 +19,13 @@ related_code:
   - src/inference/evaluate_m_adapter.py
   - src/inference/tokenization_check.py
   - src/analysis/grouped_error_analysis.py
+  - src/analysis/candidate_set_diagnostics.py
+  - src/analysis/prediction_file_audit.py
+  - src/analysis/prediction_file_clean.py
   - src/analysis/phase2a_robustness_report.py
   - src/analysis/phase2b_result_synthesis.py
+  - src/analysis/phase2c_popmatch_grouped.py
+  - src/analysis/phase2c_result_summary.py
   - tests/test_candidate_sets.py
   - tests/test_ranking_metrics.py
   - tests/test_base_zero_shot_local.py
@@ -30,6 +35,7 @@ related_code:
   - wiki/reports/phase-1-5-threshold-and-grouped-diagnostics.md
   - wiki/reports/phase-2a-ranking-robustness.md
   - wiki/reports/phase-2b-result-synthesis.md
+  - wiki/reports/phase-2c-popmatch-hard-candidate-diagnosis.md
 ---
 
 # Current Project State
@@ -64,6 +70,7 @@ Core reports are:
 - [Phase 1.5 Threshold and Grouped Diagnostics](reports/phase-1-5-threshold-and-grouped-diagnostics.md)
 - [Phase 2A Ranking Robustness](reports/phase-2a-ranking-robustness.md)
 - [Phase 2B Result Synthesis](reports/phase-2b-result-synthesis.md)
+- [Phase 2C Popmatch Hard-Candidate Diagnosis](reports/phase-2c-popmatch-hard-candidate-diagnosis.md)
 
 The current best dedicated binary model is Y-K0. The current best dedicated
 ranking model is N-K0. The current best multi-task diagnostic model is M1
@@ -141,14 +148,43 @@ Main Phase 2B claims:
 - Candidate order perturbation has small effects relative to candidate-size
   expansion.
 
+## Phase 2C Status
+
+Phase 2C popmatch hard-candidate diagnosis is complete. The stage added
+popularity-matched candidate generation and reusable audit, cleaning, grouped
+diagnostic, and result-summary scripts. It did not train new models.
+
+Cloud output:
+
+- `/root/llamarec/outputs/phase2c/movielens-1m/result_summary/phase2c_popmatch_result_summary.md`
+
+The `k5_popmatch_seed42` variant contains 5675 validation and 5675 test
+candidate records. Mean absolute target-negative popularity gap is
+`50.8842731278` on validation and `44.0282819383` on test, compared with about
+`690.6044` and `663.5850` for the canonical random validation/test candidate
+sets during diagnosis.
+
+Main Phase 2C findings:
+
+- N-K0 remains the strongest next-item ranking model under popularity-matched
+  hard candidates.
+- M1 remains close to N-K0 but does not surpass it on ranking. On test, N-K0
+  exceeds M1 by HR@1 `+0.0202643172`, NDCG@5 `+0.0092964437`, and MRR
+  `+0.0124199706`.
+- Y-K0 remains binary-strong but weak as next-item ranking, preserving the Y/N
+  semantic boundary.
+- N-K0's ranking advantage over M1 appears across target-popularity buckets;
+  the coldest `<=10` bucket favors N-K0 but has only 26 samples.
+
 ## Current Interpretation
 
 M1 is the best current multi-task tradeoff. It nearly matches Y-K0 on calibrated
 binary metrics and is the strongest M variant on ranking, but it does not exceed
 N-K0. Phase 2A strengthens this interpretation: as candidate sets become larger,
 the dedicated next-item model N-K0 is more robust than M1. Phase 2B packages
-this into the current paper-ready result interpretation and preserves the
-boundary that M1 is a compromise, not a single-task replacement.
+this into the current paper-ready result interpretation. Phase 2C further
+preserves the same boundary under popularity-matched hard candidates: M1 is a
+useful compromise, not a single-task replacement.
 
 ## Current Boundaries
 
@@ -157,10 +193,11 @@ or MovieLens-32M full training without a new scoped stage.
 
 Reasonable next work:
 
-- optionally run Y-K0 explicit-variant robustness as a preference-ranking
-  control;
-- design a later phase focused on cold-item robustness or stronger next-item
-  supervision.
+- plan traditional recommender baselines under the same split, candidate, and
+  metric contracts;
+- plan multi-seed stability checks for Y-K0, N-K0, and M1;
+- design a later phase focused on cold-item robustness, stronger next-item
+  supervision, or hard-negative training.
 
 ## Data Split Contract
 

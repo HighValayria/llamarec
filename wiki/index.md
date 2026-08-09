@@ -51,6 +51,7 @@ Accepted or currently active ADR links should be listed here.
 - [Phase 1.5 Threshold and Grouped Diagnostics](reports/phase-1-5-threshold-and-grouped-diagnostics.md)
 - [Phase 2A Ranking Robustness](reports/phase-2a-ranking-robustness.md)
 - [Phase 2B Result Synthesis](reports/phase-2b-result-synthesis.md)
+- [Phase 2C Popmatch Hard-Candidate Diagnosis](reports/phase-2c-popmatch-hard-candidate-diagnosis.md)
 
 ## History
 
