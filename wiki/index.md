@@ -52,6 +52,7 @@ Accepted or currently active ADR links should be listed here.
 - [Phase 2A Ranking Robustness](reports/phase-2a-ranking-robustness.md)
 - [Phase 2B Result Synthesis](reports/phase-2b-result-synthesis.md)
 - [Phase 2C Popmatch Hard-Candidate Diagnosis](reports/phase-2c-popmatch-hard-candidate-diagnosis.md)
+- [Baseline Popularity Comparison](reports/baseline-popularity-comparison.md)
 
 ## History
 

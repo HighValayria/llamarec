@@ -17,7 +17,10 @@ related_code:
   - src/inference/evaluate_n_adapter.py
   - src/inference/evaluate_m_adapter.py
   - src/inference/tokenization_check.py
+  - src/baselines/popularity.py
   - src/analysis/grouped_error_analysis.py
+  - src/analysis/baseline_result_summary.py
+  - src/analysis/baseline_llm_comparison.py
   - src/analysis/candidate_set_diagnostics.py
   - src/analysis/prediction_file_audit.py
   - src/analysis/prediction_file_clean.py
@@ -29,6 +32,9 @@ related_code:
   - tests/test_base_zero_shot_local.py
   - tests/test_n_m_adapter_evaluation.py
   - tests/test_analysis_outputs.py
+  - tests/test_popularity_baseline.py
+  - tests/test_baseline_result_summary.py
+  - tests/test_baseline_llm_comparison.py
 ---
 
 # Evaluation Layer
@@ -156,6 +162,31 @@ NDCG@5, NDCG@10, NDCG@20, NDCG@50
 Ranking metrics describe the rank of the true next interaction within the
 candidate set. They do not directly measure general preference ranking.
 
+## Traditional Baselines
+
+Traditional baselines must use the same fixed N candidate files as Base-N,
+N-K0, and M-N for each evaluated condition. They must not regenerate negatives
+during scoring.
+
+`src/baselines/popularity.py` implements the current deterministic Popularity
+baseline. It scores each candidate item by training-only item frequency and
+writes N-compatible prediction JSONL plus split metrics.
+
+Supported popularity sources:
+
+- `n_train_targets`: counts targets from `next_item_train`.
+- `preference_train_targets`: counts targets from `preference_train`.
+
+The baseline entry point accepts candidate-file overrides:
+
+```text
+--valid-candidates path/to/valid.jsonl
+--test-candidates path/to/test.jsonl
+```
+
+The baseline prediction files are overwritten on each run. They do not append
+to existing JSONL files.
+
 ## Analysis Outputs
 
 `src/analysis/grouped_error_analysis.py` joins predictions back to metadata and
@@ -196,6 +227,12 @@ target-popularity bucket.
 diagnostics, overall metrics, and grouped deltas into final JSON and Markdown
 artifacts.
 
+`src/analysis/baseline_result_summary.py` summarizes baseline ranking metrics
+across canonical and variant candidate conditions.
+
+`src/analysis/baseline_llm_comparison.py` combines baseline rows with Phase 2C
+LLM popmatch rows and writes comparison JSON/Markdown tables.
+
 ## Current Validated State
 
 MovieLens-1M Phase 2A generated:
@@ -218,3 +255,10 @@ results are recorded in
 [Phase 2C Popmatch Hard-Candidate Diagnosis](../reports/phase-2c-popmatch-hard-candidate-diagnosis.md).
 Under this popularity-matched candidate stress test, N-K0 remains above M1 on
 next-item ranking.
+
+MovieLens-1M Popularity baseline comparison generated canonical k5 and
+`k5_popmatch_seed42` outputs for both N-train and preference-train popularity
+sources. Results are recorded in
+[Baseline Popularity Comparison](../reports/baseline-popularity-comparison.md).
+Canonical random k5 candidates expose a popularity shortcut; popmatch k5 is the
+fair comparison condition for Phase 2C LLM rows.

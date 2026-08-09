@@ -1,10 +1,10 @@
 stage:
-  status: active
+  status: closed
   name: baseline-comparison
   goal: Baseline comparison under existing MovieLens split, candidate, and ranking metric contracts.
   scope: popularity baseline first; BPR/MF and SASRec planning after the first baseline pipeline is validated
   started: 2026-08-09
-  closed: null
+  closed: 2026-08-09
 
 wiki_access:
   read_authorized: false
@@ -27,3 +27,4 @@ notes:
   - Phase 2A wiki sync was applied on 2026-08-09 after one-time user write authorization.
   - Phase 2C wiki sync was applied on 2026-08-09 after one-time user write authorization.
   - Leave write_authorized true while the authorized wiki diff remains uncommitted, as required by tools/stage_guard.py.
+  - Baseline wiki sync was applied on 2026-08-09 after one-time user write authorization.

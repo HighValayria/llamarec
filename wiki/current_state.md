@@ -18,7 +18,10 @@ related_code:
   - src/inference/evaluate_n_adapter.py
   - src/inference/evaluate_m_adapter.py
   - src/inference/tokenization_check.py
+  - src/baselines/popularity.py
   - src/analysis/grouped_error_analysis.py
+  - src/analysis/baseline_result_summary.py
+  - src/analysis/baseline_llm_comparison.py
   - src/analysis/candidate_set_diagnostics.py
   - src/analysis/prediction_file_audit.py
   - src/analysis/prediction_file_clean.py
@@ -31,11 +34,15 @@ related_code:
   - tests/test_base_zero_shot_local.py
   - tests/test_n_m_adapter_evaluation.py
   - tests/test_analysis_outputs.py
+  - tests/test_popularity_baseline.py
+  - tests/test_baseline_result_summary.py
+  - tests/test_baseline_llm_comparison.py
   - wiki/modules/evaluation_layer.md
   - wiki/reports/phase-1-5-threshold-and-grouped-diagnostics.md
   - wiki/reports/phase-2a-ranking-robustness.md
   - wiki/reports/phase-2b-result-synthesis.md
   - wiki/reports/phase-2c-popmatch-hard-candidate-diagnosis.md
+  - wiki/reports/baseline-popularity-comparison.md
 ---
 
 # Current Project State
@@ -71,6 +78,7 @@ Core reports are:
 - [Phase 2A Ranking Robustness](reports/phase-2a-ranking-robustness.md)
 - [Phase 2B Result Synthesis](reports/phase-2b-result-synthesis.md)
 - [Phase 2C Popmatch Hard-Candidate Diagnosis](reports/phase-2c-popmatch-hard-candidate-diagnosis.md)
+- [Baseline Popularity Comparison](reports/baseline-popularity-comparison.md)
 
 The current best dedicated binary model is Y-K0. The current best dedicated
 ranking model is N-K0. The current best multi-task diagnostic model is M1
@@ -176,6 +184,35 @@ Main Phase 2C findings:
 - N-K0's ranking advantage over M1 appears across target-popularity buckets;
   the coldest `<=10` bucket favors N-K0 but has only 26 samples.
 
+## Baseline Comparison Status
+
+The first traditional baseline stage is complete for deterministic Popularity
+baselines on MovieLens-1M. The stage added `src/baselines/popularity.py`,
+`src/analysis/baseline_result_summary.py`, and
+`src/analysis/baseline_llm_comparison.py`.
+
+Cloud output:
+
+- `/root/llamarec/outputs/baselines/movielens-1m/llm_comparison/baseline_llm_comparison.md`
+
+Two training-only popularity definitions were evaluated: `n_train_targets` and
+`preference_train_targets`. On canonical random k5 candidates, Popularity is
+strong: N-train Popularity test HR@1 is `0.5663436123`, and preference-train
+Popularity test HR@1 is `0.5295154185`. Under popmatch k5, the same baselines
+drop to HR@1 `0.3226431718` and `0.0918061674`.
+
+Under popmatch k5, N-K0 and M1 are clearly above Popularity baselines. N-K0
+exceeds N-train Popularity by HR@1 `+0.2220264317`, NDCG@5 `+0.1242154223`,
+and MRR `+0.1635976505`. M1 exceeds N-train Popularity by HR@1
+`+0.2017621145`, NDCG@5 `+0.1149189786`, and MRR `+0.1511776799`.
+
+Main baseline interpretation:
+
+- canonical random k5 candidates expose a popularity shortcut;
+- popmatch k5 is the fair comparison point for Phase 2C LLM ranking results;
+- popularity alone does not explain N-K0/M1 popmatch ranking performance;
+- BPR/MF and SASRec remain future scoped stages.
+
 ## Current Interpretation
 
 M1 is the best current multi-task tradeoff. It nearly matches Y-K0 on calibrated
@@ -184,7 +221,10 @@ N-K0. Phase 2A strengthens this interpretation: as candidate sets become larger,
 the dedicated next-item model N-K0 is more robust than M1. Phase 2B packages
 this into the current paper-ready result interpretation. Phase 2C further
 preserves the same boundary under popularity-matched hard candidates: M1 is a
-useful compromise, not a single-task replacement.
+useful compromise, not a single-task replacement. The first Popularity baseline
+comparison adds an important control: canonical random candidate results are
+heavily affected by popularity, while popmatch results show N-K0 and M1 above
+Popularity baselines.
 
 ## Current Boundaries
 
@@ -193,8 +233,8 @@ or MovieLens-32M full training without a new scoped stage.
 
 Reasonable next work:
 
-- plan traditional recommender baselines under the same split, candidate, and
-  metric contracts;
+- optionally plan BPR/MF and SASRec under the same split, candidate, and metric
+  contracts;
 - plan multi-seed stability checks for Y-K0, N-K0, and M1;
 - design a later phase focused on cold-item robustness, stronger next-item
   supervision, or hard-negative training.
