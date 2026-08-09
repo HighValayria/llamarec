@@ -20,6 +20,7 @@ related_code:
   - src/inference/tokenization_check.py
   - src/analysis/grouped_error_analysis.py
   - src/analysis/phase2a_robustness_report.py
+  - src/analysis/phase2b_result_synthesis.py
   - tests/test_candidate_sets.py
   - tests/test_ranking_metrics.py
   - tests/test_base_zero_shot_local.py
@@ -28,6 +29,7 @@ related_code:
   - wiki/modules/evaluation_layer.md
   - wiki/reports/phase-1-5-threshold-and-grouped-diagnostics.md
   - wiki/reports/phase-2a-ranking-robustness.md
+  - wiki/reports/phase-2b-result-synthesis.md
 ---
 
 # Current Project State
@@ -61,6 +63,7 @@ Core reports are:
 - [Phase 1.5 STEP A Repository Check](reports/phase_1_5_step_a_repository_check.md)
 - [Phase 1.5 Threshold and Grouped Diagnostics](reports/phase-1-5-threshold-and-grouped-diagnostics.md)
 - [Phase 2A Ranking Robustness](reports/phase-2a-ranking-robustness.md)
+- [Phase 2B Result Synthesis](reports/phase-2b-result-synthesis.md)
 
 The current best dedicated binary model is Y-K0. The current best dedicated
 ranking model is N-K0. The current best multi-task diagnostic model is M1
@@ -109,12 +112,43 @@ Phase 1.5 showed:
 - Y-K0 ranking behaves like preference scoring, not next-interaction prediction.
 - Target popularity is a major ranking diagnostic axis.
 
+## Phase 2B Status
+
+Phase 2B result synthesis is complete. The stage added
+`src/analysis/phase2b_result_synthesis.py`, which reads existing Phase 1.5 and
+Phase 2A artifacts and writes paper-ready CSV/JSON/Markdown tables without
+training models or recomputing inference.
+
+Cloud output:
+
+- `/root/llamarec/outputs/phase2b/result_synthesis/phase2b_result_synthesis.md`
+
+The generated synthesis provides:
+
+- validation-calibrated binary test metrics;
+- canonical 5-candidate ranking test metrics;
+- Phase 2A robustness test metrics;
+- key robustness deltas;
+- paper-ready claims and explicit claim boundaries.
+
+Main Phase 2B claims:
+
+- Y-K0 gives the strongest validation-calibrated binary F1 on the test split.
+- M1 nearly matches Y-K0 on calibrated binary F1.
+- N-K0 is the strongest canonical next-item ranking model.
+- M1 is the strongest multi-task ranking variant but remains below N-K0.
+- The N-K0 advantage over M1 grows under k50 candidate-size stress.
+- Candidate order perturbation has small effects relative to candidate-size
+  expansion.
+
 ## Current Interpretation
 
 M1 is the best current multi-task tradeoff. It nearly matches Y-K0 on calibrated
 binary metrics and is the strongest M variant on ranking, but it does not exceed
 N-K0. Phase 2A strengthens this interpretation: as candidate sets become larger,
-the dedicated next-item model N-K0 is more robust than M1.
+the dedicated next-item model N-K0 is more robust than M1. Phase 2B packages
+this into the current paper-ready result interpretation and preserves the
+boundary that M1 is a compromise, not a single-task replacement.
 
 ## Current Boundaries
 
@@ -123,8 +157,6 @@ or MovieLens-32M full training without a new scoped stage.
 
 Reasonable next work:
 
-- write the paper/report interpretation around M1 as a tradeoff rather than a
-  replacement for N-K0;
 - optionally run Y-K0 explicit-variant robustness as a preference-ranking
   control;
 - design a later phase focused on cold-item robustness or stronger next-item
