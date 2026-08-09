@@ -1,0 +1,39 @@
+status: draft_for_user_review
+note: "Current repository wiki already includes the Phase 2B sync. This proposal records what has been stabilized and what should be considered for any future wiki update after user approval."
+proposed_updates:
+  - id: W1
+    target: "wiki/current_state.md"
+    operation: "no-op"
+    reason: "Phase 2B completion, claims, and boundaries have already been synced."
+    confidence: "high"
+
+  - id: W2
+    target: "wiki/reports/phase-2b-result-synthesis.md"
+    operation: "no-op"
+    reason: "Durable Phase 2B report already exists and is linked from wiki/index.md."
+    confidence: "high"
+
+  - id: W3
+    target: "wiki/history/2026-08.md"
+    operation: "no-op"
+    reason: "Phase 2B semantic history has already been recorded."
+    confidence: "high"
+
+  - id: W4
+    target: "future Phase 2C wiki report"
+    operation: "create-after-stage-completion"
+    reason: "Only create a durable Phase 2C report after Phase 2C diagnostics are actually run and reviewed."
+    confidence: "medium"
+
+  - id: W5
+    target: "future current_state update"
+    operation: "update-after-stage-completion"
+    reason: "Only update the long-term current state after user approval and completed Phase 2C evidence."
+    confidence: "medium"
+
+excluded_from_wiki_now:
+  - "Unexecuted hard-negative results."
+  - "Unverified mechanisms for cold-item weakness."
+  - "Claims that KAR will necessarily help."
+  - "Detailed Phase 3 method commitments."
+  - "Any implication that Phase 2C is already active."

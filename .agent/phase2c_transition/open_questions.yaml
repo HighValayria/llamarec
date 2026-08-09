@@ -1,0 +1,39 @@
+status: draft_for_user_review
+source: phase_2c_transition_planning
+open_questions:
+  - id: Q1
+    question: "How much of N-K0's ranking advantage survives under harder negatives?"
+    notes:
+      - "Current canonical and Phase 2A candidate sets are still random-negative based."
+      - "Phase 2C should test harder candidate construction before proposing new model methods."
+
+  - id: Q2
+    question: "What is the main cause of cold-item weakness?"
+    candidate_explanations:
+      - "interaction frequency imbalance"
+      - "popularity shortcut"
+      - "random negatives are too easy"
+      - "insufficient item semantic information"
+      - "insufficient collaborative signal"
+    boundary: "Do not select a single mechanism before additional diagnosis."
+
+  - id: Q3
+    question: "Would hard-negative training improve larger-candidate and low-popularity ranking?"
+    boundary: "Training changes belong to a later method stage unless Phase 2C evidence supports them."
+
+  - id: Q4
+    question: "Would popularity-balanced or cold-aware supervision improve tail performance?"
+    boundary: "This is a future-method question, not a current completed finding."
+
+  - id: Q5
+    question: "Would KAR-inspired knowledge augmentation help cold or tail items specifically?"
+    boundary: "KAR should not be started unless Phase 2C shows a clear cold-item semantic knowledge gap."
+
+  - id: Q6
+    question: "Are the Y-K0, N-K0, and M1 conclusions stable across seeds?"
+    notes:
+      - "Candidate-size degradation trend should be checked with seed control before broad claims."
+
+  - id: Q7
+    question: "Where do recommendation-tuned LLMs stand relative to Popularity, BPR/MF, and SASRec baselines?"
+    boundary: "Baselines should use the same split, candidate sets, and ranking metrics where possible."

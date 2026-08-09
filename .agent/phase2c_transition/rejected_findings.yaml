@@ -1,0 +1,32 @@
+status: draft_for_user_review
+source: phase_1_5_phase_2a_phase_2b_artifacts
+rejected_or_deprecated_findings:
+  - id: R1
+    claim: "All M0 degradation comes from unavoidable multi-task conflict."
+    status: deprecated
+    reason: "M1 increased training budget and improved both Y and N interfaces, so M0 degradation cannot be attributed entirely to irreducible task conflict."
+
+  - id: R2
+    claim: "Simply increasing the Y sampling ratio fixes M-Y bias."
+    status: rejected
+    reason: "M2 did not improve the overall multi-task tradeoff and hurt N-side ranking."
+
+  - id: R3
+    claim: "Candidate order is the main ranking weakness."
+    status: rejected
+    reason: "Phase 2A k20 order perturbation changed HR@1 only slightly for Base, N-K0, and M1."
+
+  - id: R4
+    claim: "M1 fully surpasses the best single-task models."
+    status: rejected
+    reason: "M1 nearly matches Y-K0 on calibrated binary F1 but remains below N-K0 on canonical and robustness ranking."
+
+  - id: R5
+    claim: "N ranking is equivalent to user preference ranking."
+    status: rejected
+    reason: "N is defined as next-interaction ranking within a candidate set, not preference ranking."
+
+  - id: R6
+    claim: "The current system has solved cold-item ranking."
+    status: rejected
+    reason: "Grouped diagnostics show cold/low-popularity items remain the weakest ranking groups."

@@ -1,0 +1,58 @@
+status: draft_for_user_review
+source: phase_1_5_phase_2a_phase_2b_artifacts
+findings:
+  - id: F1
+    title: Y and N supervision learn different recommendation semantics
+    status: validated
+    evidence:
+      - "Y task: P(Like | History, Item)."
+      - "N task: P(Next Item | History, Candidate Set)."
+      - "Y-K0 improves explicit preference prediction, but Y-K0 P(Yes) ranking does not replace dedicated next-interaction ranking."
+    boundary: "Do not describe Y-K0 ranking as next-interaction ranking."
+
+  - id: F2
+    title: Y-K0 is the current strongest dedicated binary model
+    status: validated
+    evidence:
+      - "Validation-calibrated test F1: Y-K0=0.7831, M1=0.7818."
+      - "Y-K0 test AUC=0.7691, M1 test AUC=0.7669."
+    boundary: "M1 nearly matches Y-K0 after calibration, but does not clearly surpass it."
+
+  - id: F3
+    title: N-K0 is the strongest canonical 5-candidate next-item ranking model
+    status: validated
+    evidence:
+      - "N-K0 canonical test HR@1=0.7189, NDCG@5=0.8773, MRR=0.8356."
+      - "M1 canonical test HR@1=0.6950, NDCG@5=0.8674, MRR=0.8223."
+    boundary: "M1 is the strongest multi-task ranking variant, but remains below N-K0."
+
+  - id: F4
+    title: M1 is the current primary multi-task result
+    status: validated
+    evidence:
+      - "M0 uses 1:1 Y:N sampling with 1500 total steps."
+      - "M1 uses 1:1 Y:N sampling with 3000 total steps."
+      - "M1 improves both M-Y and M-N relative to M0."
+    boundary: "M0 remains the original MVP baseline; M1 is the current diagnostic best multi-task run."
+
+  - id: F5
+    title: Candidate order is not the main current robustness problem
+    status: validated
+    evidence:
+      - "k20 order perturbation HR@1 delta: Base=-0.0011, N-K0=+0.0065, M1=+0.0048."
+    boundary: "Current evidence does not support candidate order as the primary failure mode."
+
+  - id: F6
+    title: Candidate-size expansion is a major ranking stressor
+    status: validated
+    evidence:
+      - "N-K0 minus M1 HR@1 gap grows with candidate size: k5_perm=+0.0219, k20=+0.0453, k20_perm=+0.0470, k50=+0.0775."
+    boundary: "Harder or larger candidate settings amplify M1 ranking loss relative to dedicated N-K0."
+
+  - id: F7
+    title: Target popularity is the strongest grouped diagnostic axis
+    status: validated
+    evidence:
+      - "k20 popularity <=10: N-K0 HR@1=0.0769, M1 HR@1=0.0769."
+      - "k20 popularity >500: N-K0 HR@1=0.5328, M1 HR@1=0.4689."
+    boundary: "Cold/low-popularity ranking is an unresolved weakness; the mechanism is not yet proven."
