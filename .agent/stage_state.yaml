@@ -1,10 +1,10 @@
 stage:
-  status: closed
-  name: baseline-comparison
-  goal: Baseline comparison under existing MovieLens split, candidate, and ranking metric contracts.
-  scope: popularity baseline first; BPR/MF and SASRec planning after the first baseline pipeline is validated
+  status: active
+  name: bpr-mf-sasrec-baseline
+  goal: BPR/MF/SASRec baseline implementation under existing MovieLens split, candidate, and ranking metric contracts.
+  scope: dependency inspection, 100K smoke, fixed-candidate prediction outputs, then MovieLens-1M run decision
   started: 2026-08-09
-  closed: 2026-08-09
+  closed: null
 
 wiki_access:
   read_authorized: false
@@ -21,7 +21,7 @@ template: .agent/templates/current_task.md
 max_current_task_chars: 12000
 
 notes:
-  - Direct wiki read was used once for the baseline stage setup and compressed into current_task.
+  - Direct wiki read was used once for the BPR/MF/SASRec baseline stage setup and compressed into current_task.
   - Formal wiki reads are disabled unless the user grants a new stage-level read authorization.
   - One-time Phase 2B wiki write authorization was granted by the user on 2026-08-09 and revoked after the sync.
   - Phase 2A wiki sync was applied on 2026-08-09 after one-time user write authorization.
