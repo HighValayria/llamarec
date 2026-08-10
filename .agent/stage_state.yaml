@@ -1,16 +1,16 @@
 stage:
-  status: closed
-  name: bpr-mf-sasrec-baseline
-  goal: BPR/MF/SASRec baseline implementation under existing MovieLens split, candidate, and ranking metric contracts.
+  status: active
+  name: sasrec-baseline
+  goal: SASRec baseline implementation under existing MovieLens split, candidate, and ranking metric contracts.
   scope: dependency inspection, 100K smoke, fixed-candidate prediction outputs, then MovieLens-1M run decision
-  started: 2026-08-09
-  closed: 2026-08-10
+  started: 2026-08-10
+  closed: null
 
 wiki_access:
   read_authorized: false
   read_authorized_by: user
-  read_authorized_at: 2026-08-09
-  read_revoked_at: 2026-08-09
+  read_authorized_at: 2026-08-10
+  read_revoked_at: 2026-08-10
   write_authorized: false
   write_authorized_by: user
   write_authorized_at: 2026-08-10
@@ -30,3 +30,5 @@ notes:
   - Baseline wiki sync was applied on 2026-08-09 after one-time user write authorization.
   - BPR-MF baseline wiki sync was authorized by the user on 2026-08-10.
   - BPR-MF baseline wiki sync was applied on 2026-08-10 and write authorization was revoked after sync.
+  - SASRec baseline stage opened on 2026-08-10.
+  - SASRec stage-start direct wiki read was authorized by the user on 2026-08-10, compressed into current_task, and revoked.
