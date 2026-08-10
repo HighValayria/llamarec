@@ -97,31 +97,54 @@ def _comparison_rows(
 
 def _comparison_deltas(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     by_model = {row["model"]: row for row in rows}
-    comparisons = [
-        ("N-K0", "Popularity N-train popmatch k5"),
-        ("M1", "Popularity N-train popmatch k5"),
-        ("Base", "Popularity N-train popmatch k5"),
-        ("N-K0", "Popularity preference-train popmatch k5"),
-        ("M1", "Popularity preference-train popmatch k5"),
-        ("Base", "Popularity preference-train popmatch k5"),
+    available_llm_models = {
+        row["model"]
+        for row in rows
+        if row["family"] == "llm" and row["condition"] == "popmatch k5"
+    }
+    preferred_order = ["N-K0", "M1", "Base", "Y-K0"]
+    llm_models = [
+        model
+        for model in preferred_order
+        if model in available_llm_models
+    ] + [
+        model
+        for model in sorted(available_llm_models)
+        if model not in preferred_order
+    ]
+    baseline_models = [
+        row["model"]
+        for row in rows
+        if row["family"] == "baseline" and row["condition"] == "popmatch k5"
     ]
     deltas = []
-    for left, right in comparisons:
-        left_row = by_model.get(left)
-        right_row = by_model.get(right)
-        if not left_row or not right_row:
-            continue
-        for metric in ["HR@1", "NDCG@5", "MRR"]:
-            if left_row.get(metric) is None or right_row.get(metric) is None:
-                continue
-            deltas.append(
-                {
-                    "comparison": f"{left} minus {right}",
-                    "metric": metric,
-                    "delta": round(float(left_row[metric]) - float(right_row[metric]), 10),
-                }
-            )
+    for left in llm_models:
+        for right in baseline_models:
+            deltas.extend(_metric_deltas(by_model, left, right))
     return deltas
+
+
+def _metric_deltas(
+    by_model: dict[str, dict[str, Any]],
+    left: str,
+    right: str,
+) -> list[dict[str, Any]]:
+    left_row = by_model.get(left)
+    right_row = by_model.get(right)
+    if not left_row or not right_row:
+        return []
+    output = []
+    for metric in ["HR@1", "NDCG@5", "MRR"]:
+        if left_row.get(metric) is None or right_row.get(metric) is None:
+            continue
+        output.append(
+            {
+                "comparison": f"{left} minus {right}",
+                "metric": metric,
+                "delta": round(float(left_row[metric]) - float(right_row[metric]), 10),
+            }
+        )
+    return output
 
 
 def _write_json(path: Path, payload: dict[str, Any]) -> None:

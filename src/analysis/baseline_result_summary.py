@@ -16,6 +16,8 @@ DEFAULT_RUNS = {
     "Popularity N-train popmatch k5": "popularity_k5_popmatch_seed42/test_metrics.json",
     "Popularity preference-train canonical k5": "popularity_preftrain_canonical_k5/test_metrics.json",
     "Popularity preference-train popmatch k5": "popularity_preftrain_k5_popmatch_seed42/test_metrics.json",
+    "BPR-MF canonical k5": "bpr_mf_canonical_k5/test_metrics.json",
+    "BPR-MF popmatch k5": "bpr_mf_k5_popmatch_seed42/test_metrics.json",
 }
 
 
@@ -163,6 +165,7 @@ def _write_markdown(path: Path, payload: dict[str, Any]) -> None:
         "",
         "- Popularity is a non-LLM ranking baseline scored from training-only item counts.",
         "- `N-train` counts next-item train targets; `preference-train` counts Y train targets as train-region interactions.",
+        "- BPR-MF is a trainable matrix-factorization baseline trained from `next_item_train` targets.",
         "- A large canonical-to-popmatch drop indicates that random candidates expose a popularity shortcut.",
         "- Compare these rows with LLM metrics only when the same candidate files and splits are used.",
         "",

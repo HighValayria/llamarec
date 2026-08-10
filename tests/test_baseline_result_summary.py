@@ -12,6 +12,8 @@ def test_baseline_result_summary_writes_metrics_and_deltas(tmp_path):
     _write_metrics(input_dir / "popularity_k5_popmatch_seed42" / "test_metrics.json", 0.3, 0.6, 0.5)
     _write_metrics(input_dir / "popularity_preftrain_canonical_k5" / "test_metrics.json", 0.5, 0.7, 0.6)
     _write_metrics(input_dir / "popularity_preftrain_k5_popmatch_seed42" / "test_metrics.json", 0.1, 0.4, 0.3)
+    _write_metrics(input_dir / "bpr_mf_canonical_k5" / "test_metrics.json", 0.55, 0.75, 0.65)
+    _write_metrics(input_dir / "bpr_mf_k5_popmatch_seed42" / "test_metrics.json", 0.35, 0.65, 0.55)
 
     summary = run_baseline_result_summary(
         config_path=tmp_path / "configs" / "experiment.yaml",
@@ -25,11 +27,12 @@ def test_baseline_result_summary_writes_metrics_and_deltas(tmp_path):
     )
     report = (output_dir / "baseline_ranking_summary.md").read_text(encoding="utf-8")
 
-    assert summary["rows"] == 4
+    assert summary["rows"] == 6
     assert rows[0]["baseline"] == "Popularity N-train canonical k5"
     assert payload["condition_deltas"][0]["delta"] == -0.3
-    assert len(payload["condition_deltas"]) == 6
+    assert len(payload["condition_deltas"]) == 9
     assert "popularity shortcut" in report
+    assert "BPR-MF" in report
 
 
 def _write_config(root: Path) -> None:
