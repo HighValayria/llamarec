@@ -5,8 +5,8 @@ status: current
 authority: descriptive
 source: mixed
 created: 2026-07-28
-updated: 2026-08-09
-last_verified: 2026-08-09
+updated: 2026-08-10
+last_verified: 2026-08-10
 related_code:
   - task.md
   - README.md
@@ -19,6 +19,7 @@ related_code:
   - src/inference/evaluate_m_adapter.py
   - src/inference/tokenization_check.py
   - src/baselines/popularity.py
+  - src/baselines/bpr_mf.py
   - src/analysis/grouped_error_analysis.py
   - src/analysis/baseline_result_summary.py
   - src/analysis/baseline_llm_comparison.py
@@ -35,6 +36,7 @@ related_code:
   - tests/test_n_m_adapter_evaluation.py
   - tests/test_analysis_outputs.py
   - tests/test_popularity_baseline.py
+  - tests/test_bpr_mf_baseline.py
   - tests/test_baseline_result_summary.py
   - tests/test_baseline_llm_comparison.py
   - wiki/modules/evaluation_layer.md
@@ -43,6 +45,7 @@ related_code:
   - wiki/reports/phase-2b-result-synthesis.md
   - wiki/reports/phase-2c-popmatch-hard-candidate-diagnosis.md
   - wiki/reports/baseline-popularity-comparison.md
+  - wiki/reports/baseline-bpr-mf-comparison.md
 ---
 
 # Current Project State
@@ -79,6 +82,7 @@ Core reports are:
 - [Phase 2B Result Synthesis](reports/phase-2b-result-synthesis.md)
 - [Phase 2C Popmatch Hard-Candidate Diagnosis](reports/phase-2c-popmatch-hard-candidate-diagnosis.md)
 - [Baseline Popularity Comparison](reports/baseline-popularity-comparison.md)
+- [Baseline BPR-MF Comparison](reports/baseline-bpr-mf-comparison.md)
 
 The current best dedicated binary model is Y-K0. The current best dedicated
 ranking model is N-K0. The current best multi-task diagnostic model is M1
@@ -186,10 +190,11 @@ Main Phase 2C findings:
 
 ## Baseline Comparison Status
 
-The first traditional baseline stage is complete for deterministic Popularity
-baselines on MovieLens-1M. The stage added `src/baselines/popularity.py`,
-`src/analysis/baseline_result_summary.py`, and
-`src/analysis/baseline_llm_comparison.py`.
+The traditional baseline work now includes deterministic Popularity baselines
+and an in-repository PyTorch BPR-MF baseline on MovieLens-1M. The baseline
+analysis path uses `src/analysis/baseline_result_summary.py` and
+`src/analysis/baseline_llm_comparison.py` to compare canonical and popmatch
+candidate conditions.
 
 Cloud output:
 
@@ -201,17 +206,26 @@ strong: N-train Popularity test HR@1 is `0.5663436123`, and preference-train
 Popularity test HR@1 is `0.5295154185`. Under popmatch k5, the same baselines
 drop to HR@1 `0.3226431718` and `0.0918061674`.
 
-Under popmatch k5, N-K0 and M1 are clearly above Popularity baselines. N-K0
-exceeds N-train Popularity by HR@1 `+0.2220264317`, NDCG@5 `+0.1242154223`,
-and MRR `+0.1635976505`. M1 exceeds N-train Popularity by HR@1
-`+0.2017621145`, NDCG@5 `+0.1149189786`, and MRR `+0.1511776799`.
+BPR-MF was trained from `next_item_train` targets with embedding dimension 64,
+10 epochs, batch size 4096, learning rate 0.01, and seed 42. It reaches test
+HR@1 `0.5610572687`, NDCG@5 `0.8066675971`, and MRR `0.7411424376` on
+canonical random k5 candidates. Under `k5_popmatch_seed42`, BPR-MF drops to
+HR@1 `0.3351541850`, NDCG@5 `0.6757962567`, and MRR `0.5690719530`.
+
+Under popmatch k5, BPR-MF is the strongest non-LLM baseline evaluated so far,
+but N-K0 and M1 remain clearly above it. N-K0 exceeds BPR-MF popmatch by HR@1
+`+0.2095154185`, NDCG@5 `+0.1120011246`, and MRR `+0.1480117474`. M1 exceeds
+BPR-MF popmatch by HR@1 `+0.1892511013`, NDCG@5 `+0.1027046809`, and MRR
+`+0.1355917768`.
 
 Main baseline interpretation:
 
 - canonical random k5 candidates expose a popularity shortcut;
 - popmatch k5 is the fair comparison point for Phase 2C LLM ranking results;
 - popularity alone does not explain N-K0/M1 popmatch ranking performance;
-- BPR/MF and SASRec remain future scoped stages.
+- a trainable matrix-factorization baseline narrows the non-LLM control but
+  still does not explain N-K0/M1 popmatch ranking performance;
+- SASRec remains a future scoped baseline stage.
 
 ## Current Interpretation
 
@@ -233,8 +247,7 @@ or MovieLens-32M full training without a new scoped stage.
 
 Reasonable next work:
 
-- optionally plan BPR/MF and SASRec under the same split, candidate, and metric
-  contracts;
+- optionally plan SASRec under the same split, candidate, and metric contracts;
 - plan multi-seed stability checks for Y-K0, N-K0, and M1;
 - design a later phase focused on cold-item robustness, stronger next-item
   supervision, or hard-negative training.

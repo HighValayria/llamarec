@@ -5,13 +5,15 @@ status: current
 authority: descriptive
 source: mixed
 created: 2026-08-09
-updated: 2026-08-09
-last_verified: 2026-08-09
+updated: 2026-08-10
+last_verified: 2026-08-10
 related_code:
   - src/baselines/popularity.py
+  - src/baselines/bpr_mf.py
   - src/analysis/baseline_result_summary.py
   - src/analysis/baseline_llm_comparison.py
   - tests/test_popularity_baseline.py
+  - tests/test_bpr_mf_baseline.py
   - tests/test_baseline_result_summary.py
   - tests/test_baseline_llm_comparison.py
 ---
@@ -20,12 +22,14 @@ related_code:
 
 ## Scope
 
-This report records the first traditional recommender baseline stage for
-MovieLens-1M. It evaluates deterministic Popularity baselines under the same
+This report records the first deterministic traditional recommender baseline
+stage for MovieLens-1M. It evaluates Popularity baselines under the same
 fixed N candidate-file and ranking-metric contracts used by Base, N-K0, M1, and
 Y-K0.
 
-The stage does not train BPR/MF, SASRec, or new LLM adapters.
+The later BPR-MF baseline stage is recorded separately in
+[Baseline BPR-MF Comparison](baseline-bpr-mf-comparison.md). SASRec and new LLM
+adapters remain out of scope for this report.
 
 ## Baselines
 
@@ -102,8 +106,10 @@ explain the popmatch N-K0/M1 ranking performance.
 - Do not compare canonical Popularity rows against popmatch LLM rows as a
   like-for-like ranking claim.
 - Do not claim that Popularity is a trained sequential recommender baseline.
-- Do not treat this stage as evidence about BPR/MF or SASRec until those
-  baselines are implemented under the same split/candidate/metric contract.
+- Use [Baseline BPR-MF Comparison](baseline-bpr-mf-comparison.md) for
+  matrix-factorization evidence.
+- Do not treat this stage as evidence about SASRec until that baseline is
+  implemented under the same split/candidate/metric contract.
 - Do not use Y-K0 ranking as next-interaction ranking evidence.
 
 ## Verification

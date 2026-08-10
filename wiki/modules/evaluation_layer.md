@@ -5,8 +5,8 @@ status: current
 authority: normative
 source: mixed
 created: 2026-07-30
-updated: 2026-08-09
-last_verified: 2026-08-09
+updated: 2026-08-10
+last_verified: 2026-08-10
 related_code:
   - configs/experiment.yaml
   - src/eval/candidate_sets.py
@@ -18,6 +18,7 @@ related_code:
   - src/inference/evaluate_m_adapter.py
   - src/inference/tokenization_check.py
   - src/baselines/popularity.py
+  - src/baselines/bpr_mf.py
   - src/analysis/grouped_error_analysis.py
   - src/analysis/baseline_result_summary.py
   - src/analysis/baseline_llm_comparison.py
@@ -33,6 +34,7 @@ related_code:
   - tests/test_n_m_adapter_evaluation.py
   - tests/test_analysis_outputs.py
   - tests/test_popularity_baseline.py
+  - tests/test_bpr_mf_baseline.py
   - tests/test_baseline_result_summary.py
   - tests/test_baseline_llm_comparison.py
 ---
@@ -187,6 +189,22 @@ The baseline entry point accepts candidate-file overrides:
 The baseline prediction files are overwritten on each run. They do not append
 to existing JSONL files.
 
+`src/baselines/bpr_mf.py` implements the current trainable matrix-factorization
+baseline. It trains from `next_item_train` targets with BPR loss, scores only
+the fixed candidate items supplied by the N candidate files, and writes
+N-compatible prediction JSONL plus split metrics. Its outputs include model and
+mapping artifacts in addition to metrics and prediction files.
+
+The BPR-MF entry point accepts the same candidate-file overrides:
+
+```text
+--valid-candidates path/to/valid.jsonl
+--test-candidates path/to/test.jsonl
+```
+
+BPR-MF prediction files are overwritten on each run. They do not append to
+existing JSONL files.
+
 ## Analysis Outputs
 
 `src/analysis/grouped_error_analysis.py` joins predictions back to metadata and
@@ -256,9 +274,12 @@ results are recorded in
 Under this popularity-matched candidate stress test, N-K0 remains above M1 on
 next-item ranking.
 
-MovieLens-1M Popularity baseline comparison generated canonical k5 and
-`k5_popmatch_seed42` outputs for both N-train and preference-train popularity
-sources. Results are recorded in
-[Baseline Popularity Comparison](../reports/baseline-popularity-comparison.md).
+MovieLens-1M baseline comparison generated canonical k5 and
+`k5_popmatch_seed42` outputs for Popularity and BPR-MF baselines. Popularity
+results are recorded in
+[Baseline Popularity Comparison](../reports/baseline-popularity-comparison.md),
+and BPR-MF results are recorded in
+[Baseline BPR-MF Comparison](../reports/baseline-bpr-mf-comparison.md).
 Canonical random k5 candidates expose a popularity shortcut; popmatch k5 is the
-fair comparison condition for Phase 2C LLM rows.
+fair comparison condition for Phase 2C LLM rows. Under popmatch k5, N-K0 and
+M1 remain above the strongest non-LLM baseline evaluated so far.
