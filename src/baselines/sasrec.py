@@ -120,6 +120,7 @@ def run_sasrec_baseline(
     seed: int | None = None,
     max_train_samples: int | None = None,
     device: str = "auto",
+    model_dir: str | Path | None = None,
 ) -> dict[str, Any]:
     """Train SASRec from N train sequences and score fixed N candidate files."""
 
@@ -147,7 +148,6 @@ def run_sasrec_baseline(
     torch.manual_seed(resolved_seed)
     resolved_device = _resolve_device(device)
 
-    train_records = _load_train_records(config, dataset_key, max_train_samples)
     candidate_records_by_split = {
         split_name: _read_candidate_records(
             config,
@@ -158,44 +158,63 @@ def run_sasrec_baseline(
         )
         for split_name in normalized_splits
     }
-    mappings = _build_mappings(train_records, candidate_records_by_split)
-    resolved_max_sequence_length = int(
-        max_sequence_length
-        if max_sequence_length is not None
-        else config.get("dataset", {}).get("history_length", 10)
-    )
-    if resolved_max_sequence_length <= 0:
-        raise ValueError("max_sequence_length must be positive")
+    source_model_dir = _resolve_model_dir(config, model_dir)
+    if source_model_dir is None:
+        train_records = _load_train_records(config, dataset_key, max_train_samples)
+        mappings = _build_mappings(train_records, candidate_records_by_split)
+        resolved_max_sequence_length = int(
+            max_sequence_length
+            if max_sequence_length is not None
+            else config.get("dataset", {}).get("history_length", 10)
+        )
+        if resolved_max_sequence_length <= 0:
+            raise ValueError("max_sequence_length must be positive")
 
-    examples = _encode_training_examples(
-        train_records,
-        mappings["item_to_index"],
-        resolved_max_sequence_length,
-    )
-    if not examples:
-        raise ValueError("SASRec training requires at least one non-empty history example")
+        examples = _encode_training_examples(
+            train_records,
+            mappings["item_to_index"],
+            resolved_max_sequence_length,
+        )
+        if not examples:
+            raise ValueError("SASRec training requires at least one non-empty history example")
 
-    model = SASRec(
-        item_count=len(mappings["item_to_index"]),
-        max_sequence_length=resolved_max_sequence_length,
-        embedding_dim=embedding_dim,
-        num_heads=num_heads,
-        num_layers=num_layers,
-        dropout=dropout,
-    ).to(resolved_device)
-    losses = _train_model(
-        model=model,
-        examples=examples,
-        epochs=epochs,
-        batch_size=batch_size,
-        learning_rate=learning_rate,
-        weight_decay=weight_decay,
-        rng=rng,
-        device=resolved_device,
-    )
+        model = SASRec(
+            item_count=len(mappings["item_to_index"]),
+            max_sequence_length=resolved_max_sequence_length,
+            embedding_dim=embedding_dim,
+            num_heads=num_heads,
+            num_layers=num_layers,
+            dropout=dropout,
+        ).to(resolved_device)
+        losses = _train_model(
+            model=model,
+            examples=examples,
+            epochs=epochs,
+            batch_size=batch_size,
+            learning_rate=learning_rate,
+            weight_decay=weight_decay,
+            rng=rng,
+            device=resolved_device,
+        )
+        train_examples = len(examples)
+        item_count = len(mappings["item_to_index"])
+    else:
+        model, mappings, loaded_summary = _load_model_artifacts(source_model_dir, resolved_device)
+        resolved_max_sequence_length = int(loaded_summary["max_sequence_length"])
+        embedding_dim = int(loaded_summary["embedding_dim"])
+        num_heads = int(loaded_summary["num_heads"])
+        num_layers = int(loaded_summary["num_layers"])
+        dropout = float(loaded_summary["dropout"])
+        losses = []
+        train_examples = int(loaded_summary.get("train_examples", 0))
+        item_count = len(mappings["item_to_index"])
+        _validate_candidate_items(candidate_records_by_split, mappings["item_to_index"])
 
     write_yaml(output_path / "config_snapshot.yaml", _config_snapshot(config))
-    _write_model_artifacts(output_path, model, mappings)
+    if source_model_dir is None:
+        _write_model_artifacts(output_path, model, mappings)
+    else:
+        write_json(output_path / "mappings.json", mappings)
 
     metrics_by_split = {}
     counts_by_split = {}
@@ -232,8 +251,8 @@ def run_sasrec_baseline(
         "counts": counts_by_split,
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "train_source": "next_item_train.history_target",
-        "train_examples": len(examples),
-        "items": len(mappings["item_to_index"]),
+        "train_examples": train_examples,
+        "items": item_count,
         "max_sequence_length": resolved_max_sequence_length,
         "embedding_dim": embedding_dim,
         "num_heads": num_heads,
@@ -247,6 +266,8 @@ def run_sasrec_baseline(
         "device": str(resolved_device),
         "epoch_losses": losses,
         "ranking_scoring": "sasrec_sequence_dot_product",
+        "model_dir": str(source_model_dir) if source_model_dir is not None else None,
+        "eval_only": source_model_dir is not None,
     }
     write_json(output_path / "run_summary.json", run_summary)
 
@@ -347,7 +368,11 @@ def _train_model(
             )
             logits = model.logits(sequences)
             logits[:, 0] = -1e9
+            if not torch.isfinite(logits).all():
+                raise FloatingPointError("SASRec produced non-finite logits during training")
             loss = torch.nn.functional.cross_entropy(logits, targets)
+            if not torch.isfinite(loss):
+                raise FloatingPointError("SASRec training loss became non-finite")
 
             optimizer.zero_grad()
             loss.backward()
@@ -397,6 +422,8 @@ def _predict_records(
                 float(value)
                 for value in model.score_candidates(sequence, candidate_indices).squeeze(0).tolist()
             ]
+            if not all(_is_finite(score) for score in scores):
+                raise FloatingPointError("SASRec produced non-finite candidate scores")
             best_index = max(range(len(scores)), key=lambda index: (scores[index], -index))
             prediction = {
                 "model": "sasrec",
@@ -451,7 +478,65 @@ def _target_movie_id(record: dict[str, Any]) -> str:
 
 def _left_pad(values: list[int], length: int) -> list[int]:
     trimmed = values[-length:]
-    return [0] * (length - len(trimmed)) + trimmed
+    return trimmed + [0] * (length - len(trimmed))
+
+
+def _resolve_model_dir(config: dict[str, Any], model_dir: str | Path | None) -> Path | None:
+    if model_dir is None:
+        return None
+    path = Path(model_dir)
+    if not path.is_absolute():
+        path = Path(config["_repo_root"]) / path
+    return path
+
+
+def _load_model_artifacts(
+    model_dir: Path,
+    device: torch.device,
+) -> tuple[SASRec, dict[str, dict[str, int]], dict[str, Any]]:
+    mappings_path = model_dir / "mappings.json"
+    summary_path = model_dir / "run_summary.json"
+    weights_path = model_dir / "model.pt"
+    if not mappings_path.exists() or not summary_path.exists() or not weights_path.exists():
+        raise FileNotFoundError("model_dir must contain mappings.json, run_summary.json, and model.pt")
+    mappings = json.loads(mappings_path.read_text(encoding="utf-8"))
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    model = SASRec(
+        item_count=len(mappings["item_to_index"]),
+        max_sequence_length=int(summary["max_sequence_length"]),
+        embedding_dim=int(summary["embedding_dim"]),
+        num_heads=int(summary["num_heads"]),
+        num_layers=int(summary["num_layers"]),
+        dropout=float(summary["dropout"]),
+    ).to(device)
+    model.load_state_dict(torch.load(weights_path, map_location=device))
+    return model, mappings, summary
+
+
+def _validate_candidate_items(
+    candidate_records_by_split: dict[str, list[dict[str, Any]]],
+    item_to_index: dict[str, int],
+) -> None:
+    missing = set()
+    for records in candidate_records_by_split.values():
+        for record in records:
+            missing.update(
+                str(movie_id)
+                for movie_id in record["candidate_movie_ids"]
+                if str(movie_id) not in item_to_index
+            )
+            missing.update(
+                movie_id
+                for movie_id in _history_movie_ids(record)
+                if movie_id not in item_to_index
+            )
+    if missing:
+        sample = ", ".join(sorted(missing)[:10])
+        raise ValueError(f"model_dir mappings do not contain candidate/history items: {sample}")
+
+
+def _is_finite(value: float) -> bool:
+    return value == value and value not in {float("inf"), float("-inf")}
 
 
 def _resolve_device(device: str) -> torch.device:
@@ -588,6 +673,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--max-train-samples", type=int, default=None)
     parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
+    parser.add_argument("--model-dir", default=None)
     return parser.parse_args()
 
 
@@ -615,6 +701,7 @@ def main() -> None:
         seed=args.seed,
         max_train_samples=args.max_train_samples,
         device=args.device,
+        model_dir=args.model_dir,
     )
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 

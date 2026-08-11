@@ -95,6 +95,61 @@ def test_sasrec_baseline_accepts_candidate_file_overrides(tmp_path):
     assert summary["counts"]["test"]["n_predictions"] == 1
 
 
+def test_sasrec_baseline_can_evaluate_existing_model_on_candidate_override(tmp_path):
+    _write_config(tmp_path)
+    _write_jsonl(
+        tmp_path / "data" / "processed" / "toy" / "next_item_train.jsonl",
+        [
+            _train_sample("u1", ["a"], "b"),
+            _train_sample("u1", ["a", "b"], "c"),
+        ],
+    )
+    _write_jsonl(
+        tmp_path / "data" / "candidates" / "toy" / "test.jsonl",
+        [_candidate_sample("u1", ["a", "b"], ["c", "x"], "c", 0)],
+    )
+    train_summary = run_sasrec_baseline(
+        config_path=tmp_path / "configs" / "experiment.yaml",
+        dataset_key="toy",
+        splits=["test"],
+        output_dir=tmp_path / "outputs" / "trained",
+        max_sequence_length=2,
+        embedding_dim=8,
+        num_heads=2,
+        num_layers=1,
+        dropout=0.0,
+        epochs=1,
+        seed=13,
+        device="cpu",
+    )
+    override_path = tmp_path / "custom" / "test_candidates.jsonl"
+    _write_jsonl(
+        override_path,
+        [_candidate_sample("u1", ["a", "b"], ["x", "c"], "c", 1)],
+    )
+
+    eval_summary = run_sasrec_baseline(
+        config_path=tmp_path / "configs" / "experiment.yaml",
+        dataset_key="toy",
+        splits=["test"],
+        candidate_files={"test": override_path},
+        output_dir=tmp_path / "outputs" / "eval_only",
+        model_dir=train_summary["outputs_dir"],
+        device="cpu",
+    )
+
+    output_dir = Path(eval_summary["outputs_dir"])
+    run_summary = json.loads((output_dir / "run_summary.json").read_text(encoding="utf-8"))
+    prediction = json.loads(
+        (output_dir / "n_test_predictions.jsonl").read_text(encoding="utf-8").splitlines()[0]
+    )
+
+    assert run_summary["eval_only"] is True
+    assert run_summary["model_dir"] == train_summary["outputs_dir"]
+    assert prediction["ground_truth_index"] == 1
+    assert len(prediction["scores"]) == 2
+
+
 def _write_config(root: Path) -> None:
     config_dir = root / "configs"
     config_dir.mkdir(parents=True)

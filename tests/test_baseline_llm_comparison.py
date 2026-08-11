@@ -49,6 +49,7 @@ def test_baseline_llm_comparison_writes_table_and_deltas(tmp_path):
     assert any(row["comparison"] == "N-K0 minus BPR-MF popmatch k5" for row in payload["deltas"])
     assert any(row["comparison"] == "N-K0 minus SASRec popmatch k5" for row in payload["deltas"])
     assert "Popmatch rows are the fair comparison point" in report
+    assert "non-budget-matched" in report
 
 
 def _write_config(root: Path) -> None:

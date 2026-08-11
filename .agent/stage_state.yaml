@@ -32,3 +32,4 @@ notes:
   - BPR-MF baseline wiki sync was applied on 2026-08-10 and write authorization was revoked after sync.
   - SASRec baseline stage opened on 2026-08-10.
   - SASRec stage-start direct wiki read was authorized by the user on 2026-08-10, compressed into current_task, and revoked.
+  - SASRec follow-up wiki read for N-K0/M1 budget verification was authorized by the user on 2026-08-10, compressed into current_task, and revoked.

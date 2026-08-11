@@ -182,6 +182,7 @@ def _write_markdown(path: Path, payload: dict[str, Any]) -> None:
         "",
         "- Canonical baseline rows are included to expose random-candidate popularity shortcuts.",
         "- Popmatch rows are the fair comparison point for Phase 2C LLM results.",
+        "- Under the current non-budget-matched setting, SASRec is a strong specialized sequence baseline and should constrain, not overstate, LLM ranking claims.",
         "- Do not compare canonical baseline rows against popmatch LLM rows as a like-for-like ranking claim.",
         "",
     ]
