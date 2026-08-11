@@ -16,7 +16,7 @@ def test_baseline_llm_comparison_writes_table_and_deltas(tmp_path):
                 _baseline_row("Popularity N-train popmatch k5", 0.3, 0.6, 0.5),
                 _baseline_row("Popularity preference-train popmatch k5", 0.1, 0.5, 0.4),
                 _baseline_row("BPR-MF popmatch k5", 0.35, 0.65, 0.55),
-                _baseline_row("SASRec popmatch k5", 0.63, 0.83, 0.77),
+                _baseline_row("SASRec fixed e10 popmatch k5", 0.63, 0.83, 0.77),
             ]
         },
     )
@@ -47,7 +47,7 @@ def test_baseline_llm_comparison_writes_table_and_deltas(tmp_path):
     assert payload["deltas"][0]["comparison"] == "N-K0 minus Popularity N-train popmatch k5"
     assert payload["deltas"][0]["delta"] == 0.25
     assert any(row["comparison"] == "N-K0 minus BPR-MF popmatch k5" for row in payload["deltas"])
-    assert any(row["comparison"] == "N-K0 minus SASRec popmatch k5" for row in payload["deltas"])
+    assert any(row["comparison"] == "N-K0 minus SASRec fixed e10 popmatch k5" for row in payload["deltas"])
     assert "Popmatch rows are the fair comparison point" in report
     assert "non-budget-matched" in report
 

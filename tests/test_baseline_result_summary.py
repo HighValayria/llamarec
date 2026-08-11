@@ -14,8 +14,8 @@ def test_baseline_result_summary_writes_metrics_and_deltas(tmp_path):
     _write_metrics(input_dir / "popularity_preftrain_k5_popmatch_seed42" / "test_metrics.json", 0.1, 0.4, 0.3)
     _write_metrics(input_dir / "bpr_mf_canonical_k5" / "test_metrics.json", 0.55, 0.75, 0.65)
     _write_metrics(input_dir / "bpr_mf_k5_popmatch_seed42" / "test_metrics.json", 0.35, 0.65, 0.55)
-    _write_metrics(input_dir / "sasrec_canonical_k5" / "test_metrics.json", 0.77, 0.90, 0.86)
-    _write_metrics(input_dir / "sasrec_k5_popmatch_seed42" / "test_metrics.json", 0.63, 0.83, 0.77)
+    _write_metrics(input_dir / "sasrec_fixed_canonical_k5_e10" / "test_metrics.json", 0.77, 0.90, 0.86)
+    _write_metrics(input_dir / "sasrec_fixed_popmatch_k5_e10_eval" / "test_metrics.json", 0.63, 0.83, 0.77)
 
     summary = run_baseline_result_summary(
         config_path=tmp_path / "configs" / "experiment.yaml",

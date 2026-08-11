@@ -18,8 +18,8 @@ DEFAULT_RUNS = {
     "Popularity preference-train popmatch k5": "popularity_preftrain_k5_popmatch_seed42/test_metrics.json",
     "BPR-MF canonical k5": "bpr_mf_canonical_k5/test_metrics.json",
     "BPR-MF popmatch k5": "bpr_mf_k5_popmatch_seed42/test_metrics.json",
-    "SASRec canonical k5": "sasrec_canonical_k5/test_metrics.json",
-    "SASRec popmatch k5": "sasrec_k5_popmatch_seed42/test_metrics.json",
+    "SASRec fixed e10 canonical k5": "sasrec_fixed_canonical_k5_e10/test_metrics.json",
+    "SASRec fixed e10 popmatch k5": "sasrec_fixed_popmatch_k5_e10_eval/test_metrics.json",
 }
 
 
