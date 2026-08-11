@@ -119,6 +119,7 @@ def run_sasrec_baseline(
     weight_decay: float = 0.0,
     seed: int | None = None,
     max_train_samples: int | None = None,
+    max_steps: int | None = None,
     device: str = "auto",
     model_dir: str | Path | None = None,
 ) -> dict[str, Any]:
@@ -132,6 +133,8 @@ def run_sasrec_baseline(
         raise ValueError("num_layers must be positive")
     if epochs < 0:
         raise ValueError("epochs must be non-negative")
+    if max_steps is not None and max_steps < 0:
+        raise ValueError("max_steps must be non-negative")
     if batch_size <= 0:
         raise ValueError("batch_size must be positive")
     if dropout < 0 or dropout >= 1:
@@ -186,7 +189,7 @@ def run_sasrec_baseline(
             num_layers=num_layers,
             dropout=dropout,
         ).to(resolved_device)
-        losses = _train_model(
+        training_result = _train_model(
             model=model,
             examples=examples,
             epochs=epochs,
@@ -195,7 +198,12 @@ def run_sasrec_baseline(
             weight_decay=weight_decay,
             rng=rng,
             device=resolved_device,
+            max_steps=max_steps,
         )
+        losses = training_result["epoch_losses"]
+        optimizer_steps = training_result["optimizer_steps"]
+        completed_epochs = training_result["completed_epochs"]
+        training_stop = training_result["training_stop"]
         train_examples = len(examples)
         item_count = len(mappings["item_to_index"])
     else:
@@ -211,6 +219,10 @@ def run_sasrec_baseline(
         weight_decay = float(loaded_summary["weight_decay"])
         resolved_seed = int(loaded_summary["seed"])
         losses = []
+        optimizer_steps = int(loaded_summary.get("optimizer_steps", 0))
+        completed_epochs = int(loaded_summary.get("completed_epochs", epochs))
+        training_stop = str(loaded_summary.get("training_stop", "loaded_model"))
+        max_steps = loaded_summary.get("max_steps", max_steps)
         train_examples = int(loaded_summary.get("train_examples", 0))
         item_count = len(mappings["item_to_index"])
         _validate_candidate_items(candidate_records_by_split, mappings["item_to_index"])
@@ -264,6 +276,10 @@ def run_sasrec_baseline(
         "num_layers": num_layers,
         "dropout": dropout,
         "epochs": epochs,
+        "max_steps": max_steps,
+        "optimizer_steps": optimizer_steps,
+        "completed_epochs": completed_epochs,
+        "training_stop": training_stop,
         "batch_size": batch_size,
         "learning_rate": learning_rate,
         "weight_decay": weight_decay,
@@ -350,16 +366,23 @@ def _train_model(
     weight_decay: float,
     rng: Random,
     device: torch.device,
-) -> list[float]:
+    max_steps: int | None,
+) -> dict[str, Any]:
     optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
     losses = []
-    for _ in range(epochs):
+    optimizer_steps = 0
+    completed_epochs = 0
+    stop_after_steps = max_steps is not None
+    epoch_limit = epochs
+    while (optimizer_steps < max_steps) if stop_after_steps else (completed_epochs < epoch_limit):
         model.train()
         shuffled = list(examples)
         rng.shuffle(shuffled)
         total_loss = 0.0
         total_examples = 0
         for start in range(0, len(shuffled), batch_size):
+            if stop_after_steps and optimizer_steps >= max_steps:
+                break
             batch = shuffled[start:start + batch_size]
             sequences = torch.tensor(
                 [sequence for sequence, _ in batch],
@@ -382,11 +405,21 @@ def _train_model(
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+            optimizer_steps += 1
 
             total_loss += float(loss.detach()) * len(batch)
             total_examples += len(batch)
-        losses.append(total_loss / max(total_examples, 1))
-    return losses
+        if total_examples:
+            losses.append(total_loss / total_examples)
+        completed_epochs += 1
+        if stop_after_steps and optimizer_steps >= max_steps:
+            break
+    return {
+        "epoch_losses": losses,
+        "optimizer_steps": optimizer_steps,
+        "completed_epochs": completed_epochs,
+        "training_stop": "max_steps" if stop_after_steps else "epochs",
+    }
 
 
 def _predict_records(
@@ -677,6 +710,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--weight-decay", type=float, default=0.0)
     parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--max-train-samples", type=int, default=None)
+    parser.add_argument("--max-steps", type=int, default=None)
     parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     parser.add_argument("--model-dir", default=None)
     return parser.parse_args()
@@ -705,6 +739,7 @@ def main() -> None:
         weight_decay=args.weight_decay,
         seed=args.seed,
         max_train_samples=args.max_train_samples,
+        max_steps=args.max_steps,
         device=args.device,
         model_dir=args.model_dir,
     )

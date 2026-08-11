@@ -5,8 +5,8 @@ status: current
 authority: descriptive
 source: mixed
 created: 2026-07-28
-updated: 2026-08-10
-last_verified: 2026-08-10
+updated: 2026-08-11
+last_verified: 2026-08-11
 related_code: []
 ---
 
@@ -54,6 +54,7 @@ Accepted or currently active ADR links should be listed here.
 - [Phase 2C Popmatch Hard-Candidate Diagnosis](reports/phase-2c-popmatch-hard-candidate-diagnosis.md)
 - [Baseline Popularity Comparison](reports/baseline-popularity-comparison.md)
 - [Baseline BPR-MF Comparison](reports/baseline-bpr-mf-comparison.md)
+- [Baseline SASRec Comparison](reports/baseline-sasrec-comparison.md)
 
 ## History
 

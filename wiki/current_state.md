@@ -5,8 +5,8 @@ status: current
 authority: descriptive
 source: mixed
 created: 2026-07-28
-updated: 2026-08-10
-last_verified: 2026-08-10
+updated: 2026-08-11
+last_verified: 2026-08-11
 related_code:
   - task.md
   - README.md
@@ -20,6 +20,7 @@ related_code:
   - src/inference/tokenization_check.py
   - src/baselines/popularity.py
   - src/baselines/bpr_mf.py
+  - src/baselines/sasrec.py
   - src/analysis/grouped_error_analysis.py
   - src/analysis/baseline_result_summary.py
   - src/analysis/baseline_llm_comparison.py
@@ -37,6 +38,7 @@ related_code:
   - tests/test_analysis_outputs.py
   - tests/test_popularity_baseline.py
   - tests/test_bpr_mf_baseline.py
+  - tests/test_sasrec_baseline.py
   - tests/test_baseline_result_summary.py
   - tests/test_baseline_llm_comparison.py
   - wiki/modules/evaluation_layer.md
@@ -46,6 +48,7 @@ related_code:
   - wiki/reports/phase-2c-popmatch-hard-candidate-diagnosis.md
   - wiki/reports/baseline-popularity-comparison.md
   - wiki/reports/baseline-bpr-mf-comparison.md
+  - wiki/reports/baseline-sasrec-comparison.md
 ---
 
 # Current Project State
@@ -83,10 +86,13 @@ Core reports are:
 - [Phase 2C Popmatch Hard-Candidate Diagnosis](reports/phase-2c-popmatch-hard-candidate-diagnosis.md)
 - [Baseline Popularity Comparison](reports/baseline-popularity-comparison.md)
 - [Baseline BPR-MF Comparison](reports/baseline-bpr-mf-comparison.md)
+- [Baseline SASRec Comparison](reports/baseline-sasrec-comparison.md)
 
-The current best dedicated binary model is Y-K0. The current best dedicated
-ranking model is N-K0. The current best multi-task diagnostic model is M1
-(`diag_m1_1m_m_200k_3000`).
+The current best dedicated binary model is Y-K0. Among LLM runs, the current
+best dedicated ranking model is N-K0 and the current best multi-task diagnostic
+model is M1 (`diag_m1_1m_m_200k_3000`). SASRec is now the strongest specialized
+non-LLM sequence baseline under the fixed e10 popmatch comparison, but this is
+not a strict compute- or capacity-matched comparison against LLM adapters.
 
 ## Phase 2A Status
 
@@ -190,9 +196,10 @@ Main Phase 2C findings:
 
 ## Baseline Comparison Status
 
-The traditional baseline work now includes deterministic Popularity baselines
-and an in-repository PyTorch BPR-MF baseline on MovieLens-1M. The baseline
-analysis path uses `src/analysis/baseline_result_summary.py` and
+The traditional baseline work now includes deterministic Popularity baselines,
+an in-repository PyTorch BPR-MF baseline, and an in-repository PyTorch SASRec
+sequence baseline on MovieLens-1M. The baseline analysis path uses
+`src/analysis/baseline_result_summary.py` and
 `src/analysis/baseline_llm_comparison.py` to compare canonical and popmatch
 candidate conditions.
 
@@ -212,43 +219,58 @@ HR@1 `0.5610572687`, NDCG@5 `0.8066675971`, and MRR `0.7411424376` on
 canonical random k5 candidates. Under `k5_popmatch_seed42`, BPR-MF drops to
 HR@1 `0.3351541850`, NDCG@5 `0.6757962567`, and MRR `0.5690719530`.
 
-Under popmatch k5, BPR-MF is the strongest non-LLM baseline evaluated so far,
-but N-K0 and M1 remain clearly above it. N-K0 exceeds BPR-MF popmatch by HR@1
-`+0.2095154185`, NDCG@5 `+0.1120011246`, and MRR `+0.1480117474`. M1 exceeds
-BPR-MF popmatch by HR@1 `+0.1892511013`, NDCG@5 `+0.1027046809`, and MRR
-`+0.1355917768`.
+SASRec was implemented after BPR-MF. Pre-fix SASRec outputs were invalidated
+because a left-padding plus causal-mask interaction produced NaN losses and
+degenerate fixed-label predictions. The fixed implementation uses right padding,
+non-finite guards, and eval-only `--model-dir` scoring so the same trained
+canonical model can be evaluated against popmatch candidates. Fixed SASRec e10
+reaches test HR@1 `0.7793832599`, NDCG@5 `0.9044029047`, and MRR
+`0.8718942731` on canonical random k5 candidates. The same fixed e10 model
+evaluated on `k5_popmatch_seed42` reaches HR@1 `0.6394713656`, NDCG@5
+`0.8345499558`, and MRR `0.7791659325`.
+
+The capped 200k SASRec check reduces, but does not eliminate, the training
+budget mismatch with N-K0. With `max_train_samples=200000`, SASRec e1 remains
+below N-K0/M1 on popmatch HR@1 (`0.4623788546`), while SASRec e3 exceeds them
+on popmatch HR@1 (`0.5991189427`). These rows show that a specialized sequence
+recommender is a strong control; they do not prove an architecture-level result
+against LLM recommendation tuning under matched compute and capacity.
 
 Main baseline interpretation:
 
 - canonical random k5 candidates expose a popularity shortcut;
 - popmatch k5 is the fair comparison point for Phase 2C LLM ranking results;
-- popularity alone does not explain N-K0/M1 popmatch ranking performance;
-- a trainable matrix-factorization baseline narrows the non-LLM control but
-  still does not explain N-K0/M1 popmatch ranking performance;
-- SASRec remains a future scoped baseline stage.
+- popularity and BPR-MF alone do not explain N-K0/M1 popmatch ranking
+  performance;
+- fixed SASRec is a stronger specialized non-LLM sequence baseline than
+  Popularity or BPR-MF;
+- SASRec comparisons must carry non-budget/capacity-matched claim boundaries.
 
 ## Current Interpretation
 
 M1 is the best current multi-task tradeoff. It nearly matches Y-K0 on calibrated
 binary metrics and is the strongest M variant on ranking, but it does not exceed
-N-K0. Phase 2A strengthens this interpretation: as candidate sets become larger,
-the dedicated next-item model N-K0 is more robust than M1. Phase 2B packages
-this into the current paper-ready result interpretation. Phase 2C further
-preserves the same boundary under popularity-matched hard candidates: M1 is a
-useful compromise, not a single-task replacement. The first Popularity baseline
-comparison adds an important control: canonical random candidate results are
-heavily affected by popularity, while popmatch results show N-K0 and M1 above
-Popularity baselines.
+N-K0 among LLM ranking runs. Phase 2A strengthens this interpretation: as
+candidate sets become larger, the dedicated next-item LLM model N-K0 is more
+robust than M1. Phase 2B packages this into the LLM-centered paper-ready result
+interpretation. Phase 2C further preserves the same boundary under
+popularity-matched hard candidates: M1 is a useful compromise, not a
+single-task replacement. Traditional baselines now add two controls: canonical
+random candidate results are heavily affected by popularity, and a specialized
+sequence model can outperform the LLM next-item rows under the current
+non-budget-matched setup.
 
 ## Current Boundaries
 
-Do not start M3, KAR, hard negatives, SASRec, 7B models, multi-seed experiments,
-or MovieLens-32M full training without a new scoped stage.
+Do not start M3, KAR, hard negatives, 7B models, multi-seed experiments,
+MovieLens-32M full training, or a strict compute/capacity-matched LLM-vs-SASRec
+study without a new scoped stage.
 
 Reasonable next work:
 
-- optionally plan SASRec under the same split, candidate, and metric contracts;
 - plan multi-seed stability checks for Y-K0, N-K0, and M1;
+- plan stricter compute/capacity-matched comparisons between LLM adapters and
+  specialized sequence recommenders;
 - design a later phase focused on cold-item robustness, stronger next-item
   supervision, or hard-negative training.
 

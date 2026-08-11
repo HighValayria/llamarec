@@ -5,8 +5,8 @@ status: current
 authority: normative
 source: mixed
 created: 2026-07-30
-updated: 2026-08-10
-last_verified: 2026-08-10
+updated: 2026-08-11
+last_verified: 2026-08-11
 related_code:
   - configs/experiment.yaml
   - src/eval/candidate_sets.py
@@ -19,6 +19,7 @@ related_code:
   - src/inference/tokenization_check.py
   - src/baselines/popularity.py
   - src/baselines/bpr_mf.py
+  - src/baselines/sasrec.py
   - src/analysis/grouped_error_analysis.py
   - src/analysis/baseline_result_summary.py
   - src/analysis/baseline_llm_comparison.py
@@ -35,6 +36,7 @@ related_code:
   - tests/test_analysis_outputs.py
   - tests/test_popularity_baseline.py
   - tests/test_bpr_mf_baseline.py
+  - tests/test_sasrec_baseline.py
   - tests/test_baseline_result_summary.py
   - tests/test_baseline_llm_comparison.py
 ---
@@ -205,6 +207,25 @@ The BPR-MF entry point accepts the same candidate-file overrides:
 BPR-MF prediction files are overwritten on each run. They do not append to
 existing JSONL files.
 
+`src/baselines/sasrec.py` implements the current trainable sequence baseline.
+It trains from strict N train histories and targets, scores only fixed candidate
+items supplied by N candidate files, and writes N-compatible prediction JSONL
+plus split metrics. It supports:
+
+```text
+--valid-candidates path/to/valid.jsonl
+--test-candidates path/to/test.jsonl
+--device auto|cpu|cuda
+--model-dir outputs/baselines/{dataset}/sasrec_fixed_canonical_k5_e10
+```
+
+The `--model-dir` mode evaluates an existing trained SASRec model against a
+new fixed candidate condition without retraining. This is the preferred way to
+compare canonical and popmatch candidates for the same SASRec model. The
+implementation uses right padding with a causal Transformer encoder and raises
+an error on non-finite training logits, losses, or candidate scores. Earlier
+pre-fix SASRec outputs with NaN epoch losses are invalid and must not be used.
+
 ## Analysis Outputs
 
 `src/analysis/grouped_error_analysis.py` joins predictions back to metadata and
@@ -275,11 +296,15 @@ Under this popularity-matched candidate stress test, N-K0 remains above M1 on
 next-item ranking.
 
 MovieLens-1M baseline comparison generated canonical k5 and
-`k5_popmatch_seed42` outputs for Popularity and BPR-MF baselines. Popularity
-results are recorded in
+`k5_popmatch_seed42` outputs for Popularity, BPR-MF, and fixed SASRec
+baselines. Popularity results are recorded in
 [Baseline Popularity Comparison](../reports/baseline-popularity-comparison.md),
-and BPR-MF results are recorded in
-[Baseline BPR-MF Comparison](../reports/baseline-bpr-mf-comparison.md).
+BPR-MF results are recorded in
+[Baseline BPR-MF Comparison](../reports/baseline-bpr-mf-comparison.md), and
+SASRec results are recorded in
+[Baseline SASRec Comparison](../reports/baseline-sasrec-comparison.md).
 Canonical random k5 candidates expose a popularity shortcut; popmatch k5 is the
-fair comparison condition for Phase 2C LLM rows. Under popmatch k5, N-K0 and
-M1 remain above the strongest non-LLM baseline evaluated so far.
+fair comparison condition for Phase 2C LLM rows. Under popmatch k5, fixed
+SASRec e10 is above N-K0 and M1, while capped 200k SASRec e1 is below them and
+capped 200k SASRec e3 is above them. These SASRec comparisons are not strict
+compute- or capacity-matched claims against LLM adapters.

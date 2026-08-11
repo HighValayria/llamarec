@@ -95,6 +95,49 @@ def test_sasrec_baseline_accepts_candidate_file_overrides(tmp_path):
     assert summary["counts"]["test"]["n_predictions"] == 1
 
 
+def test_sasrec_baseline_can_stop_at_max_steps(tmp_path):
+    _write_config(tmp_path)
+    _write_jsonl(
+        tmp_path / "data" / "processed" / "toy" / "next_item_train.jsonl",
+        [
+            _train_sample("u1", ["a"], "b"),
+            _train_sample("u1", ["a", "b"], "c"),
+            _train_sample("u2", ["d"], "e"),
+            _train_sample("u2", ["d", "e"], "f"),
+            _train_sample("u3", ["g"], "h"),
+        ],
+    )
+    _write_jsonl(
+        tmp_path / "data" / "candidates" / "toy" / "test.jsonl",
+        [_candidate_sample("u1", ["a", "b"], ["c", "x"], "c", 0)],
+    )
+
+    summary = run_sasrec_baseline(
+        config_path=tmp_path / "configs" / "experiment.yaml",
+        dataset_key="toy",
+        splits=["test"],
+        output_dir=tmp_path / "outputs" / "max_steps",
+        max_sequence_length=3,
+        embedding_dim=8,
+        num_heads=2,
+        num_layers=1,
+        dropout=0.0,
+        epochs=10,
+        batch_size=2,
+        max_steps=2,
+        seed=17,
+        device="cpu",
+    )
+
+    run_summary = json.loads(
+        (Path(summary["outputs_dir"]) / "run_summary.json").read_text(encoding="utf-8")
+    )
+
+    assert run_summary["max_steps"] == 2
+    assert run_summary["optimizer_steps"] == 2
+    assert run_summary["training_stop"] == "max_steps"
+
+
 def test_sasrec_baseline_can_evaluate_existing_model_on_candidate_override(tmp_path):
     _write_config(tmp_path)
     _write_jsonl(
