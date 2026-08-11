@@ -205,6 +205,11 @@ def run_sasrec_baseline(
         num_heads = int(loaded_summary["num_heads"])
         num_layers = int(loaded_summary["num_layers"])
         dropout = float(loaded_summary["dropout"])
+        epochs = int(loaded_summary["epochs"])
+        batch_size = int(loaded_summary["batch_size"])
+        learning_rate = float(loaded_summary["learning_rate"])
+        weight_decay = float(loaded_summary["weight_decay"])
+        resolved_seed = int(loaded_summary["seed"])
         losses = []
         train_examples = int(loaded_summary.get("train_examples", 0))
         item_count = len(mappings["item_to_index"])

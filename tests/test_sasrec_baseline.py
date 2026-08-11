@@ -146,6 +146,8 @@ def test_sasrec_baseline_can_evaluate_existing_model_on_candidate_override(tmp_p
 
     assert run_summary["eval_only"] is True
     assert run_summary["model_dir"] == train_summary["outputs_dir"]
+    assert run_summary["epochs"] == 1
+    assert run_summary["batch_size"] == 256
     assert prediction["ground_truth_index"] == 1
     assert len(prediction["scores"]) == 2
 
