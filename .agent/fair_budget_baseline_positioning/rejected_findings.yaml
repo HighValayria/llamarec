@@ -1,0 +1,18 @@
+status: draft_for_user_review
+source: fair_budget_baseline_positioning_stage
+rejected_findings:
+  - id: RF1
+    claim: "SASRec is proven superior to N-K0 under sample-exposure-matched evaluation."
+    reason: "The roughly N-sample-exposure-matched diagnostic shows SASRec-exp-match below N-K0 by HR@1 -0.2767, NDCG@5 -0.1536, and MRR -0.2024."
+
+  - id: RF2
+    claim: "Optimizer-step alignment is a fair proxy for training budget."
+    reason: "SASRec s1500 saw 767,424 N exposures while N-K0 saw 12,000; the same optimizer-step count hides a 63.952x exposure difference."
+
+  - id: RF3
+    claim: "Cold-item weakness is LLM-specific."
+    reason: "In the <=10 popularity bucket, N-K0 and M1 outperform both SASRec s1500 and SASRec s3000."
+
+  - id: RF4
+    claim: "SASRec is robust to larger candidate sets."
+    reason: "SASRec s3000 HR@1 drops from 0.7736 at k5 to 0.3894 at k50."

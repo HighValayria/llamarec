@@ -5,8 +5,8 @@ status: current
 authority: descriptive
 source: mixed
 created: 2026-07-28
-updated: 2026-08-11
-last_verified: 2026-08-11
+updated: 2026-08-12
+last_verified: 2026-08-12
 related_code: []
 ---
 
@@ -55,6 +55,7 @@ Accepted or currently active ADR links should be listed here.
 - [Baseline Popularity Comparison](reports/baseline-popularity-comparison.md)
 - [Baseline BPR-MF Comparison](reports/baseline-bpr-mf-comparison.md)
 - [Baseline SASRec Comparison](reports/baseline-sasrec-comparison.md)
+- [Fair-Budget Baseline Positioning](reports/fair-budget-baseline-positioning.md)
 
 ## History
 

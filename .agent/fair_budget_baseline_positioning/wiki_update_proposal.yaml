@@ -1,0 +1,32 @@
+status: draft_for_user_review
+source: fair_budget_baseline_positioning_stage
+requires_user_write_authorization: true
+proposals:
+  - wiki_file: wiki/current_state.md
+    operation: update
+    reason: "Record that fair-budget positioning changed the interpretation of SASRec-vs-LLM results."
+    evidence:
+      - "training_budget_audit.csv"
+      - "sasrec_grouped_diagnostics.md"
+      - "sasrec_candidate_size_robustness.md"
+      - "sample_exposure_matched_diagnostic.md"
+
+  - wiki_file: wiki/reports/fair-budget-baseline-positioning.md
+    operation: create
+    reason: "Add durable report for the four-workstream fair-budget baseline positioning stage."
+    evidence:
+      - ".agent/fair_budget_baseline_positioning/stage_summary.md"
+      - ".agent/fair_budget_baseline_positioning/validated_findings.yaml"
+      - ".agent/fair_budget_baseline_positioning/rejected_findings.yaml"
+
+  - wiki_file: wiki/index.md
+    operation: update
+    reason: "Add navigation entry only if the new fair-budget report is approved."
+    evidence:
+      - "New report proposal."
+
+  - wiki_file: wiki/history/2026-08.md
+    operation: update
+    reason: "Record the semantic shift from step-aligned SASRec advantage to budget-sensitive interpretation."
+    evidence:
+      - "SASRec-exp-match below N-K0 under roughly matched N-task exposure."

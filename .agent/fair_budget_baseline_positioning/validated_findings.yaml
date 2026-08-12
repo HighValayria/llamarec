@@ -1,0 +1,55 @@
+status: draft_for_user_review
+source: fair_budget_baseline_positioning_stage
+findings:
+  - id: FB1
+    title: Step-aligned SASRec comparison has a large sample-exposure mismatch
+    status: validated
+    evidence:
+      - "N-K0 processed N-task exposure: 12,000."
+      - "SASRec s1500 processed N-task exposure: 767,424, or 63.952x N-K0."
+      - "SASRec s3000 processed N-task exposure: 1,534,656, or 127.888x N-K0."
+    boundary: "Do not call the step-aligned SASRec result compute-matched or sample-exposure-matched."
+
+  - id: FB2
+    title: SASRec has clear target-popularity dependence
+    status: validated
+    evidence:
+      - "SASRec s1500 HR@1 is 0.3077 in <=10 and 0.5847 in >500."
+      - "SASRec s3000 HR@1 is 0.2692 in <=10 and 0.5954 in >500."
+    boundary: "The <=10 bucket has only 26 samples and should be interpreted cautiously."
+
+  - id: FB3
+    title: SASRec aggregate advantage is concentrated in middle/head buckets
+    status: validated
+    evidence:
+      - "SASRec s3000 exceeds N-K0 HR@1 in 11-50, 51-200, 201-500, and >500 buckets."
+      - "SASRec s1500 exceeds N-K0 HR@1 in 51-200, 201-500, and >500 buckets."
+      - "Both SASRec s1500 and s3000 are below N-K0 in the <=10 bucket."
+    boundary: "Do not claim SASRec dominates N-K0 across all popularity buckets."
+
+  - id: FB4
+    title: Candidate-size expansion affects SASRec too
+    status: validated
+    evidence:
+      - "SASRec s1500 HR@1 drops from 0.7623 at k5 to 0.3681 at k50."
+      - "SASRec s3000 HR@1 drops from 0.7736 at k5 to 0.3894 at k50."
+    boundary: "SASRec is not immune to candidate-size difficulty."
+
+  - id: FB5
+    title: SASRec candidate-size degradation is smaller than N-K0 and M1
+    status: validated
+    evidence:
+      - "N-K0 k5->k50 HR@1 delta: -0.5156."
+      - "M1 k5->k50 HR@1 delta: -0.5713."
+      - "SASRec s1500 k5->k50 HR@1 delta: -0.3942."
+      - "SASRec s3000 k5->k50 HR@1 delta: -0.3841."
+    boundary: "This is Phase 2A candidate-size robustness, not popmatch."
+
+  - id: FB6
+    title: Roughly exposure-matched SASRec does not beat N-K0
+    status: validated
+    evidence:
+      - "N-K0: 12,000 N-task exposure, HR@1 0.5466, NDCG@5 0.7885, MRR 0.7180."
+      - "SASRec-exp-match: 11,776 N-task exposure, HR@1 0.2700, NDCG@5 0.6349, MRR 0.5157."
+      - "SASRec-exp-match minus N-K0: HR@1 -0.2767, NDCG@5 -0.1536, MRR -0.2024."
+    boundary: "The match is rough, single-run, and not compute matched."

@@ -1,20 +1,20 @@
 stage:
-  status: active
-  name: strict-aligned-sasrec-llm-comparison
-  goal: Establish evidence-backed training-budget alignment before making SASRec versus N-K0/M1 claims.
-  scope: cloud budget evidence, SASRec step-capped training support, step-matched cloud run instructions
-  started: 2026-08-11
-  closed: null
+  status: closed
+  name: fair-budget-baseline-positioning
+  goal: Audit training exposure and test whether SASRec's step-aligned advantage over N-K0/M1 holds under fairer baseline positioning diagnostics.
+  scope: training budget audit, SASRec grouped diagnostics, candidate-size robustness, sample-exposure-matched diagnostic
+  started: 2026-08-12
+  closed: 2026-08-12
 
 wiki_access:
   read_authorized: false
   read_authorized_by: user
-  read_authorized_at: 2026-08-10
-  read_revoked_at: 2026-08-10
+  read_authorized_at: 2026-08-12
+  read_revoked_at: 2026-08-12
   write_authorized: false
   write_authorized_by: user
-  write_authorized_at: 2026-08-11
-  write_revoked_at: 2026-08-11
+  write_authorized_at: 2026-08-12
+  write_revoked_at: 2026-08-12
 
 current_task: .agent/current_task.md
 template: .agent/templates/current_task.md
@@ -36,3 +36,10 @@ notes:
   - SASRec stage-end wiki sync was authorized by the user on 2026-08-11.
   - SASRec stage-end wiki sync was applied on 2026-08-11 and write authorization was revoked after sync.
   - Strict aligned SASRec-vs-LLM comparison stage opened on 2026-08-11 without formal wiki read authorization.
+  - Strict aligned SASRec-vs-LLM wiki sync was authorized by the user on 2026-08-12.
+  - Strict aligned SASRec-vs-LLM wiki sync was applied on 2026-08-12 and write authorization was revoked after guard checks.
+  - Paper-ready result lock stage opened on 2026-08-12 with one-time direct relevant wiki read authorization.
+  - Paper-ready result lock stage-start wiki read was compressed into current_task and revoked on 2026-08-12.
+  - Current active stage was migrated on 2026-08-12 to Fair-Budget Baseline Positioning without new wiki read authorization.
+  - Fair-Budget Baseline Positioning wiki sync was authorized by the user on 2026-08-12.
+  - Fair-Budget Baseline Positioning wiki sync was applied on 2026-08-12 and write authorization was revoked after guard checks.

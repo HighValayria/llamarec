@@ -5,8 +5,8 @@ status: current
 authority: descriptive
 source: mixed
 created: 2026-07-28
-updated: 2026-08-11
-last_verified: 2026-08-11
+updated: 2026-08-12
+last_verified: 2026-08-12
 related_code:
   - task.md
   - README.md
@@ -31,6 +31,10 @@ related_code:
   - src/analysis/phase2b_result_synthesis.py
   - src/analysis/phase2c_popmatch_grouped.py
   - src/analysis/phase2c_result_summary.py
+  - src/analysis/training_budget_audit.py
+  - src/analysis/sasrec_grouped_diagnostics.py
+  - src/analysis/sasrec_candidate_size_robustness.py
+  - src/analysis/sample_exposure_matched_diagnostic.py
   - tests/test_candidate_sets.py
   - tests/test_ranking_metrics.py
   - tests/test_base_zero_shot_local.py
@@ -39,6 +43,8 @@ related_code:
   - tests/test_popularity_baseline.py
   - tests/test_bpr_mf_baseline.py
   - tests/test_sasrec_baseline.py
+  - tests/test_training_budget_audit.py
+  - tests/test_sample_exposure_matched_diagnostic.py
   - tests/test_baseline_result_summary.py
   - tests/test_baseline_llm_comparison.py
   - wiki/modules/evaluation_layer.md
@@ -49,6 +55,7 @@ related_code:
   - wiki/reports/baseline-popularity-comparison.md
   - wiki/reports/baseline-bpr-mf-comparison.md
   - wiki/reports/baseline-sasrec-comparison.md
+  - wiki/reports/fair-budget-baseline-positioning.md
 ---
 
 # Current Project State
@@ -87,12 +94,17 @@ Core reports are:
 - [Baseline Popularity Comparison](reports/baseline-popularity-comparison.md)
 - [Baseline BPR-MF Comparison](reports/baseline-bpr-mf-comparison.md)
 - [Baseline SASRec Comparison](reports/baseline-sasrec-comparison.md)
+- [Fair-Budget Baseline Positioning](reports/fair-budget-baseline-positioning.md)
 
 The current best dedicated binary model is Y-K0. Among LLM runs, the current
 best dedicated ranking model is N-K0 and the current best multi-task diagnostic
 model is M1 (`diag_m1_1m_m_200k_3000`). SASRec is now the strongest specialized
-non-LLM sequence baseline under the fixed e10 popmatch comparison, but this is
-not a strict compute- or capacity-matched comparison against LLM adapters.
+non-LLM sequence baseline under the fixed popmatch comparison. A follow-up
+diagnostic re-evaluated N-K0 and M1 adapters on the same popmatch test
+candidate file and added SASRec 1500/3000 optimizer-step rows. SASRec remains
+above N-K0/M1 in that optimizer-step-aligned diagnostic, but this is not a
+strict compute-, sample-exposure-, or capacity-matched comparison against LLM
+adapters.
 
 ## Phase 2A Status
 
@@ -236,6 +248,25 @@ on popmatch HR@1 (`0.5991189427`). These rows show that a specialized sequence
 recommender is a strong control; they do not prove an architecture-level result
 against LLM recommendation tuning under matched compute and capacity.
 
+The stricter follow-up found that the old N-K0 prediction candidates did not
+match `k5_popmatch_seed42/test.jsonl` by content, so old canonical
+`test_metrics.json` rows must not be reused as popmatch evidence. N-K0 and M1
+were re-evaluated in adapter eval-only mode on the actual popmatch test
+candidate file. SASRec was evaluated from the same 200k N train pool at 1500
+and 3000 optimizer steps:
+
+| model | alignment | popmatch HR@1 | popmatch NDCG@5 | popmatch MRR |
+|---|---|---:|---:|---:|
+| N-K0 popmatch eval | 200k N loaded, 1500 LLM optimizer steps | 0.5466079295 | 0.7884963692 | 0.7180411160 |
+| M1 popmatch eval | 200k Y + 200k N loaded, 3000 LLM optimizer steps | 0.5238766520 | 0.7781912330 | 0.7042525698 |
+| SASRec s1500 popmatch | 200k N pool, 1500 optimizer steps, batch 512 | 0.6088105727 | 0.8198039644 | 0.7595506608 |
+| SASRec s3000 popmatch | 200k N pool, 3000 optimizer steps, batch 512 | 0.6243171806 | 0.8283562609 | 0.7708663730 |
+
+This supports the narrow claim that SASRec is stronger under the same-candidate
+popmatch, optimizer-step-aligned diagnostic. It still does not match sample
+exposure or compute: SASRec uses batch size 512, LLM trainer states record
+`train_batch_size=1`, and M1's 3000 steps are split across Y and N tasks.
+
 Main baseline interpretation:
 
 - canonical random k5 candidates expose a popularity shortcut;
@@ -245,6 +276,39 @@ Main baseline interpretation:
 - fixed SASRec is a stronger specialized non-LLM sequence baseline than
   Popularity or BPR-MF;
 - SASRec comparisons must carry non-budget/capacity-matched claim boundaries.
+
+## Fair-Budget Baseline Positioning Status
+
+The fair-budget baseline positioning stage audited whether the
+optimizer-step-aligned SASRec advantage remains stable under fairer budget and
+difficulty diagnostics. The durable report is
+[Fair-Budget Baseline Positioning](reports/fair-budget-baseline-positioning.md).
+
+Main findings:
+
+- Optimizer-step alignment hides a large sample-exposure mismatch. N-K0 used
+  12000 N-task processed examples at 1500 optimizer steps with effective batch
+  8. SASRec s1500 used 767424 N-task exposures at the same optimizer-step count
+  with batch size 512, or `63.952x` N-K0's N-task exposure.
+- M1 should be described separately from N-only rows: it used 12000 N-task
+  examples but 24000 total examples after including Y-task exposure.
+- In target-popularity groups on `k5_popmatch_seed42`, SASRec's advantage is
+  concentrated in middle/head buckets. In the coldest `<=10` bucket, N-K0
+  HR@1 is `0.5000`, M1 is `0.4615`, SASRec s1500 is `0.3077`, and SASRec
+  s3000 is `0.2692`, with only 26 samples.
+- Under Phase 2A candidate-size variants, SASRec degrades less than N-K0/M1 as
+  candidate count grows. The SASRec s3000 minus N-K0 HR@1 gap grows from
+  `+0.0585` at k5 to `+0.1900` at k50.
+- Under a rough N-task sample-exposure match, SASRec used 23 optimizer steps
+  and 11776 N exposures, `-1.8667%` from the 12000 target. It scored HR@1
+  `0.2700`, NDCG@5 `0.6349`, and MRR `0.5157`, below N-K0's HR@1 `0.5466`,
+  NDCG@5 `0.7885`, and MRR `0.7180`.
+
+The safe interpretation is now budget-sensitive: SASRec remains a strong
+specialized sequence baseline under same-candidate, optimizer-step-aligned
+diagnostics, but that advantage does not survive the single rough
+N-sample-exposure-matched diagnostic. This motivates further sample-efficiency
+and matched-compute analysis rather than a final architecture-level claim.
 
 ## Current Interpretation
 
@@ -258,7 +322,10 @@ popularity-matched hard candidates: M1 is a useful compromise, not a
 single-task replacement. Traditional baselines now add two controls: canonical
 random candidate results are heavily affected by popularity, and a specialized
 sequence model can outperform the LLM next-item rows under the current
-non-budget-matched setup.
+same-candidate popmatch, optimizer-step-aligned diagnostic. The fair-budget
+baseline positioning stage narrows that interpretation: the SASRec advantage
+is sensitive to budget definition and does not hold in the single rough
+N-sample-exposure-matched diagnostic.
 
 ## Current Boundaries
 

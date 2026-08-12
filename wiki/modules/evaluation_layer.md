@@ -5,8 +5,8 @@ status: current
 authority: normative
 source: mixed
 created: 2026-07-30
-updated: 2026-08-11
-last_verified: 2026-08-11
+updated: 2026-08-12
+last_verified: 2026-08-12
 related_code:
   - configs/experiment.yaml
   - src/eval/candidate_sets.py
@@ -29,6 +29,10 @@ related_code:
   - src/analysis/phase2a_robustness_report.py
   - src/analysis/phase2c_popmatch_grouped.py
   - src/analysis/phase2c_result_summary.py
+  - src/analysis/training_budget_audit.py
+  - src/analysis/sasrec_grouped_diagnostics.py
+  - src/analysis/sasrec_candidate_size_robustness.py
+  - src/analysis/sample_exposure_matched_diagnostic.py
   - tests/test_candidate_sets.py
   - tests/test_ranking_metrics.py
   - tests/test_base_zero_shot_local.py
@@ -37,6 +41,8 @@ related_code:
   - tests/test_popularity_baseline.py
   - tests/test_bpr_mf_baseline.py
   - tests/test_sasrec_baseline.py
+  - tests/test_training_budget_audit.py
+  - tests/test_sample_exposure_matched_diagnostic.py
   - tests/test_baseline_result_summary.py
   - tests/test_baseline_llm_comparison.py
 ---
@@ -103,6 +109,28 @@ model comparison must use the same explicit variant files:
 
 Base also accepts `--output-dir` so variant outputs do not overwrite canonical
 Base results.
+
+N-K0 and M-K0 adapter evaluation entry points also accept candidate-file
+overrides:
+
+```text
+python -m src.inference.evaluate_n_adapter \
+  --adapter-dir outputs/n/{dataset}/{run}/adapter \
+  --mode real \
+  --test-candidates data/candidates/{dataset}/variants/{variant_name}/test.jsonl
+
+python -m src.inference.evaluate_m_adapter \
+  --adapter-dir outputs/m/{dataset}/{run}/adapter \
+  --mode real \
+  --test-candidates data/candidates/{dataset}/variants/{variant_name}/test.jsonl
+```
+
+Use these eval-only commands when a canonical-trained adapter must be scored
+against a non-canonical candidate variant. The resulting
+`evaluation_summary.json` records resolved `candidate_files`; this is the
+preferred evidence for candidate provenance. If an older output directory does
+not record `candidate_files`, verify the prediction rows by content against the
+candidate JSONL before treating its metrics as variant metrics.
 
 ## Phase 2C Popularity-Matched Candidates
 
@@ -216,6 +244,8 @@ plus split metrics. It supports:
 --valid-candidates path/to/valid.jsonl
 --test-candidates path/to/test.jsonl
 --device auto|cpu|cuda
+--max-train-samples 200000
+--max-steps 1500
 --model-dir outputs/baselines/{dataset}/sasrec_fixed_canonical_k5_e10
 ```
 
@@ -225,6 +255,19 @@ compare canonical and popmatch candidates for the same SASRec model. The
 implementation uses right padding with a causal Transformer encoder and raises
 an error on non-finite training logits, losses, or candidate scores. Earlier
 pre-fix SASRec outputs with NaN epoch losses are invalid and must not be used.
+
+The `--max-steps` option stops SASRec training by optimizer-step count and is
+used only for diagnostic budget alignment. It does not make SASRec strictly
+compute- or sample-exposure-matched with LLM adapters because SASRec may use a
+large batch size and a very different model family.
+
+When comparing SASRec with LLM adapters, distinguish these budget protocols:
+
+- optimizer-step-aligned diagnostics align only optimizer-step count;
+- N-sample-exposure diagnostics compare processed N-task examples;
+- M1 rows must separate N-task exposure from total Y+N exposure;
+- strict compute/capacity matching remains out of scope unless wall-clock,
+  hardware, trainable-parameter, and token-count evidence is available.
 
 ## Analysis Outputs
 
@@ -272,6 +315,19 @@ across canonical and variant candidate conditions.
 `src/analysis/baseline_llm_comparison.py` combines baseline rows with Phase 2C
 LLM popmatch rows and writes comparison JSON/Markdown tables.
 
+`src/analysis/training_budget_audit.py` summarizes processed sample exposure
+and optimizer-step counts for N-K0, M1, and SASRec comparison rows.
+
+`src/analysis/sasrec_grouped_diagnostics.py` compares N-K0, M1, and SASRec
+prediction files by target-popularity bucket on a shared candidate file.
+
+`src/analysis/sasrec_candidate_size_robustness.py` compares SASRec/N-K0/M1
+ranking behavior across Phase 2A candidate-size variants.
+
+`src/analysis/sample_exposure_matched_diagnostic.py` summarizes the rough
+N-task sample-exposure-matched SASRec diagnostic against N-K0, with M1 as a
+supplemental row because its total exposure includes Y-task samples.
+
 ## Current Validated State
 
 MovieLens-1M Phase 2A generated:
@@ -308,3 +364,14 @@ fair comparison condition for Phase 2C LLM rows. Under popmatch k5, fixed
 SASRec e10 is above N-K0 and M1, while capped 200k SASRec e1 is below them and
 capped 200k SASRec e3 is above them. These SASRec comparisons are not strict
 compute- or capacity-matched claims against LLM adapters.
+
+A follow-up same-candidate diagnostic re-evaluated N-K0 and M1 adapters on the
+actual `k5_popmatch_seed42` test candidate file and evaluated SASRec with
+1500/3000 optimizer-step caps. In that diagnostic, SASRec s1500 is above the
+N-K0 popmatch eval row and SASRec s3000 is above the M1 popmatch eval row. This
+is optimizer-step-aligned evidence only; it is not sample-exposure or compute
+matching.
+
+The fair-budget baseline positioning report adds the current boundary: SASRec
+is below N-K0 in the single rough N-task sample-exposure-matched diagnostic, so
+the optimizer-step-aligned advantage should be treated as budget-sensitive.

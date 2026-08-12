@@ -1,0 +1,40 @@
+status: draft_for_user_review
+source: fair_budget_baseline_positioning_stage
+open_questions:
+  - id: OQ1
+    topic: sample efficiency
+    question: "Why does N-K0 substantially outperform a 23-step SASRec run at roughly matched N-task exposure?"
+    evidence_needed:
+      - "Multiple SASRec low-step seeds."
+      - "LLM processed token counts and prompt length statistics if recoverable."
+      - "A learning-curve comparison at several exposure budgets."
+
+  - id: OQ2
+    topic: cold-item mechanism
+    question: "Why do N-K0 and M1 outperform SASRec in the smallest target-popularity bucket despite SASRec's aggregate advantage?"
+    evidence_needed:
+      - "Per-bucket confidence/margin diagnostics."
+      - "Cold bucket sample inspection."
+      - "Additional candidate seeds or a larger cold bucket protocol."
+
+  - id: OQ3
+    topic: candidate-size mechanism
+    question: "Why does SASRec degrade less than LLMs as candidate size increases?"
+    evidence_needed:
+      - "Per-rank distributions across k5/k20/k50."
+      - "Candidate popularity and score-margin analysis."
+
+  - id: OQ4
+    topic: specialized vs LLM architecture advantage
+    question: "Is the high-exposure SASRec advantage mainly an architecture advantage, an exposure advantage, or both?"
+    evidence_needed:
+      - "Exposure ladder for SASRec."
+      - "Comparable LLM sample/token budget evidence."
+
+  - id: OQ5
+    topic: knowledge augmentation necessity
+    question: "Does the cold-bucket N-K0 advantage provide enough reason for semantic or knowledge augmentation?"
+    evidence_needed:
+      - "Cold item qualitative analysis."
+      - "Knowledge availability and item metadata coverage checks."
+    current_status: "Not enough evidence to make knowledge augmentation the next default stage."
