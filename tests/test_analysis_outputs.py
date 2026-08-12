@@ -13,6 +13,7 @@ from src.analysis.phase2c_popmatch_grouped import run_phase2c_popmatch_grouped
 from src.analysis.phase2c_result_summary import run_phase2c_result_summary
 from src.analysis.prediction_file_clean import run_prediction_file_clean
 from src.analysis.prediction_file_audit import run_prediction_file_audit
+from src.analysis.sasrec_candidate_size_robustness import run_sasrec_candidate_size_robustness
 from src.analysis.sasrec_grouped_diagnostics import run_sasrec_grouped_diagnostics
 from src.analysis.summarize_results import run_result_summary
 from src.analysis.threshold_calibration import run_threshold_calibration
@@ -293,6 +294,64 @@ def test_sasrec_grouped_diagnostics_marks_missing_runs(tmp_path):
     assert rows[0]["evidence_status"] == "missing_prediction_file"
     assert rows[0]["HR@1"] == "unavailable"
     assert "Do not interpret unavailable rows as negative results" in report
+
+
+def test_sasrec_candidate_size_robustness_writes_metrics_and_deltas(tmp_path):
+    _write_config(tmp_path)
+    root = tmp_path / "outputs" / "fair_budget_inputs"
+    runs = {
+        "N-K0": {
+            "k5": _write_candidate_size_run(root, "n_k5", 0.8, 1.0, 1.0, 0.9, 1.0, 0.9, ranks=[1, 2]),
+            "k20": _write_candidate_size_run(root, "n_k20", 0.5, 0.9, 0.9, 0.7, 0.8, 0.6, ranks=[2, 3]),
+            "k50": _write_candidate_size_run(root, "n_k50", 0.2, 0.5, 0.6, 0.4, 0.5, 0.3, ranks=[4, 5]),
+        },
+        "SASRec s3000": {
+            "k5": _write_candidate_size_run(root, "s_k5", 0.9, 1.0, 1.0, 0.95, 1.0, 0.95, ranks=[1, 1]),
+            "k20": _write_candidate_size_run(root, "s_k20", 0.7, 1.0, 1.0, 0.85, 0.9, 0.8, ranks=[1, 2]),
+            "k50": _write_candidate_size_run(root, "s_k50", 0.4, 0.8, 0.9, 0.6, 0.7, 0.5, ranks=[2, 3]),
+        },
+    }
+
+    summary = run_sasrec_candidate_size_robustness(
+        config_path=tmp_path / "configs" / "experiment.yaml",
+        dataset_key="toy",
+        output_dir=tmp_path / "outputs" / "fair_budget",
+        runs=runs,
+    )
+
+    output_dir = Path(summary["paths"]["csv"]).parent
+    metric_rows = list(csv.DictReader((output_dir / "sasrec_candidate_size_robustness.csv").open()))
+    delta_rows = list(
+        csv.DictReader((output_dir / "sasrec_candidate_size_robustness_deltas.csv").open())
+    )
+    payload = json.loads(
+        (output_dir / "sasrec_candidate_size_robustness.json").read_text(encoding="utf-8")
+    )
+
+    assert summary["missing_metric_rows"] == 0
+    assert metric_rows[0]["mean_rank"] == "1.5"
+    n_k5_to_k50 = next(row for row in delta_rows if row["model"] == "N-K0" and row["comparison"] == "k5_to_k50")
+    assert n_k5_to_k50["delta_HR@1"] == "-0.6"
+    assert payload["answers"]["sasrec_degrades_with_candidate_size"] == "yes"
+
+
+def test_sasrec_candidate_size_robustness_marks_missing_metrics(tmp_path):
+    _write_config(tmp_path)
+
+    summary = run_sasrec_candidate_size_robustness(
+        config_path=tmp_path / "configs" / "experiment.yaml",
+        dataset_key="toy",
+        output_dir=tmp_path / "outputs" / "fair_budget",
+        runs={"SASRec s1500": {"k5": (tmp_path / "missing.json", tmp_path / "missing.jsonl"), "k20": (tmp_path / "missing2.json", tmp_path / "missing2.jsonl"), "k50": (tmp_path / "missing3.json", tmp_path / "missing3.jsonl")}},
+    )
+
+    rows = list(csv.DictReader(Path(summary["paths"]["csv"]).open()))
+    report = Path(summary["paths"]["markdown"]).read_text(encoding="utf-8")
+
+    assert summary["missing_metric_rows"] == 3
+    assert rows[0]["evidence_status"] == "missing_metrics_file"
+    assert rows[0]["HR@1"] == "unavailable"
+    assert "unavailable until SASRec k5/k20/k50 eval metrics exist" in report
 
 
 def test_phase2c_result_summary_writes_final_report(tmp_path):
@@ -906,6 +965,50 @@ def _write_popmatch_grouped_csv(path: Path) -> None:
             },
         ],
     )
+
+
+def _write_candidate_size_run(
+    root: Path,
+    run_name: str,
+    hr_at_1: float,
+    hr_at_5: float,
+    hr_at_10: float,
+    ndcg_at_5: float,
+    ndcg_at_10: float,
+    mrr: float,
+    ranks: list[int],
+):
+    run_dir = root / run_name
+    _write_json(
+        run_dir / "test_metrics.json",
+        {
+            "ranking": {
+                "HR@1": hr_at_1,
+                "HR@5": hr_at_5,
+                "HR@10": hr_at_10,
+                "NDCG@5": ndcg_at_5,
+                "NDCG@10": ndcg_at_10,
+                "MRR": mrr,
+                "samples": len(ranks),
+            }
+        },
+    )
+    prediction_rows = []
+    for rank in ranks:
+        scores = [1.0 - index * 0.01 for index in range(max(10, rank + 1))]
+        ground_truth_index = rank - 1
+        prediction_rows.append(
+            _ranking_prediction_with_scores(
+                "model",
+                f"u{rank}",
+                [str(index) for index in range(len(scores))],
+                str(ground_truth_index),
+                ground_truth_index,
+                scores,
+            )
+        )
+    _write_jsonl(run_dir / "n_test_predictions.jsonl", prediction_rows)
+    return run_dir / "test_metrics.json", run_dir / "n_test_predictions.jsonl"
 
 
 def _preference_sample(user_id: str, movie_id: str, label: str, rating: float, history: list[dict]):
