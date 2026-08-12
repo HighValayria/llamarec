@@ -13,6 +13,7 @@ from src.analysis.phase2c_popmatch_grouped import run_phase2c_popmatch_grouped
 from src.analysis.phase2c_result_summary import run_phase2c_result_summary
 from src.analysis.prediction_file_clean import run_prediction_file_clean
 from src.analysis.prediction_file_audit import run_prediction_file_audit
+from src.analysis.sasrec_grouped_diagnostics import run_sasrec_grouped_diagnostics
 from src.analysis.summarize_results import run_result_summary
 from src.analysis.threshold_calibration import run_threshold_calibration
 from src.analysis.threshold_comparison import run_threshold_comparison
@@ -237,6 +238,61 @@ def test_phase2c_popmatch_grouped_writes_bucketed_ranking(tmp_path):
     assert n_row["HR@1"] == "1.0"
     assert m1_row["HR@1"] == "0.5"
     assert (output_dir / "test_ranking_by_target_popularity.md").exists()
+
+
+def test_sasrec_grouped_diagnostics_computes_available_runs(tmp_path):
+    _write_config(tmp_path)
+    _write_grouped_metadata_tree(tmp_path)
+    prediction_dir = tmp_path / "outputs" / "fair_budget"
+    _write_jsonl(
+        prediction_dir / "sasrec.jsonl",
+        [
+            _ranking_prediction_with_scores("sasrec", "u1", ["a", "b"], "a", 0, [0.8, 0.2]),
+            _ranking_prediction_with_scores("sasrec", "u2", ["c", "d"], "d", 1, [0.7, 0.3]),
+        ],
+    )
+
+    summary = run_sasrec_grouped_diagnostics(
+        config_path=tmp_path / "configs" / "experiment.yaml",
+        dataset_key="toy",
+        split_name="test",
+        candidate_file=tmp_path / "data" / "candidates" / "toy" / "test.jsonl",
+        output_dir=tmp_path / "outputs" / "fair_budget",
+        runs={"SASRec s1500": prediction_dir / "sasrec.jsonl"},
+    )
+
+    output_dir = Path(summary["paths"]["csv"]).parent
+    rows = list(csv.DictReader((output_dir / "sasrec_grouped_diagnostics.csv").open()))
+    payload = json.loads(
+        (output_dir / "sasrec_grouped_diagnostics.json").read_text(encoding="utf-8")
+    )
+
+    assert summary["missing_runs"] == 0
+    assert rows[0]["model"] == "SASRec s1500"
+    assert rows[0]["HR@1"] == "0.5"
+    assert payload["answers"]["sasrec_popularity_dependence"] == "not established"
+
+
+def test_sasrec_grouped_diagnostics_marks_missing_runs(tmp_path):
+    _write_config(tmp_path)
+    _write_grouped_metadata_tree(tmp_path)
+
+    summary = run_sasrec_grouped_diagnostics(
+        config_path=tmp_path / "configs" / "experiment.yaml",
+        dataset_key="toy",
+        split_name="test",
+        candidate_file=tmp_path / "data" / "candidates" / "toy" / "test.jsonl",
+        output_dir=tmp_path / "outputs" / "fair_budget",
+        runs={"SASRec s1500": tmp_path / "missing.jsonl"},
+    )
+
+    rows = list(csv.DictReader(Path(summary["paths"]["csv"]).open()))
+    report = Path(summary["paths"]["markdown"]).read_text(encoding="utf-8")
+
+    assert summary["missing_runs"] == 1
+    assert rows[0]["evidence_status"] == "missing_prediction_file"
+    assert rows[0]["HR@1"] == "unavailable"
+    assert "Do not interpret unavailable rows as negative results" in report
 
 
 def test_phase2c_result_summary_writes_final_report(tmp_path):
