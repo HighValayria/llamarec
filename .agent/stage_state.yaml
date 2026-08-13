@@ -1,10 +1,10 @@
 stage:
-  status: closed
-  name: fair-budget-baseline-positioning
-  goal: Audit training exposure and test whether SASRec's step-aligned advantage over N-K0/M1 holds under fairer baseline positioning diagnostics.
-  scope: training budget audit, SASRec grouped diagnostics, candidate-size robustness, sample-exposure-matched diagnostic
+  status: active
+  name: sample-efficiency-training-efficiency
+  goal: Quantify N-K0 and SASRec sample-efficiency curves under fixed candidate protocols, with a small cold-item diagnostic slice as secondary analysis.
+  scope: N-K0/SASRec exposure grid planning, reusable curve summaries, cloud run handoff commands, cold-item secondary diagnostic
   started: 2026-08-12
-  closed: 2026-08-12
+  closed: null
 
 wiki_access:
   read_authorized: false
@@ -43,3 +43,4 @@ notes:
   - Current active stage was migrated on 2026-08-12 to Fair-Budget Baseline Positioning without new wiki read authorization.
   - Fair-Budget Baseline Positioning wiki sync was authorized by the user on 2026-08-12.
   - Fair-Budget Baseline Positioning wiki sync was applied on 2026-08-12 and write authorization was revoked after guard checks.
+  - Sample Efficiency / Training Efficiency stage opened on 2026-08-12 without formal wiki read authorization.

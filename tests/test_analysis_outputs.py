@@ -15,6 +15,7 @@ from src.analysis.prediction_file_clean import run_prediction_file_clean
 from src.analysis.prediction_file_audit import run_prediction_file_audit
 from src.analysis.sasrec_candidate_size_robustness import run_sasrec_candidate_size_robustness
 from src.analysis.sasrec_grouped_diagnostics import run_sasrec_grouped_diagnostics
+from src.analysis.sample_efficiency_curve import run_sample_efficiency_curve
 from src.analysis.summarize_results import run_result_summary
 from src.analysis.threshold_calibration import run_threshold_calibration
 from src.analysis.threshold_comparison import run_threshold_comparison
@@ -352,6 +353,77 @@ def test_sasrec_candidate_size_robustness_marks_missing_metrics(tmp_path):
     assert rows[0]["evidence_status"] == "missing_metrics_file"
     assert rows[0]["HR@1"] == "unavailable"
     assert "unavailable until SASRec k5/k20/k50 eval metrics exist" in report
+
+
+def test_sample_efficiency_curve_writes_closest_exposure_gaps(tmp_path):
+    _write_config(tmp_path)
+    root = tmp_path / "outputs" / "sample_efficiency_inputs"
+    points = [
+        _sample_efficiency_point(root, "N-K0", "n_s375", 3000, 375, 8, 0.40, 0.60, 0.50),
+        _sample_efficiency_point(root, "N-K0", "n_s750", 6000, 750, 8, 0.52, 0.70, 0.62),
+        _sample_efficiency_point(root, "SASRec", "sasrec_s6", 3072, 6, 512, 0.18, 0.40, 0.30),
+        _sample_efficiency_point(root, "SASRec", "sasrec_s12", 6144, 12, 512, 0.31, 0.50, 0.42),
+    ]
+
+    summary = run_sample_efficiency_curve(
+        config_path=tmp_path / "configs" / "experiment.yaml",
+        dataset_key="toy",
+        output_dir=tmp_path / "outputs" / "sample_efficiency",
+        points=points,
+    )
+
+    output_dir = Path(summary["paths"]["csv"]).parent
+    rows = list(csv.DictReader((output_dir / "sample_efficiency_curve.csv").open()))
+    gaps = list(csv.DictReader((output_dir / "sample_efficiency_curve_gaps.csv").open()))
+    payload = json.loads(
+        (output_dir / "sample_efficiency_curve.json").read_text(encoding="utf-8")
+    )
+
+    assert summary["computed_rows"] == 4
+    assert rows[0]["candidate_protocol"] == "k5_popmatch_seed42"
+    assert gaps[0]["comparison"] == "sasrec_s6_minus_n_s375"
+    assert gaps[0]["relative_exposure_mismatch %"] == "2.4"
+    assert gaps[0]["delta_HR@1"] == "-0.22"
+    assert payload["answers"]["curve_status"] == "computed for planned points"
+
+
+def test_sample_efficiency_curve_marks_missing_metrics(tmp_path):
+    _write_config(tmp_path)
+    points = [
+        {
+            "model": "N-K0",
+            "point": "n_missing",
+            "family": "llm",
+            "n_exposure": 3000,
+            "optimizer_steps": 375,
+            "effective_batch": 8,
+            "metrics": tmp_path / "missing.json",
+        },
+        {
+            "model": "SASRec",
+            "point": "sasrec_missing",
+            "family": "sasrec",
+            "n_exposure": 3072,
+            "optimizer_steps": 6,
+            "effective_batch": 512,
+            "metrics": tmp_path / "missing_s.json",
+        },
+    ]
+
+    summary = run_sample_efficiency_curve(
+        config_path=tmp_path / "configs" / "experiment.yaml",
+        dataset_key="toy",
+        output_dir=tmp_path / "outputs" / "sample_efficiency",
+        points=points,
+    )
+
+    rows = list(csv.DictReader(Path(summary["paths"]["csv"]).open()))
+    report = Path(summary["paths"]["markdown"]).read_text(encoding="utf-8")
+
+    assert summary["missing_rows"] == 2
+    assert rows[0]["evidence_status"] == "missing_metrics_file"
+    assert rows[0]["HR@1"] == "unavailable"
+    assert "incomplete until all planned curve metrics exist" in report
 
 
 def test_phase2c_result_summary_writes_final_report(tmp_path):
@@ -771,6 +843,53 @@ def _phase2a_metric_row(model_key: str, variant: str, hr_at_1: float, hr_at_5: f
         "HR@5": hr_at_5,
         "NDCG@5": hr_at_5 - 0.1,
         "MRR": mrr,
+    }
+
+
+def _sample_efficiency_point(
+    root: Path,
+    model: str,
+    point: str,
+    exposure: int,
+    steps: int,
+    batch: int,
+    hr_at_1: float,
+    ndcg_at_5: float,
+    mrr: float,
+) -> dict:
+    run_dir = root / point
+    eval_dir = root / f"{point}_eval"
+    _write_json(
+        eval_dir / "test_metrics.json",
+        {
+            "ranking": {
+                "HR@1": hr_at_1,
+                "NDCG@5": ndcg_at_5,
+                "MRR": mrr,
+                "samples": 2,
+            }
+        },
+    )
+    _write_json(run_dir / "run_summary.json", {"training_stop": "max_steps"})
+    _write_json(
+        eval_dir / "evaluation_summary.json",
+        {
+            "candidate_files": {
+                "test": "data/candidates/toy/variants/k5_popmatch_seed42/test.jsonl"
+            }
+        },
+    )
+    return {
+        "model": model,
+        "point": point,
+        "family": model.lower(),
+        "n_exposure": exposure,
+        "total_exposure": exposure,
+        "optimizer_steps": steps,
+        "effective_batch": batch,
+        "metrics": eval_dir / "test_metrics.json",
+        "run_summary": run_dir / "run_summary.json",
+        "evaluation_summary": eval_dir / "evaluation_summary.json",
     }
 
 
