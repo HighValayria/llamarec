@@ -426,6 +426,36 @@ def test_sample_efficiency_curve_marks_missing_metrics(tmp_path):
     assert "incomplete until all planned curve metrics exist" in report
 
 
+def test_sample_efficiency_curve_allows_missing_optional_evaluation_summary(tmp_path):
+    _write_config(tmp_path)
+    root = tmp_path / "outputs" / "sample_efficiency_inputs"
+    point = _sample_efficiency_point(
+        root,
+        "SASRec",
+        "sasrec_s6",
+        3072,
+        6,
+        512,
+        0.18,
+        0.40,
+        0.30,
+    )
+    point.pop("evaluation_summary")
+
+    summary = run_sample_efficiency_curve(
+        config_path=tmp_path / "configs" / "experiment.yaml",
+        dataset_key="toy",
+        output_dir=tmp_path / "outputs" / "sample_efficiency",
+        points=[point],
+    )
+
+    rows = list(csv.DictReader(Path(summary["paths"]["csv"]).open()))
+
+    assert summary["computed_rows"] == 1
+    assert rows[0]["evaluation_summary_path"] == ""
+    assert rows[0]["candidate_protocol"] == "k5_popmatch_seed42"
+
+
 def test_phase2c_result_summary_writes_final_report(tmp_path):
     _write_config(tmp_path)
     eval_dir = tmp_path / "outputs" / "phase2c" / "toy" / "popmatch_eval_clean"

@@ -185,8 +185,8 @@ def run_sample_efficiency_curve(
 
 def _curve_row(repo_root: Path, spec: dict[str, Any]) -> dict[str, Any]:
     metrics_path = _resolve_path(repo_root, spec["metrics"])
-    run_summary_path = _resolve_path(repo_root, spec.get("run_summary", ""))
-    evaluation_summary_path = _resolve_path(repo_root, spec.get("evaluation_summary", ""))
+    run_summary_path = _optional_path(repo_root, spec.get("run_summary"))
+    evaluation_summary_path = _optional_path(repo_root, spec.get("evaluation_summary"))
     row = {
         "model": spec["model"],
         "point": spec["point"],
@@ -203,9 +203,9 @@ def _curve_row(repo_root: Path, spec: dict[str, Any]) -> dict[str, Any]:
         "evidence_status": "missing_metrics_file",
         "training_stop": UNAVAILABLE,
         "metrics_path": str(metrics_path),
-        "run_summary_path": str(run_summary_path) if spec.get("run_summary") else "",
+        "run_summary_path": str(run_summary_path) if run_summary_path else "",
         "evaluation_summary_path": (
-            str(evaluation_summary_path) if spec.get("evaluation_summary") else ""
+            str(evaluation_summary_path) if evaluation_summary_path else ""
         ),
     }
     if not metrics_path.exists():
@@ -222,10 +222,10 @@ def _curve_row(repo_root: Path, spec: dict[str, Any]) -> dict[str, Any]:
             "evidence_status": "computed",
         }
     )
-    if run_summary_path.exists():
+    if run_summary_path and run_summary_path.is_file():
         run_summary = json.loads(run_summary_path.read_text(encoding="utf-8"))
         row["training_stop"] = run_summary.get("training_stop", UNAVAILABLE)
-    if evaluation_summary_path.exists():
+    if evaluation_summary_path and evaluation_summary_path.is_file():
         evaluation_summary = json.loads(evaluation_summary_path.read_text(encoding="utf-8"))
         candidate_files = evaluation_summary.get("candidate_files", {})
         row["candidate_protocol"] = _candidate_protocol(candidate_files) or row["candidate_protocol"]
@@ -339,6 +339,12 @@ def _resolve_path(base: Path, path: str | Path) -> Path:
     if output.is_absolute():
         return output
     return base / output
+
+
+def _optional_path(base: Path, path: str | Path | None) -> Path | None:
+    if path is None or str(path) == "":
+        return None
+    return _resolve_path(base, path)
 
 
 def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
