@@ -6,6 +6,7 @@ from pathlib import Path
 
 from src.analysis.basic_error_analysis import run_basic_error_analysis
 from src.analysis.candidate_set_diagnostics import run_candidate_set_diagnostics
+from src.analysis.cold_tail_slice_diagnostic import run_cold_tail_slice_diagnostic
 from src.analysis.grouped_error_analysis import run_grouped_error_analysis, _write_csv
 from src.analysis.phase2a_robustness_report import run_phase2a_robustness_report
 from src.analysis.phase2b_result_synthesis import run_phase2b_result_synthesis
@@ -295,6 +296,55 @@ def test_sasrec_grouped_diagnostics_marks_missing_runs(tmp_path):
     assert rows[0]["evidence_status"] == "missing_prediction_file"
     assert rows[0]["HR@1"] == "unavailable"
     assert "Do not interpret unavailable rows as negative results" in report
+
+
+def test_cold_tail_slice_diagnostic_writes_bucket_deltas(tmp_path):
+    _write_config(tmp_path)
+    _write_grouped_metadata_tree(tmp_path)
+    prediction_dir = tmp_path / "outputs" / "cold_tail_inputs"
+    _write_jsonl(
+        prediction_dir / "n.jsonl",
+        [
+            _ranking_prediction_with_scores("n_k0", "u1", ["a", "b"], "a", 0, [0.8, 0.2]),
+            _ranking_prediction_with_scores("n_k0", "u2", ["c", "d"], "d", 1, [0.8, 0.2]),
+        ],
+    )
+    _write_jsonl(
+        prediction_dir / "sasrec.jsonl",
+        [
+            _ranking_prediction_with_scores("sasrec", "u1", ["a", "b"], "a", 0, [0.4, 0.6]),
+            _ranking_prediction_with_scores("sasrec", "u2", ["c", "d"], "d", 1, [0.3, 0.7]),
+        ],
+    )
+
+    summary = run_cold_tail_slice_diagnostic(
+        config_path=tmp_path / "configs" / "experiment.yaml",
+        dataset_key="toy",
+        split_name="test",
+        candidate_file=tmp_path / "data" / "candidates" / "toy" / "test.jsonl",
+        output_dir=tmp_path / "outputs" / "cold_tail",
+        runs={
+            "N-K0": prediction_dir / "n.jsonl",
+            "SASRec exp-match": prediction_dir / "sasrec.jsonl",
+        },
+        comparisons=[("SASRec exp-match", "N-K0")],
+    )
+
+    output_dir = Path(summary["paths"]["csv"]).parent
+    deltas = list(csv.DictReader((output_dir / "cold_tail_slice_deltas.csv").open()))
+    payload = json.loads((output_dir / "cold_tail_slice_diagnostic.json").read_text(encoding="utf-8"))
+    report = (output_dir / "cold_tail_slice_diagnostic.md").read_text(encoding="utf-8")
+
+    cold_delta = next(
+        row
+        for row in deltas
+        if row["comparison"] == "SASRec exp-match_minus_N-K0" and row["bucket"] == "<=10"
+    )
+
+    assert summary["missing_runs"] == 0
+    assert cold_delta["delta_HR@1"] == "-1.0"
+    assert payload["answers"]["cold_tail_status"] == "computed for requested prediction files"
+    assert "Cold/Tail Item Slice Diagnostic" in report
 
 
 def test_sasrec_candidate_size_robustness_writes_metrics_and_deltas(tmp_path):
