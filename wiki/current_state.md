@@ -5,8 +5,8 @@ status: current
 authority: descriptive
 source: mixed
 created: 2026-07-28
-updated: 2026-08-12
-last_verified: 2026-08-12
+updated: 2026-08-16
+last_verified: 2026-08-16
 related_code:
   - task.md
   - README.md
@@ -35,6 +35,7 @@ related_code:
   - src/analysis/sasrec_grouped_diagnostics.py
   - src/analysis/sasrec_candidate_size_robustness.py
   - src/analysis/sample_exposure_matched_diagnostic.py
+  - src/analysis/sample_efficiency_curve.py
   - tests/test_candidate_sets.py
   - tests/test_ranking_metrics.py
   - tests/test_base_zero_shot_local.py
@@ -56,6 +57,7 @@ related_code:
   - wiki/reports/baseline-bpr-mf-comparison.md
   - wiki/reports/baseline-sasrec-comparison.md
   - wiki/reports/fair-budget-baseline-positioning.md
+  - wiki/reports/sample-efficiency-training-efficiency.md
 ---
 
 # Current Project State
@@ -95,6 +97,7 @@ Core reports are:
 - [Baseline BPR-MF Comparison](reports/baseline-bpr-mf-comparison.md)
 - [Baseline SASRec Comparison](reports/baseline-sasrec-comparison.md)
 - [Fair-Budget Baseline Positioning](reports/fair-budget-baseline-positioning.md)
+- [Sample-Efficiency Training-Efficiency Curve](reports/sample-efficiency-training-efficiency.md)
 
 The current best dedicated binary model is Y-K0. Among LLM runs, the current
 best dedicated ranking model is N-K0 and the current best multi-task diagnostic
@@ -310,6 +313,30 @@ diagnostics, but that advantage does not survive the single rough
 N-sample-exposure-matched diagnostic. This motivates further sample-efficiency
 and matched-compute analysis rather than a final architecture-level claim.
 
+## Sample-Efficiency Training-Efficiency Status
+
+The sample-efficiency stage completed a 10-row N-task exposure curve on
+MovieLens-1M fixed `k5_popmatch_seed42` candidates. The durable report is
+[Sample-Efficiency Training-Efficiency Curve](reports/sample-efficiency-training-efficiency.md),
+and the tracked artifact commit is `6b29fcd Record sample efficiency final
+curve`.
+
+At closest N-task exposure points, SASRec does not exceed N-K0 by HR@1:
+
+| comparison | N-K0 exposure | SASRec exposure | mismatch % | delta HR@1 |
+|---|---:|---:|---:|---:|
+| sasrec_s6_minus_n_s375 | 3000 | 3072 | 2.4 | -0.2200881058 |
+| sasrec_s12_minus_n_s750 | 6000 | 6144 | 2.4 | -0.2801762115 |
+| sasrec_s23_minus_n_s1500 | 12000 | 11776 | -1.8666666667 | -0.2766519824 |
+| sasrec_s47_minus_n_s3000 | 24000 | 24064 | 0.2666666667 | -0.2771806168 |
+
+The high-exposure SASRec anchors remain above N-K0, but they use much larger
+N-task exposure. The safe interpretation is therefore that SASRec is a strong
+specialized sequence baseline whose apparent advantage is highly sensitive to
+the budget axis. The current sample-exposure curve supports further cold-item,
+tail-item, multi-seed, and stricter compute/capacity diagnostics rather than a
+final architecture-level claim.
+
 ## Current Interpretation
 
 M1 is the best current multi-task tradeoff. It nearly matches Y-K0 on calibrated
@@ -325,7 +352,8 @@ sequence model can outperform the LLM next-item rows under the current
 same-candidate popmatch, optimizer-step-aligned diagnostic. The fair-budget
 baseline positioning stage narrows that interpretation: the SASRec advantage
 is sensitive to budget definition and does not hold in the single rough
-N-sample-exposure-matched diagnostic.
+N-sample-exposure-matched diagnostic or in the completed closest-exposure
+sample-efficiency curve.
 
 ## Current Boundaries
 

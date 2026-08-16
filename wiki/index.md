@@ -5,8 +5,8 @@ status: current
 authority: descriptive
 source: mixed
 created: 2026-07-28
-updated: 2026-08-12
-last_verified: 2026-08-12
+updated: 2026-08-16
+last_verified: 2026-08-16
 related_code: []
 ---
 
@@ -56,6 +56,7 @@ Accepted or currently active ADR links should be listed here.
 - [Baseline BPR-MF Comparison](reports/baseline-bpr-mf-comparison.md)
 - [Baseline SASRec Comparison](reports/baseline-sasrec-comparison.md)
 - [Fair-Budget Baseline Positioning](reports/fair-budget-baseline-positioning.md)
+- [Sample-Efficiency Training-Efficiency Curve](reports/sample-efficiency-training-efficiency.md)
 
 ## History
 

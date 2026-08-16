@@ -14,3 +14,9 @@ of current architecture. Make scope and date explicit.
 - `phase-1-5-threshold-and-grouped-diagnostics.md`: Phase 1.5 STEP B/C threshold comparison and grouped diagnostics for MovieLens-1M.
 - `phase-2a-ranking-robustness.md`: Phase 2A candidate-size, candidate-order, tokenizer-label, and explicit-variant ranking robustness results.
 - `phase-2b-result-synthesis.md`: Phase 2B paper-ready synthesis of Phase 1.5 diagnostics and Phase 2A robustness outputs.
+- `phase-2c-popmatch-hard-candidate-diagnosis.md`: Phase 2C popularity-matched hard-candidate diagnosis.
+- `baseline-popularity-comparison.md`: deterministic popularity baseline results.
+- `baseline-bpr-mf-comparison.md`: in-repository BPR-MF baseline results.
+- `baseline-sasrec-comparison.md`: in-repository SASRec baseline results and claim boundaries.
+- `fair-budget-baseline-positioning.md`: budget, grouped, candidate-size, and rough sample-exposure diagnostics for SASRec-vs-LLM positioning.
+- `sample-efficiency-training-efficiency.md`: N-K0 and SASRec sample-efficiency curve under fixed popmatch candidates.
