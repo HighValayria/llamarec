@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 import inspect
 import json
 from pathlib import Path
+import random
 from typing import Any
 
 import yaml
@@ -30,8 +31,10 @@ def run_y_training(args: argparse.Namespace) -> dict[str, Any]:
 
     config = load_training_config(args.config)
     dataset_key = args.dataset or config["dataset"]["formal"]
+    resolved_seed = _resolve_training_seed(args, config)
     if getattr(args, "reload_only", False):
         return _run_reload_only(args=args, config=config, dataset_key=dataset_key)
+    _set_training_seed(resolved_seed)
 
     output_dir = _resolve_output_dir(config, dataset_key, args)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -105,6 +108,7 @@ def run_y_training(args: argparse.Namespace) -> dict[str, Any]:
         "dataset": dataset_key,
         "output_dir": str(output_dir),
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
+        "seed": resolved_seed,
         "train_samples": len(train_records),
         "validation_samples": len(valid_records),
         "train": dict(train_result.metrics),
@@ -222,6 +226,42 @@ def _normalize_sample_limit(raw_limit: int | None) -> int | None:
     return raw_limit
 
 
+def _resolve_training_seed(args: argparse.Namespace, config: dict[str, Any]) -> int:
+    """Resolve the training seed from CLI first, then the shared config."""
+
+    raw_seed = getattr(args, "seed", None)
+    if raw_seed is None:
+        raw_seed = config.get("seed", {}).get("random_seed", 42)
+    return int(raw_seed)
+
+
+def _set_training_seed(seed: int) -> None:
+    """Seed available RNGs before model initialization and Trainer construction."""
+
+    random.seed(seed)
+    try:
+        import numpy as np
+    except ImportError:
+        np = None
+    if np is not None:
+        np.random.seed(seed)
+
+    try:
+        import torch
+    except ImportError:
+        torch = None
+    if torch is not None:
+        torch.manual_seed(seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(seed)
+
+    try:
+        from transformers import set_seed
+    except ImportError:
+        return
+    set_seed(seed)
+
+
 def _load_tokenizer_and_model(config: dict[str, Any]):
     try:
         import torch
@@ -297,6 +337,11 @@ def _build_trainer(
         "gradient_checkpointing": bool(config["lora"].get("gradient_checkpointing", True)),
     }
     signature = inspect.signature(TrainingArguments.__init__)
+    resolved_seed = _resolve_training_seed(args, config)
+    if "seed" in signature.parameters:
+        training_kwargs["seed"] = resolved_seed
+    if "data_seed" in signature.parameters:
+        training_kwargs["data_seed"] = resolved_seed
     if "eval_strategy" in signature.parameters:
         training_kwargs["eval_strategy"] = "steps"
     else:
@@ -425,6 +470,7 @@ def _write_run_inputs(
             "model": "y_k0",
             "dataset": dataset_key,
             "created_at_utc": datetime.now(timezone.utc).isoformat(),
+            "seed": _resolve_training_seed(args, config),
             "max_train_samples": args.max_train_samples,
             "max_valid_samples": args.max_valid_samples,
             "train_records_loaded": len(train_records),
@@ -525,6 +571,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dataset", default=None, help="数据集 key，默认使用 dataset.formal")
     parser.add_argument("--output-dir", default=None, help="覆盖输出目录")
     parser.add_argument("--run-name", default=None, help="追加到输出目录下的运行名")
+    parser.add_argument("--seed", type=int, default=None, help="训练随机种子；默认读取配置 seed.random_seed")
     parser.add_argument("--smoke", action="store_true", help="标记本次为 smoke/overfit 运行")
     parser.add_argument("--max-train-samples", type=int, default=1000, help="最多读取训练样本数；负数表示全量")
     parser.add_argument("--max-valid-samples", type=int, default=1000, help="最多读取验证样本数；负数表示全量")

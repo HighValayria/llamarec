@@ -20,6 +20,8 @@ from src.train.train_y import (
     _load_tokenizer_and_model,
     _normalize_sample_limit,
     _release_cuda_cache,
+    _resolve_training_seed,
+    _set_training_seed,
     _trainable_parameter_summary,
     _use_chat_format,
     load_training_config,
@@ -31,8 +33,10 @@ def run_n_training(args: argparse.Namespace) -> dict[str, Any]:
 
     config = load_training_config(args.config)
     dataset_key = args.dataset or config["dataset"]["formal"]
+    resolved_seed = _resolve_training_seed(args, config)
     if getattr(args, "reload_only", False):
         return _run_reload_only(args=args, config=config, dataset_key=dataset_key)
+    _set_training_seed(resolved_seed)
 
     output_dir = _resolve_output_dir(config, dataset_key, args)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -109,6 +113,7 @@ def run_n_training(args: argparse.Namespace) -> dict[str, Any]:
         "dataset": dataset_key,
         "output_dir": str(output_dir),
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
+        "seed": resolved_seed,
         "train_samples": len(train_records),
         "validation_samples": len(valid_records),
         "train": dict(train_result.metrics),
@@ -223,6 +228,7 @@ def _write_run_inputs(
             "model": "n_k0",
             "dataset": dataset_key,
             "created_at_utc": datetime.now(timezone.utc).isoformat(),
+            "seed": _resolve_training_seed(args, config),
             "max_train_samples": args.max_train_samples,
             "max_valid_samples": args.max_valid_samples,
             "train_records_loaded": len(train_records),
@@ -270,6 +276,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dataset", default=None, help="数据集 key，默认使用 dataset.formal")
     parser.add_argument("--output-dir", default=None, help="覆盖输出目录")
     parser.add_argument("--run-name", default=None, help="追加到输出目录下的运行名")
+    parser.add_argument("--seed", type=int, default=None, help="训练随机种子；默认读取配置 seed.random_seed")
     parser.add_argument("--smoke", action="store_true", help="标记本次为 smoke/overfit 运行")
     parser.add_argument("--max-train-samples", type=int, default=1000, help="最多读取训练样本数；负数表示全量")
     parser.add_argument("--max-valid-samples", type=int, default=1000, help="最多读取验证样本数；负数表示全量")
