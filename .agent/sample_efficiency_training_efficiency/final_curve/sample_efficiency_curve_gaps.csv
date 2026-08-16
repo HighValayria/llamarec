@@ -1,0 +1,5 @@
+comparison,n_point,sasrec_point,n_exposure,sasrec_exposure,relative_exposure_mismatch %,delta_HR@1,delta_NDCG@5,delta_MRR,evidence_status
+sasrec_s6_minus_n_s375,n_s375,sasrec_s6,3000,3072,2.4,-0.2200881058,-0.1248451515,-0.16420558,computed
+sasrec_s12_minus_n_s750,n_s750,sasrec_s12,6000,6144,2.4,-0.2801762115,-0.1584742663,-0.2085668135,computed
+sasrec_s23_minus_n_s1500,n_s1500,sasrec_s23,12000,11776,-1.8666666667,-0.2766519824,-0.1536035485,-0.2023788546,computed
+sasrec_s47_minus_n_s3000,n_s3000,sasrec_s47,24000,24064,0.2666666667,-0.2771806168,-0.1538549682,-0.202784141,computed
