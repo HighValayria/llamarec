@@ -20,3 +20,4 @@ of current architecture. Make scope and date explicit.
 - `baseline-sasrec-comparison.md`: in-repository SASRec baseline results and claim boundaries.
 - `fair-budget-baseline-positioning.md`: budget, grouped, candidate-size, and rough sample-exposure diagnostics for SASRec-vs-LLM positioning.
 - `sample-efficiency-training-efficiency.md`: N-K0 and SASRec sample-efficiency curve under fixed popmatch candidates.
+- `cold-tail-item-slice-diagnostic.md`: target-popularity bucket slices showing where N-K0/M1/SASRec differences concentrate.

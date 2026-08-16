@@ -36,6 +36,7 @@ related_code:
   - src/analysis/sasrec_candidate_size_robustness.py
   - src/analysis/sample_exposure_matched_diagnostic.py
   - src/analysis/sample_efficiency_curve.py
+  - src/analysis/cold_tail_slice_diagnostic.py
   - tests/test_candidate_sets.py
   - tests/test_ranking_metrics.py
   - tests/test_base_zero_shot_local.py
@@ -58,6 +59,7 @@ related_code:
   - wiki/reports/baseline-sasrec-comparison.md
   - wiki/reports/fair-budget-baseline-positioning.md
   - wiki/reports/sample-efficiency-training-efficiency.md
+  - wiki/reports/cold-tail-item-slice-diagnostic.md
 ---
 
 # Current Project State
@@ -98,6 +100,7 @@ Core reports are:
 - [Baseline SASRec Comparison](reports/baseline-sasrec-comparison.md)
 - [Fair-Budget Baseline Positioning](reports/fair-budget-baseline-positioning.md)
 - [Sample-Efficiency Training-Efficiency Curve](reports/sample-efficiency-training-efficiency.md)
+- [Cold/Tail Item Slice Diagnostic](reports/cold-tail-item-slice-diagnostic.md)
 
 The current best dedicated binary model is Y-K0. Among LLM runs, the current
 best dedicated ranking model is N-K0 and the current best multi-task diagnostic
@@ -337,6 +340,31 @@ the budget axis. The current sample-exposure curve supports further cold-item,
 tail-item, multi-seed, and stricter compute/capacity diagnostics rather than a
 final architecture-level claim.
 
+## Cold/Tail Item Slice Diagnostic Status
+
+The cold/tail slice stage completed a target-popularity bucket diagnostic on
+MovieLens-1M fixed `k5_popmatch_seed42` test candidates. The durable report is
+[Cold/Tail Item Slice Diagnostic](reports/cold-tail-item-slice-diagnostic.md),
+and the tracked artifact commit is `3d76f3f Record cold tail slice diagnostic`.
+
+The bucket sizes were 26 samples for `<=10`, 199 for `11-50`, 854 for
+`51-200`, 1497 for `201-500`, and 3099 for `>500`.
+
+Main findings:
+
+- N-K0 exceeds M1 by HR@1 in every target-popularity bucket.
+- SASRec exp-match and SASRec s47 are below N-K0 in every bucket.
+- High-exposure SASRec s1500 and s3000 remain below N-K0 in the coldest
+  `<=10` bucket, with HR@1 deltas `-0.1923` and `-0.2308`.
+- High-exposure SASRec exceeds N-K0 in middle/head buckets. SASRec s3000 minus
+  N-K0 HR@1 is `+0.0402` in `11-50`, `+0.0878` in `51-200`, `+0.0775` in
+  `201-500`, and `+0.0800` in `>500`.
+
+The safe interpretation is that SASRec's high-exposure popmatch advantage is
+not cold-tail driven; it appears mainly in middle/head target-popularity
+buckets. The coldest bucket has only 26 samples and should be treated as a
+diagnostic signal, not a final statistical claim.
+
 ## Current Interpretation
 
 M1 is the best current multi-task tradeoff. It nearly matches Y-K0 on calibrated
@@ -353,7 +381,9 @@ same-candidate popmatch, optimizer-step-aligned diagnostic. The fair-budget
 baseline positioning stage narrows that interpretation: the SASRec advantage
 is sensitive to budget definition and does not hold in the single rough
 N-sample-exposure-matched diagnostic or in the completed closest-exposure
-sample-efficiency curve.
+sample-efficiency curve. The cold/tail diagnostic further shows that
+high-exposure SASRec's popmatch advantage is concentrated outside the coldest
+target-popularity bucket.
 
 ## Current Boundaries
 

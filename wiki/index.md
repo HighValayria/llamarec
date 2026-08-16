@@ -57,6 +57,7 @@ Accepted or currently active ADR links should be listed here.
 - [Baseline SASRec Comparison](reports/baseline-sasrec-comparison.md)
 - [Fair-Budget Baseline Positioning](reports/fair-budget-baseline-positioning.md)
 - [Sample-Efficiency Training-Efficiency Curve](reports/sample-efficiency-training-efficiency.md)
+- [Cold/Tail Item Slice Diagnostic](reports/cold-tail-item-slice-diagnostic.md)
 
 ## History
 
