@@ -1,0 +1,10 @@
+comparison,seed,left_model,right_model,delta_HR@1,delta_NDCG@5,delta_MRR,evidence_status
+N-K0_minus_M1,42,N-K0,M1,0.0227312775,0.0103051362,0.0137885462,computed
+N-K0_minus_M1,43,N-K0,M1,0.0207929515,0.0102080938,0.0135535977,computed
+N-K0_minus_M1,44,N-K0,M1,0.0103964758,0.0036748076,0.005010279,computed
+N-K0_minus_SASRec_exp_match,42,N-K0,SASRec exp-match,0.2766519824,0.1536035485,0.2023788546,computed
+N-K0_minus_SASRec_exp_match,43,N-K0,SASRec exp-match,0.2879295154,0.1604825262,0.2114008811,computed
+N-K0_minus_SASRec_exp_match,44,N-K0,SASRec exp-match,0.2851101322,0.1567550235,0.2066108664,computed
+SASRec_high_s3000_minus_N-K0,42,SASRec high s3000,N-K0,0.0777092511,0.0398598917,0.052825257,computed
+SASRec_high_s3000_minus_N-K0,43,SASRec high s3000,N-K0,0.085814978,0.0426440955,0.0566196769,computed
+SASRec_high_s3000_minus_N-K0,44,SASRec high s3000,N-K0,0.0921585903,0.0463357094,0.0614948605,computed
