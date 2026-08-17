@@ -5,8 +5,8 @@ status: current
 authority: descriptive
 source: mixed
 created: 2026-07-28
-updated: 2026-08-16
-last_verified: 2026-08-16
+updated: 2026-08-17
+last_verified: 2026-08-17
 related_code:
   - task.md
   - README.md
@@ -37,6 +37,7 @@ related_code:
   - src/analysis/sample_exposure_matched_diagnostic.py
   - src/analysis/sample_efficiency_curve.py
   - src/analysis/cold_tail_slice_diagnostic.py
+  - src/analysis/multiseed_stability_summary.py
   - tests/test_candidate_sets.py
   - tests/test_ranking_metrics.py
   - tests/test_base_zero_shot_local.py
@@ -60,6 +61,7 @@ related_code:
   - wiki/reports/fair-budget-baseline-positioning.md
   - wiki/reports/sample-efficiency-training-efficiency.md
   - wiki/reports/cold-tail-item-slice-diagnostic.md
+  - wiki/reports/multiseed-stability.md
 ---
 
 # Current Project State
@@ -101,6 +103,7 @@ Core reports are:
 - [Fair-Budget Baseline Positioning](reports/fair-budget-baseline-positioning.md)
 - [Sample-Efficiency Training-Efficiency Curve](reports/sample-efficiency-training-efficiency.md)
 - [Cold/Tail Item Slice Diagnostic](reports/cold-tail-item-slice-diagnostic.md)
+- [Multi-seed Stability](reports/multiseed-stability.md)
 
 The current best dedicated binary model is Y-K0. Among LLM runs, the current
 best dedicated ranking model is N-K0 and the current best multi-task diagnostic
@@ -365,6 +368,36 @@ not cold-tail driven; it appears mainly in middle/head target-popularity
 buckets. The coldest bucket has only 26 samples and should be treated as a
 diagnostic signal, not a final statistical claim.
 
+## Multi-seed Stability Status
+
+The multi-seed stability stage completed seed42/43/44 checks for Y-K0, N-K0,
+M1, SASRec exp-match, and SASRec high s3000 on MovieLens-1M fixed
+`k5_popmatch_seed42` candidates. The durable report is
+[Multi-seed Stability](reports/multiseed-stability.md), and the tracked
+artifact commit is `22b9089 Record multiseed stability results`.
+
+The stage also added explicit training seed support for Y/N/M adapter training:
+`src/train/train_y.py`, `src/train/train_n.py`, and `src/train/train_m.py` now
+accept `--seed`, seed Python/NumPy/torch/CUDA/transformers before model
+initialization, pass `seed` and `data_seed` to `TrainingArguments` where
+supported, and record the resolved seed in metrics and `run_summary.json`.
+
+Main findings:
+
+- Y-K0 binary F1 is available across three seeds, with range `0.0097766064`.
+- N-K0 remains above M1 by HR@1 across all three seeds. The minimum HR@1 margin
+  is `0.0103964758`.
+- N-K0 remains above roughly exposure-matched SASRec s23 by HR@1 across all
+  three seeds. The minimum HR@1 margin is `0.2766519824`.
+- SASRec high s3000 remains above N-K0 by HR@1 across all three seeds. The
+  minimum HR@1 margin is `0.0777092511`, but this remains a separate
+  high-exposure budget regime.
+- All multi-seed rows use the fixed `k5_popmatch_seed42` candidate protocol.
+
+The safe interpretation is that the main ranking and sample-efficiency
+directions are stable across seeds 42/43/44. The result does not convert the
+high-exposure SASRec advantage into a matched-budget claim.
+
 ## Current Interpretation
 
 M1 is the best current multi-task tradeoff. It nearly matches Y-K0 on calibrated
@@ -383,17 +416,18 @@ is sensitive to budget definition and does not hold in the single rough
 N-sample-exposure-matched diagnostic or in the completed closest-exposure
 sample-efficiency curve. The cold/tail diagnostic further shows that
 high-exposure SASRec's popmatch advantage is concentrated outside the coldest
-target-popularity bucket.
+target-popularity bucket. The multi-seed stability stage confirms that these
+main directions are stable across seeds 42/43/44 under the fixed popmatch
+candidate protocol.
 
 ## Current Boundaries
 
-Do not start M3, KAR, hard negatives, 7B models, multi-seed experiments,
-MovieLens-32M full training, or a strict compute/capacity-matched LLM-vs-SASRec
-study without a new scoped stage.
+Do not start M3, KAR, hard negatives, 7B models, MovieLens-32M full training,
+or a strict compute/capacity-matched LLM-vs-SASRec study without a new scoped
+stage.
 
 Reasonable next work:
 
-- plan multi-seed stability checks for Y-K0, N-K0, and M1;
 - plan stricter compute/capacity-matched comparisons between LLM adapters and
   specialized sequence recommenders;
 - design a later phase focused on cold-item robustness, stronger next-item

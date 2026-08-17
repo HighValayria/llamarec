@@ -11,10 +11,10 @@ wiki_access:
   read_authorized_by: user
   read_authorized_at: 2026-08-16
   read_revoked_at: 2026-08-16
-  write_authorized: false
-  write_authorized_by: null
-  write_authorized_at: null
-  write_revoked_at: 2026-08-16
+  write_authorized: true
+  write_authorized_by: user
+  write_authorized_at: 2026-08-17
+  write_revoked_at: null
 
 current_task: .agent/current_task.md
 template: .agent/templates/current_task.md
@@ -51,3 +51,4 @@ notes:
   - Cold/Tail Item Slice Diagnostic wiki sync was applied on 2026-08-16 and write authorization was revoked after guard checks.
   - Multi-seed Stability stage opened on 2026-08-16 with one-time directly relevant wiki read authorization from the user migration directive.
   - Multi-seed Stability stage-start wiki read was compressed into current_task and revoked on 2026-08-16 before any GPU training.
+  - Multi-seed Stability wiki sync was authorized by the user on 2026-08-17.
