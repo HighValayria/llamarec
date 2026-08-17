@@ -8,6 +8,7 @@ from src.analysis.basic_error_analysis import run_basic_error_analysis
 from src.analysis.candidate_set_diagnostics import run_candidate_set_diagnostics
 from src.analysis.cold_tail_slice_diagnostic import run_cold_tail_slice_diagnostic
 from src.analysis.grouped_error_analysis import run_grouped_error_analysis, _write_csv
+from src.analysis.multiseed_stability_summary import run_multiseed_stability_summary
 from src.analysis.phase2a_robustness_report import run_phase2a_robustness_report
 from src.analysis.phase2b_result_synthesis import run_phase2b_result_synthesis
 from src.analysis.phase2c_popmatch_grouped import run_phase2c_popmatch_grouped
@@ -435,6 +436,44 @@ def test_sample_efficiency_curve_writes_closest_exposure_gaps(tmp_path):
     assert gaps[0]["relative_exposure_mismatch %"] == "2.4"
     assert gaps[0]["delta_HR@1"] == "-0.22"
     assert payload["answers"]["curve_status"] == "computed for planned points"
+
+
+def test_multiseed_stability_summary_writes_comparisons(tmp_path):
+    _write_config(tmp_path)
+    root = tmp_path / "outputs" / "multiseed_inputs"
+    runs = []
+    for seed in [42, 43, 44]:
+        runs.extend(
+            [
+                _multiseed_point(root, "Y-K0", seed, "binary_preference", 0.76, 0.77, 0.20),
+                _multiseed_point(root, "N-K0", seed, "popmatch_ranking", None, None, 0.54),
+                _multiseed_point(root, "M1", seed, "popmatch_ranking", None, None, 0.52),
+                _multiseed_point(root, "SASRec exp-match", seed, "roughly_exposure_matched", None, None, 0.25),
+                _multiseed_point(root, "SASRec high s3000", seed, "high_exposure", None, None, 0.63),
+            ]
+        )
+
+    summary = run_multiseed_stability_summary(
+        config_path=tmp_path / "configs" / "experiment.yaml",
+        dataset_key="toy",
+        output_dir=tmp_path / "outputs" / "multiseed",
+        runs=runs,
+    )
+
+    comparisons = list(csv.DictReader(Path(summary["paths"]["comparisons_csv"]).open()))
+    payload = json.loads(Path(summary["paths"]["json"]).read_text(encoding="utf-8"))
+    report = Path(summary["paths"]["markdown"]).read_text(encoding="utf-8")
+
+    assert summary["missing_rows"] == 0
+    assert len(comparisons) == 9
+    n_minus_m = next(
+        row
+        for row in comparisons
+        if row["comparison"] == "N-K0_minus_M1" and row["seed"] == "42"
+    )
+    assert n_minus_m["delta_HR@1"] == "0.02"
+    assert payload["answers"]["n_k0_above_m1_by_hr1"].startswith("yes across 3 seeds")
+    assert "high-exposure SASRec is a separate budget regime" in report
 
 
 def test_sample_efficiency_curve_marks_missing_metrics(tmp_path):
@@ -970,6 +1009,47 @@ def _sample_efficiency_point(
         "metrics": eval_dir / "test_metrics.json",
         "run_summary": run_dir / "run_summary.json",
         "evaluation_summary": eval_dir / "evaluation_summary.json",
+    }
+
+
+def _multiseed_point(
+    root: Path,
+    model: str,
+    seed: int,
+    regime: str,
+    binary_auc,
+    binary_f1,
+    hr_at_1: float,
+) -> dict:
+    safe_model = model.lower().replace(" ", "_").replace("-", "_")
+    run_dir = root / f"{safe_model}_seed{seed}"
+    metrics_path = run_dir / "test_metrics.json"
+    payload = {
+        "model": model,
+        "dataset": "toy",
+        "split": "test",
+        "ranking": {
+            "HR@1": hr_at_1,
+            "NDCG@5": hr_at_1 + 0.2,
+            "MRR": hr_at_1 + 0.1,
+            "samples": 2,
+        },
+    }
+    if binary_auc is not None:
+        payload["binary"] = {
+            "AUC": binary_auc,
+            "F1": binary_f1,
+            "Accuracy": 0.70,
+            "samples": 2,
+        }
+    _write_json(metrics_path, payload)
+    _write_json(run_dir / "run_summary.json", {"seed": seed})
+    return {
+        "model": model,
+        "seed": seed,
+        "regime": regime,
+        "metrics": metrics_path,
+        "run_summary": run_dir / "run_summary.json",
     }
 
 
