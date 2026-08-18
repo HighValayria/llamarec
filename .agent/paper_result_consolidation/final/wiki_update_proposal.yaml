@@ -1,0 +1,32 @@
+write_authorization_required: true
+status: proposed_only
+proposals:
+  - wiki_file: wiki/current_state.md
+    operation: update
+    reason: Reflect that completed MovieLens-1M evidence has been consolidated into paper-ready claims and that cross-dataset validation is the recommended next stage.
+    evidence:
+      - .agent/paper_result_consolidation/final/stage_summary.md
+      - .agent/paper_result_consolidation/paper_ready_claims.json
+  - wiki_file: wiki/reports/paper-result-consolidation.md
+    operation: create
+    reason: Durable report summarizing claim hierarchy, table plan, evidence gaps, limitations, and recommended next stage.
+    evidence:
+      - .agent/paper_result_consolidation/claims.yaml
+      - .agent/paper_result_consolidation/claim_evidence_matrix.csv
+      - .agent/paper_result_consolidation/paper_results_draft.md
+      - .agent/paper_result_consolidation/final/validated_findings.yaml
+      - .agent/paper_result_consolidation/final/rejected_findings.yaml
+      - .agent/paper_result_consolidation/final/open_questions.yaml
+  - wiki_file: wiki/index.md
+    operation: update
+    reason: Add navigation entry for the new paper-result-consolidation report only after the report is created.
+    evidence:
+      - wiki/reports/paper-result-consolidation.md
+  - wiki_file: wiki/history/2026-08.md
+    operation: update
+    reason: Record durable semantic stage completion and next-stage decision.
+    evidence:
+      - .agent/paper_result_consolidation/final/stage_summary.md
+notes:
+  - Do not apply these updates until the user grants one-time wiki write authorization.
+  - No wiki write authorization is active at this point.

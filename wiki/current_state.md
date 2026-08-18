@@ -5,8 +5,8 @@ status: current
 authority: descriptive
 source: mixed
 created: 2026-07-28
-updated: 2026-08-17
-last_verified: 2026-08-17
+updated: 2026-08-18
+last_verified: 2026-08-18
 related_code:
   - task.md
   - README.md
@@ -62,6 +62,7 @@ related_code:
   - wiki/reports/sample-efficiency-training-efficiency.md
   - wiki/reports/cold-tail-item-slice-diagnostic.md
   - wiki/reports/multiseed-stability.md
+  - wiki/reports/paper-result-consolidation.md
 ---
 
 # Current Project State
@@ -104,6 +105,7 @@ Core reports are:
 - [Sample-Efficiency Training-Efficiency Curve](reports/sample-efficiency-training-efficiency.md)
 - [Cold/Tail Item Slice Diagnostic](reports/cold-tail-item-slice-diagnostic.md)
 - [Multi-seed Stability](reports/multiseed-stability.md)
+- [Paper Result Consolidation](reports/paper-result-consolidation.md)
 
 The current best dedicated binary model is Y-K0. Among LLM runs, the current
 best dedicated ranking model is N-K0 and the current best multi-task diagnostic
@@ -398,6 +400,30 @@ The safe interpretation is that the main ranking and sample-efficiency
 directions are stable across seeds 42/43/44. The result does not convert the
 high-exposure SASRec advantage into a matched-budget claim.
 
+## Paper Result Consolidation Status
+
+The paper result consolidation stage is complete. It produced a stage-local
+paper package under `.agent/paper_result_consolidation/` and the durable report
+[Paper Result Consolidation](reports/paper-result-consolidation.md). The stage
+did not launch new training. It consolidated the completed MovieLens-1M
+evidence into paper-ready claims, claim boundaries, table plans, limitations,
+a Results-section draft, and a next-stage recommendation.
+
+The consolidated paper claims are:
+
+- Y-style preference supervision and N-style next-item supervision learn
+  different recommendation semantics.
+- N-K0 is the strongest completed LLM ranking setting, while M1 is the best
+  unified Y/N tradeoff.
+- LLM-vs-SASRec conclusions are budget-regime dependent: N-K0 is stronger at
+  closest N-task sample exposure, while high-exposure SASRec is stronger.
+- Canonical Random-k5 must be supplemented with PopMatch-k5 and candidate-size
+  stress tests to reduce popularity shortcut concerns.
+
+The recommended next stage is compact cross-dataset validation. The chosen
+second dataset is Amazon Books. The first task in that stage is a dataset
+feasibility audit before any GPU training.
+
 ## Current Interpretation
 
 M1 is the best current multi-task tradeoff. It nearly matches Y-K0 on calibrated
@@ -428,10 +454,13 @@ stage.
 
 Reasonable next work:
 
-- plan stricter compute/capacity-matched comparisons between LLM adapters and
-  specialized sequence recommenders;
-- design a later phase focused on cold-item robustness, stronger next-item
-  supervision, or hard-negative training.
+- run compact cross-dataset validation on Amazon Books to test whether the
+  MovieLens-1M task-interface and budget-regime findings have external
+  validity;
+- if cross-dataset validation supports the main directions, move toward full
+  paper writing and submission preparation;
+- if cross-dataset validation is dataset-dependent, keep the stable
+  task-interface contribution and narrow model-positioning claims accordingly.
 
 ## Data Split Contract
 

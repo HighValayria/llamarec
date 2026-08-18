@@ -1,0 +1,74 @@
+{
+  "dataset": "movielens-1m",
+  "status": "stage_local_consolidation",
+  "claims": [
+    {
+      "id": "MC1",
+      "claim": "Y-style preference supervision and N-style next-item supervision learn different recommendation semantics.",
+      "status": "paper_ready_with_scope",
+      "evidence": [
+        "Y-K0 improves binary AUC/F1 over the zero-shot base on MovieLens-1M.",
+        "N-K0 strongly outperforms Y-K0 on candidate-label ranking under Canonical Random-k5 and PopMatch-k5.",
+        "Y-K0's P(Yes)-based ranking weakens under PopMatch-k5 despite strong binary metrics."
+      ],
+      "scope": "MovieLens-1M; completed Y/N/M runs; ranking claims require candidate protocol labels.",
+      "limitations": [
+        "Y ranking uses P(Yes)-based preference scoring, not N-task candidate-label scoring.",
+        "The result should not be phrased as a universal superiority of one supervision type."
+      ],
+      "allowed_language": "Y and N supervision expose a task-interface mismatch: binary preference quality does not automatically transfer to hard candidate ranking.",
+      "forbidden_language": "Y-K0 is a better recommender than N-K0."
+    },
+    {
+      "id": "MC2",
+      "claim": "Dedicated N supervision is the strongest LLM ranking setting, while M1 is the best unified Y/N tradeoff.",
+      "status": "paper_ready_with_scope",
+      "evidence": [
+        "N-K0 exceeds M1 on PopMatch-k5 HR@1 by 0.0202643172 in seed 42.",
+        "N-K0 exceeds M1 on PopMatch-k5 HR@1 in seeds 42/43/44; minimum margin 0.0103964758.",
+        "M1 keeps Y-side binary performance near Y-K0 while ranking close to N-K0."
+      ],
+      "scope": "MovieLens-1M; K0/M1/M2 variants tested; multi-seed evidence for seeds 42/43/44.",
+      "limitations": [
+        "M1 has doubled total supervision exposure relative to N-K0 in the fair-budget diagnostic.",
+        "M1 is not strictly better than N-K0 on ranking."
+      ],
+      "allowed_language": "M1 provides a unified multi-task compromise; N-K0 remains the cleaner ranking specialist.",
+      "forbidden_language": "M1 dominates N-K0."
+    },
+    {
+      "id": "MC3",
+      "claim": "LLM-vs-SASRec conclusions depend on the budget regime.",
+      "status": "paper_ready_with_scope",
+      "evidence": [
+        "At roughly matched N-task sample exposure, N-K0 exceeds SASRec s23 by HR@1 0.2766519824 in seed 42.",
+        "The sample-efficiency curve shows N-K0 above closest-exposure SASRec points from roughly 3k to 24k N exposure.",
+        "At high exposure, SASRec s3000 exceeds N-K0 in all three seeds; minimum HR@1 margin 0.0777092511."
+      ],
+      "scope": "MovieLens-1M; PopMatch-k5; SASRec effective batch 512; LLM effective batch 8.",
+      "limitations": [
+        "These are sample-exposure and step/exposure diagnostics, not strict FLOP-, wall-clock-, parameter-, or capacity-matched comparisons.",
+        "SASRec high-exposure rows must remain a separate regime."
+      ],
+      "allowed_language": "The LLM adapter is more sample efficient at low matched N-task exposure, whereas heavily trained SASRec is stronger in its high-exposure regime.",
+      "forbidden_language": "The LLM beats SASRec overall."
+    },
+    {
+      "id": "MC4",
+      "claim": "Canonical random-k5 ranking is too easy to interpret alone; PopMatch-k5 and candidate-size robustness are needed for credible ranking evidence.",
+      "status": "paper_ready_with_scope",
+      "evidence": [
+        "Popularity and BPR-MF baselines are much stronger on canonical random-k5 than on PopMatch-k5.",
+        "N-K0 and M1 remain above popularity and BPR-MF under PopMatch-k5.",
+        "N-K0 remains above M1 under k20/k50 candidate-size stress tests."
+      ],
+      "scope": "MovieLens-1M; candidate protocols generated and evaluated in prior stages.",
+      "limitations": [
+        "Candidate robustness is still offline evaluation, not an online recommendation setting.",
+        "Candidate protocol details must be printed with every table."
+      ],
+      "allowed_language": "Harder candidate controls reduce popularity shortcut concerns and preserve the main N-K0/M1 ranking pattern.",
+      "forbidden_language": "Canonical random-k5 alone proves recommender quality."
+    }
+  ]
+}

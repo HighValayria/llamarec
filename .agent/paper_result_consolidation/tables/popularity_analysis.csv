@@ -1,0 +1,19 @@
+analysis,group_or_baseline,count,model_or_comparison,hr1,ndcg5,mrr,delta_hr1,interpretation
+popularity_baseline,canonical_random_k5,,Popularity_N_train,0.5663436123,,,,canonical random candidates expose a popularity shortcut
+popularity_baseline,popmatch_k5,,Popularity_N_train,0.3226431718,,,,popularity drops sharply under popmatch
+popularity_baseline,popmatch_k5,,N-K0_minus_Popularity_N_train,,,,0.2220264317,N-K0 cannot be reduced to raw popularity ranking
+popularity_baseline,popmatch_k5,,M1_minus_Popularity_N_train,,,,0.2017621145,M1 cannot be reduced to raw popularity ranking
+bpr_mf_baseline,canonical_random_k5,,BPR-MF,0.5610572687,0.8066675971,0.7411424376,,matrix factorization benefits from canonical candidates
+bpr_mf_baseline,popmatch_k5,,BPR-MF,0.3351541850,0.6757962567,0.5690719530,,matrix factorization drops under popmatch
+bpr_mf_baseline,popmatch_k5,,N-K0_minus_BPR-MF,,,,0.2095154185,N-K0 remains above BPR-MF under popmatch
+bpr_mf_baseline,popmatch_k5,,M1_minus_BPR-MF,,,,0.1892511013,M1 remains above BPR-MF under popmatch
+cold_tail_bucket,<=10,26,N-K0_minus_M1,,,,0.0384615385,coldest bucket too small for main claim
+cold_tail_bucket,11-50,199,N-K0_minus_M1,,,,0.0904522613,N-K0 advantage larger in tail slice
+cold_tail_bucket,51-200,854,N-K0_minus_M1,,,,0.0304449649,N-K0 remains above M1
+cold_tail_bucket,201-500,1497,N-K0_minus_M1,,,,0.0213760855,N-K0 remains above M1
+cold_tail_bucket,>500,3099,N-K0_minus_M1,,,,0.0167796063,N-K0 remains above M1
+cold_tail_bucket,<=10,26,SASRec_high_s3000_minus_N-K0,,,,-0.2307692308,high-exposure SASRec does not dominate coldest bucket; sample size small
+cold_tail_bucket,11-50,199,SASRec_high_s3000_minus_N-K0,,,,0.0402010050,high-exposure SASRec advantage starts in tail/mid slice
+cold_tail_bucket,51-200,854,SASRec_high_s3000_minus_N-K0,,,,0.0878220141,high-exposure SASRec advantage middle driven
+cold_tail_bucket,201-500,1497,SASRec_high_s3000_minus_N-K0,,,,0.0774883100,high-exposure SASRec advantage middle/head driven
+cold_tail_bucket,>500,3099,SASRec_high_s3000_minus_N-K0,,,,0.0800258148,high-exposure SASRec advantage head driven

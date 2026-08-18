@@ -1,0 +1,16 @@
+protocol,model,hr1,ndcg5,mrr,samples,comparison_note
+Canonical Random-k5 perm seed43,Base,0.3217621145,,,5675,order perturbation control
+Canonical Random-k5 perm seed43,N-K0,0.7150660793,,,5675,N-K0 remains above M1
+Canonical Random-k5 perm seed43,M1,0.6932158590,,,5675,N-K0_minus_M1_hr1=0.0218502203
+Random-k20 seed42,Base,0.0690748899,,,5675,candidate-size stress test
+Random-k20 seed42,N-K0,0.4163876652,,,5675,N-K0 remains above M1
+Random-k20 seed42,M1,0.3711013216,,,5675,N-K0_minus_M1_hr1=0.0452863436
+Random-k20 perm seed43,Base,,,,5675,order perturbation at k20
+Random-k20 perm seed43,N-K0,,,,5675,N-K0_minus_M1_hr1=0.0470484581
+Random-k20 perm seed43,M1,,,,5675,N-K0 remains above M1
+Random-k50 seed42,Base,0.0292511013,,,5675,candidate-size stress test
+Random-k50 seed42,N-K0,0.1994713656,,,5675,N-K0 remains above M1
+Random-k50 seed42,M1,0.1219383260,,,5675,N-K0_minus_M1_hr1=0.0775330396
+PopMatch-k5 seed42,Base,0.3148898678,0.6636020792,0.5531365639,5675,harder popularity-matched candidate set
+PopMatch-k5 seed42,N-K0,0.5446696035,0.7877973813,0.7170837004,5675,N-K0_minus_M1_hr1=0.0202643172
+PopMatch-k5 seed42,M1,0.5244052863,0.7785009376,0.7046637298,5675,N-K0 remains above M1

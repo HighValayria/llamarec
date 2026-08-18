@@ -1,0 +1,9 @@
+row_type,comparison_or_model,metric,seeds,value_mean,value_std,value_min,value_max,value_range,seed42,seed43,seed44,min_margin,interpretation
+aggregate,Y-K0,binary_F1,42/43/44,0.7757557482,0.0041027983,0.7701956507,0.7799722571,0.0097766064,,,,,binary stability available across three seeds
+aggregate,N-K0,HR@1,42/43/44,0.5425550661,0.0033833823,0.5383259912,0.5466079295,0.0082819383,,,,,N-K0 popmatch ranking stable
+aggregate,M1,HR@1,42/43/44,0.5245814978,0.0024961562,0.5219383260,0.5279295154,0.0059911894,,,,,M1 popmatch ranking stable
+aggregate,SASRec_exp_match,HR@1,42/43/44,0.2593245227,0.0075453809,0.2532158590,0.2699559471,0.0167400881,,,,,low exposure SASRec stable below N-K0
+aggregate,SASRec_high_s3000,HR@1,42/43/44,0.6277826725,0.0025750732,0.6243171806,0.6304845815,0.0061674009,,,,,high exposure SASRec stable above N-K0
+paired_delta,N-K0_minus_M1,HR@1,42/43/44,,,,,0.0227312775,0.0207929515,0.0103964758,0.0103964758,N-K0 above M1 in every seed
+paired_delta,N-K0_minus_SASRec_exp_match,HR@1,42/43/44,,,,,0.2766519824,0.2879295154,0.2851101322,0.2766519824,N-K0 above sample-exposure-matched SASRec in every seed
+paired_delta,SASRec_high_s3000_minus_N-K0,HR@1,42/43/44,,,,,0.0777092511,0.0858149780,0.0921585903,0.0777092511,high-exposure SASRec above N-K0 in every seed

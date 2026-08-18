@@ -1,0 +1,30 @@
+dataset: movielens-1m
+validated_findings:
+  - id: vf_001
+    finding: Y-K0 improves binary preference prediction over the zero-shot base.
+    evidence: Y-K0 validation-calibrated AUC 0.7690966770 and F1 0.7830635118 versus base AUC 0.6204640889 and F1 0.7414450771.
+    paper_status: main_text
+  - id: vf_002
+    finding: N-K0 is the strongest LLM ranking model among completed Y/N/M settings.
+    evidence: N-K0 exceeds M1 under Canonical Random-k5 and PopMatch-k5; multi-seed PopMatch-k5 minimum HR@1 margin over M1 is 0.0103964758.
+    paper_status: main_text
+  - id: vf_003
+    finding: M1 is the best unified Y/N tradeoff among tested multi-task variants.
+    evidence: M1 retains near-Y-K0 binary metrics while ranking close to N-K0 and above M0/M2.
+    paper_status: main_text
+  - id: vf_004
+    finding: PopMatch-k5 reduces popularity shortcut concerns relative to Canonical Random-k5.
+    evidence: Popularity and BPR-MF baselines drop sharply under PopMatch-k5 while N-K0 and M1 remain above them.
+    paper_status: main_text_or_appendix
+  - id: vf_005
+    finding: N-K0 is more sample efficient than SASRec at closest N-task exposure points.
+    evidence: Sample-efficiency curve shows N-K0 above SASRec at roughly 3k, 6k, 12k, and 24k N-task exposure.
+    paper_status: main_text
+  - id: vf_006
+    finding: High-exposure SASRec is stronger than N-K0 under its own larger-exposure budget.
+    evidence: SASRec s3000 exceeds N-K0 across seeds 42/43/44 with minimum HR@1 margin 0.0777092511.
+    paper_status: main_text
+  - id: vf_007
+    finding: Main ranking and budget-regime directions are stable across seeds 42/43/44.
+    evidence: Multi-seed comparison rows have no missing metrics and preserve the planned directions.
+    paper_status: main_text

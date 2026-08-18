@@ -5,8 +5,8 @@ status: current
 authority: descriptive
 source: mixed
 created: 2026-07-28
-updated: 2026-08-17
-last_verified: 2026-08-17
+updated: 2026-08-18
+last_verified: 2026-08-18
 related_code: []
 ---
 
@@ -59,6 +59,7 @@ Accepted or currently active ADR links should be listed here.
 - [Sample-Efficiency Training-Efficiency Curve](reports/sample-efficiency-training-efficiency.md)
 - [Cold/Tail Item Slice Diagnostic](reports/cold-tail-item-slice-diagnostic.md)
 - [Multi-seed Stability](reports/multiseed-stability.md)
+- [Paper Result Consolidation](reports/paper-result-consolidation.md)
 
 ## History
 

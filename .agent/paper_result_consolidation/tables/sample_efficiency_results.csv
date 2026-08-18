@@ -1,0 +1,12 @@
+regime,model,point,n_task_exposure,total_supervision_exposure,optimizer_steps,effective_batch,hr1,ndcg5,mrr,samples,interpretation
+sample_efficiency_curve,N-K0,n_s375,3000,3000,375,8,0.4313656388,,,,closest to SASRec s6
+sample_efficiency_curve,N-K0,n_s750,6000,6000,750,8,0.5222907489,,,,closest to SASRec s12
+sample_efficiency_curve,N-K0,n_s1500,12000,12000,1500,8,0.5466079295,0.7884963692,0.7180411160,5675,main N-K0 anchor
+sample_efficiency_curve,N-K0,n_s3000,24000,24000,3000,8,0.5612334802,,,,closest to SASRec s47
+sample_efficiency_curve,SASRec,sasrec_s6,3072,3072,6,512,0.2112775330,0.6011741153,0.4713597651,5675,closest N-task exposure to n_s375
+sample_efficiency_curve,SASRec,sasrec_s12,6144,6144,12,512,0.2421145374,0.6176512047,0.4930631424,5675,closest N-task exposure to n_s750
+sample_efficiency_curve,SASRec,sasrec_s23,11776,11776,23,512,0.2699559471,0.6348928207,0.5156622614,5675,roughly exposure matched to n_s1500
+sample_efficiency_curve,SASRec,sasrec_s47,24064,24064,47,512,0.2840528634,0.6429537473,0.5261879589,5675,closest N-task exposure to n_s3000
+high_exposure_anchor,SASRec,sasrec_s1500,767424,767424,1500,512,0.6088105727,0.8198039644,0.7595506608,5675,63.952x N-K0 N exposure; separate budget regime
+high_exposure_anchor,SASRec,sasrec_s3000,1534656,1534656,3000,512,0.6243171806,0.8283562609,0.7708663730,5675,127.888x N-K0 N exposure; separate budget regime
+multi_task_supplement,M1,m1_s3000,12000,24000,3000,8,0.5238766520,0.7781912330,0.7042525698,5675,N exposure matched but total supervision doubled

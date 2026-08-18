@@ -1,0 +1,11 @@
+section,model,binary_interface,binary_auc,binary_f1_type,binary_f1,binary_accuracy,ranking_interface,candidate_protocol,hr1,ndcg5,mrr,samples,notes
+canonical_core,Base,zero-shot yes/no,0.6204640889,validation_calibrated,0.7414450771,0.5948544699,zero-shot candidate-label ranking,Canonical Random-k5,0.3166519824,0.6630782998,0.5525168869,5675,zero-shot reference point
+canonical_core,Y-K0,P(Yes|history,item),0.7690966770,validation_calibrated,0.7830635118,0.6981981982,P(Yes)-based preference ranking,Canonical Random-k5,0.3048458150,0.6503957066,0.5365521292,5675,ranking is not N-task candidate-label scoring
+canonical_core,N-K0,not_applicable,,,,candidate-label next-item ranking,Canonical Random-k5,0.7189427313,0.8773024023,0.8356446402,5675,strongest LLM ranking condition
+canonical_core,M0,M-Y yes/no,0.7234059346,validation_calibrated,0.7687245753,,M-N candidate-label ranking,Canonical Random-k5,0.6717180617,,,5675,multi-task variant below M1
+canonical_core,M1,M-Y yes/no,0.7668964028,validation_calibrated,0.7817788523,0.7028759529,M-N candidate-label ranking,Canonical Random-k5,0.6949779736,0.8673895627,0.8223230543,5675,best unified Y/N tradeoff
+canonical_core,M2,M-Y yes/no,0.7246538748,validation_calibrated,0.7734258800,,M-N candidate-label ranking,Canonical Random-k5,0.6548017621,,,5675,multi-task variant below M1
+popmatch_core,Base,zero-shot yes/no,0.6217848091,fixed_or_reported,0.6978069304,,zero-shot candidate-label ranking,PopMatch-k5 seed42,0.3148898678,0.6636020792,0.5531365639,5675,popularity-matched hard-candidate diagnostic
+popmatch_core,Y-K0,P(Yes|history,item),0.7690355691,fixed_or_reported,0.7799656403,,P(Yes)-based preference ranking,PopMatch-k5 seed42,0.1853744493,0.5801737577,0.4442819383,5675,binary semantics remain strong while ranking via P(Yes) weakens
+popmatch_core,N-K0,not_applicable,,,,candidate-label next-item ranking,PopMatch-k5 seed42,0.5446696035,0.7877973813,0.7170837004,5675,strongest LLM ranking under popmatch
+popmatch_core,M1,M-Y yes/no,0.7664120559,fixed_or_reported,0.7275700935,,M-N candidate-label ranking,PopMatch-k5 seed42,0.5244052863,0.7785009376,0.7046637298,5675,unified model close to N-K0 under popmatch

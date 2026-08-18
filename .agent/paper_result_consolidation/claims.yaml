@@ -1,0 +1,99 @@
+stage: paper-result-consolidation
+created: 2026-08-17
+status: initial_inventory
+
+main_claims:
+  - id: MC1
+    text: Y and N supervision learn different recommendation semantics.
+    allowed_wording: >
+      Y-K0 improves binary preference prediction, while N-K0 is the dedicated
+      next-interaction ranking model; Y-K0 P(Yes) ranking should not be treated
+      as N-task candidate-label ranking.
+    forbidden_wording:
+      - N ranking is equivalent to preference ranking.
+      - Y-K0 ranking replaces N-K0 next-item ranking.
+    evidence:
+      - phase-2b-result-synthesis
+      - phase-2c-popmatch-hard-candidate-diagnosis
+
+  - id: MC2
+    text: Dedicated supervision remains strongest for its corresponding task, while M1 provides a unified multi-task tradeoff.
+    allowed_wording: >
+      Y-K0 is the strongest dedicated binary model; N-K0 is the strongest LLM
+      next-item ranking model; M1 preserves both interfaces but does not surpass
+      the best dedicated single-task models.
+    forbidden_wording:
+      - M1 beats single-task models.
+      - positive transfer is achieved by M1.
+    evidence:
+      - phase-2b-result-synthesis
+      - phase-2c-popmatch-hard-candidate-diagnosis
+      - multiseed-stability
+
+  - id: MC3
+    text: LLM-vs-SASRec conclusions depend strongly on training exposure.
+    allowed_wording: >
+      SASRec high-exposure rows are stronger than N-K0, while closest N-task
+      sample-exposure comparisons favor N-K0; these are complementary budget
+      regimes, not contradictory conclusions.
+    forbidden_wording:
+      - SASRec is better than LLM recommendation tuning.
+      - LLM is better than SASRec under all settings.
+      - The comparison is strict compute matched.
+    evidence:
+      - fair-budget-baseline-positioning
+      - sample-efficiency-training-efficiency
+      - baseline-sasrec-comparison
+      - multiseed-stability
+
+  - id: MC4
+    text: Harder candidate settings reveal limitations that canonical random-k5 obscures.
+    allowed_wording: >
+      Candidate-size expansion and popularity-matched candidates reveal ranking
+      difficulty that canonical random-k5 can hide; candidate order perturbation
+      is smaller than candidate-size stress in the current evidence.
+    forbidden_wording:
+      - Canonical random-k5 alone proves ranking robustness.
+      - Cold-item ranking is solved.
+    evidence:
+      - phase-2a-ranking-robustness
+      - phase-2c-popmatch-hard-candidate-diagnosis
+      - cold-tail-item-slice-diagnostic
+
+supporting_findings:
+  - id: SF1
+    text: M1 calibration nearly matches Y-K0 binary performance, but M1 ranking remains below N-K0.
+  - id: SF2
+    text: N-K0 remains above M1 under PopMatch-k5 and across seeds 42/43/44.
+  - id: SF3
+    text: Popularity and BPR-MF alone do not explain N-K0/M1 PopMatch-k5 performance.
+  - id: SF4
+    text: High-exposure SASRec advantage is mainly middle/head driven in the current popularity slice.
+  - id: SF5
+    text: SASRec is the strongest specialized non-LLM sequence baseline evaluated so far.
+
+diagnostic_findings:
+  - id: DF1
+    text: Coldest target-popularity bucket favors N-K0 over high-exposure SASRec, but n=26.
+  - id: DF2
+    text: Candidate order perturbation is small relative to candidate-size expansion.
+  - id: DF3
+    text: M0/M2 remain development diagnostics rather than paper main claims.
+  - id: DF4
+    text: Individual SASRec s1500/s3000 optimizer-step rows should be interpreted only through their named budget regime.
+
+limitations:
+  - id: L1
+    text: MovieLens-1M only; second dataset is not yet validated.
+  - id: L2
+    text: Coldest bucket sample size is small.
+  - id: L3
+    text: LLM pretraining may contain movie-title or movie-semantic knowledge.
+  - id: L4
+    text: Strict compute/FLOPs/capacity matching is not completed.
+  - id: L5
+    text: Sample-efficiency findings are scoped to current protocol.
+  - id: L6
+    text: No claim that cold-item ranking is solved.
+  - id: L7
+    text: No claim that N ranking equals preference ranking.

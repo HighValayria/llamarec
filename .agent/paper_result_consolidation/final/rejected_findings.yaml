@@ -1,0 +1,22 @@
+dataset: movielens-1m
+rejected_or_downgraded_findings:
+  - id: rf_001
+    finding: M1 dominates N-K0.
+    decision: rejected
+    reason: N-K0 remains above M1 on ranking across candidate protocols and seeds.
+  - id: rf_002
+    finding: LLM adapters beat SASRec overall.
+    decision: rejected
+    reason: High-exposure SASRec s3000 exceeds N-K0 across seeds; only sample-exposure-matched SASRec is below N-K0.
+  - id: rf_003
+    finding: Canonical Random-k5 alone establishes recommender quality.
+    decision: rejected
+    reason: Popularity and BPR-MF baselines are strong under canonical random candidates and drop under PopMatch-k5.
+  - id: rf_004
+    finding: Coldest-bucket behavior proves a main cold-start conclusion.
+    decision: downgraded_to_diagnostic
+    reason: The `<=10` bucket has only 26 samples.
+  - id: rf_005
+    finding: The completed SASRec comparison is strict compute matched.
+    decision: rejected
+    reason: Available evidence is step/exposure/sample-efficiency diagnostic, not strict FLOP, wall-clock, capacity, or parameter matching.

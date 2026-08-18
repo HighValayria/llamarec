@@ -1,0 +1,22 @@
+dataset: movielens-1m
+open_questions:
+  - id: oq_001
+    question: Does the task-interface pattern generalize beyond MovieLens-1M?
+    priority: high
+    recommended_resolution: Run a second-dataset validation stage before making broad domain claims.
+  - id: oq_002
+    question: Is a stricter compute-matched SASRec/LLM comparison needed?
+    priority: medium
+    recommended_resolution: Only run if target venue requires compute-equivalent baselines; current paper can use budget-conditioned language.
+  - id: oq_003
+    question: How much of the LLM result comes from pretrained movie-title or popularity priors?
+    priority: medium
+    recommended_resolution: Add title-ablation, anonymized-item, or cross-dataset controls in a later stage if the paper focuses on mechanism.
+  - id: oq_004
+    question: Should cold/tail analysis be expanded?
+    priority: low_to_medium
+    recommended_resolution: Useful as an appendix diagnostic; not the top blocker because bucket size is small in the coldest slice.
+  - id: oq_005
+    question: Which venue and page budget should shape final table compression?
+    priority: medium
+    recommended_resolution: Decide before converting stage artifacts into manuscript tables.
