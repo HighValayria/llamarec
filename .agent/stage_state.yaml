@@ -1,20 +1,20 @@
 stage:
   status: active
-  name: paper-result-consolidation
-  goal: Consolidate completed MovieLens-1M experiments into paper-ready claims, evidence mapping, table plans, protocol terminology, limitations, and next-stage recommendations.
-  scope: claim hierarchy, claim-evidence matrix, paper table planning, protocol/budget terminology, results narrative planning, evidence gap assessment
-  started: 2026-08-17
+  name: cross-dataset-validation
+  goal: Validate completed MovieLens-1M paper claims on Amazon Books, starting with a dataset feasibility gate before any GPU training.
+  scope: amazon-books feasibility audit, dataset/code abstraction audit, candidate protocol planning, seed42 experiment plan if feasible
+  started: 2026-08-18
   closed: null
 
 wiki_access:
   read_authorized: false
   read_authorized_by: user
-  read_authorized_at: 2026-08-17
-  read_revoked_at: 2026-08-17
-  write_authorized: true
+  read_authorized_at: 2026-08-18
+  read_revoked_at: 2026-08-18
+  write_authorized: false
   write_authorized_by: user
   write_authorized_at: 2026-08-18
-  write_revoked_at: 2026-08-17
+  write_revoked_at: 2026-08-18
 
 current_task: .agent/current_task.md
 template: .agent/templates/current_task.md
@@ -57,3 +57,7 @@ notes:
   - Paper Result Consolidation stage-start wiki read was compressed into current_task and revoked on 2026-08-17 before paper-ready drafting.
   - Paper Result Consolidation stage-local claim, table, limitation, Results-draft, and next-stage recommendation artifacts were produced on 2026-08-17 without new training or wiki writes.
   - Paper Result Consolidation wiki sync was authorized by the user on 2026-08-18.
+  - Paper Result Consolidation wiki sync was applied and committed on 2026-08-18; write authorization was then revoked.
+  - Cross-dataset Validation stage opened on 2026-08-18 with Amazon Books selected by the user as the second dataset.
+  - Cross-dataset Validation stage-start direct wiki read was compressed into current_task and revoked on 2026-08-18 before any training.
+  - Amazon Books feasibility gate currently blocks GPU training because the supplied raw files are product catalog metadata, not user-item interaction logs.

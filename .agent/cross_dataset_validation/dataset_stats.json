@@ -1,0 +1,66 @@
+{
+  "dataset_key": "amazon-books",
+  "raw_dir": "data/raw/Amazon-books",
+  "primary_file": "data/raw/Amazon-books/Amazon_popular_books_dataset.csv",
+  "source_type": "product_catalog_with_aggregate_book_metadata",
+  "rows": 2269,
+  "unique_items": 2269,
+  "unique_users": 0,
+  "individual_interactions": 0,
+  "has_user_id_column": false,
+  "has_item_id_column": true,
+  "item_id_column": "asin",
+  "has_individual_rating_column": false,
+  "rating_semantics": "aggregate average rating string, e.g. '4.6 out of 5 stars'",
+  "has_interaction_timestamp": false,
+  "timestamp_semantics": "catalog scrape timestamp, not user interaction timestamp",
+  "title_coverage": 1.0,
+  "timestamp_coverage": 1.0,
+  "rating_count": 2269,
+  "rating_distribution": {
+    "3.4": 1,
+    "3.6": 1,
+    "3.9": 6,
+    "4.0": 16,
+    "4.1": 21,
+    "4.2": 72,
+    "4.3": 108,
+    "4.4": 152,
+    "4.5": 294,
+    "4.6": 403,
+    "4.7": 571,
+    "4.8": 461,
+    "4.9": 163
+  },
+  "reviews_count_summary": {
+    "min": 10010,
+    "p50": 16119,
+    "max": 196572,
+    "mean": 21497.73821066549
+  },
+  "root_bs_rank_summary": {
+    "min": 1,
+    "p50": 3104,
+    "max": 2904335,
+    "mean": 30951.777974347635
+  },
+  "strict_y_samples": {
+    "train": 0,
+    "validation": 0,
+    "test": 0,
+    "reason": "No user-item interaction rows with user_id and per-interaction rating."
+  },
+  "strict_n_samples": {
+    "train": 0,
+    "validation": 0,
+    "test": 0,
+    "legal_n_users": 0,
+    "reason": "No per-user temporal sequences; next-item ground truth cannot be defined."
+  },
+  "popmatch_candidate_build": {
+    "status": "blocked",
+    "reason": "PopMatch requires target next-item samples and training-split item popularity from interactions."
+  },
+  "gate_status": "blocked_requires_review_interaction_log",
+  "blocking_reason": "The supplied Amazon Books dataset is item metadata, not recommendation interaction data."
+}
