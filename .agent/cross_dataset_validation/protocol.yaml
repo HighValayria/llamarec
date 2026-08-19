@@ -1,9 +1,12 @@
 stage: cross-dataset-validation
 dataset:
-  key: amazon-books
+  key: amazon-musical-instruments
   selected_by_user: true
-  raw_dir: data/raw/Amazon-books
-  current_gate_status: blocked_requires_review_interaction_log
+  raw_dir: data/raw/amazon_reviews_2023/musical_instruments
+  current_gate_status: raw_feasibility_pass_formal_build_pending
+previous_dataset_source:
+  key: amazon-books
+  status: rejected_as_interaction_source
 goal: >
   Validate whether MovieLens-1M task-interface, specialist-vs-unified, harder
   candidate, and SASRec sample-efficiency findings transfer to a second
@@ -24,13 +27,19 @@ required_data_contract:
 current_amazon_books_catalog:
   usable_as_item_metadata: true
   usable_as_interactions: false
+current_amazon_musical_instruments:
+  usable_as_item_metadata: true
+  usable_as_interactions: true
+  formal_strict_outputs: pending
 candidate_protocols_when_unblocked:
   random_k5:
     candidate_num: 5
     candidate_seed: 42
+    item_universe: observed_interactions_after_title_join
   popmatch_k5:
     candidate_num: 5
     candidate_seed: 42
+    item_universe: observed_interactions_after_title_join
     popularity_source: training_split_interactions_only
 seed42_matrix_when_unblocked:
   - Base

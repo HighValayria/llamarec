@@ -130,7 +130,7 @@ def run_step2(
     write_preference_samples(dataset_key, preference_samples, config)
 
     # 4. 构造 N 样本：先由 split 确定合法 N target，再写出 train/validation/test。
-    all_movie_ids = sorted(str(movie_id) for movie_id in movies)
+    all_movie_ids = _candidate_item_universe(config, dataset_key, movies, full_sequences)
     next_item_samples = build_next_item_samples(
         full_sequences,
         split,
@@ -339,6 +339,23 @@ def select_inspection_samples(
     if len(tagged_samples) <= limit:
         return tagged_samples
     return rng.sample(tagged_samples, limit)
+
+
+def _candidate_item_universe(
+    config: dict[str, Any],
+    dataset_key: str,
+    movies: dict[str, Any],
+    full_sequences: dict[str, list[dict[str, Any]]],
+) -> list[str]:
+    raw_info = config.get("raw_files", {}).get(dataset_key, {})
+    if raw_info.get("candidate_item_universe") == "observed_interactions":
+        item_ids = {
+            str(interaction["movie_id"])
+            for interactions in full_sequences.values()
+            for interaction in interactions
+        }
+        return sorted(item_ids)
+    return sorted(str(movie_id) for movie_id in movies)
 
 
 def _open_streaming_writers(

@@ -1,0 +1,6 @@
+{
+  "dataset_key": "amazon-musical-instruments",
+  "candidate_protocol": "random_k5_seed42",
+  "status": "pending_formal_build",
+  "reason": "Strict N validation/test candidate records must be generated after src.data.build_step2 succeeds."
+}

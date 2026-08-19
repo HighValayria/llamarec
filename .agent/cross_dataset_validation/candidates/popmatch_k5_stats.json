@@ -1,0 +1,6 @@
+{
+  "dataset_key": "amazon-musical-instruments",
+  "candidate_protocol": "popmatch_k5_seed42",
+  "status": "pending_formal_build",
+  "reason": "PopMatch requires training-split item popularity from formal strict preprocessing."
+}

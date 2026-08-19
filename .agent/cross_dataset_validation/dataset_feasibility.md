@@ -1,4 +1,10 @@
-# Dataset Feasibility Gate: Amazon Books
+# Dataset Feasibility Gate: Amazon Books Catalog
+
+## Stage-local Status
+
+This source is **rejected as an interaction source** and superseded by the
+active Amazon Reviews 2023 5-core Musical_Instruments route recorded in
+`.agent/cross_dataset_validation/dataset_source_decision.md`.
 
 ## Decision
 

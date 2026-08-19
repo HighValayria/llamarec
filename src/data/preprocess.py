@@ -1,4 +1,4 @@
-"""STEP 2 实现：MovieLens 读取与用户序列构造。
+"""STEP 2 实现：交互读取与用户序列构造。
 
 MVP 的主数据来源是 full_sequence。positive_sequence 只作为辅助统计产物保留，
 不参与 MVP split，也不决定 N 的 history 或 target。
@@ -20,13 +20,13 @@ except ImportError:  # 允许在 src/data 目录内直接调试单个模块文�
 
 
 def load_ratings(dataset_key: str, config: dict[str, Any]) -> list[dict[str, Any]]:
-    """读取 MovieLens 评分记录并标准化字段名。"""
+    """读取评分/交互记录并标准化字段名。"""
 
     return list(iter_ratings(dataset_key, config))
 
 
 def iter_ratings(dataset_key: str, config: dict[str, Any]):
-    """逐条读取 MovieLens 评分记录，避免 32M 一次性进入内存。"""
+    """逐条读取评分/交互记录，避免大数据集一次性进入内存。"""
 
     paths = resolve_dataset_paths(config, dataset_key)
     movies = load_movies(dataset_key, config)
@@ -38,13 +38,17 @@ def iter_ratings(dataset_key: str, config: dict[str, Any]):
         row_iter = _iter_movielens_csv_ratings(paths["ratings_path"])
     elif ratings_format == "double_colon_no_header":
         row_iter = _iter_movielens_1m_ratings(paths["ratings_path"])
+    elif ratings_format == "amazon_reviews_2023_csv":
+        row_iter = _iter_amazon_reviews_2023_ratings(paths["ratings_path"])
     else:
         raise ValueError(f"暂不支持的 ratings_format: {ratings_format}")
 
     for row in row_iter:
         movie_meta = movies.get(row["movie_id"], {})
+        if not _valid_title(movie_meta.get("title")):
+            continue
         # prompt 当前只需要 title。genres 不参与 MVP 任务语义，避免在 32M 中重复膨胀。
-        row["title"] = movie_meta.get("title", "Unknown")
+        row["title"] = str(movie_meta.get("title"))
         yield row
 
 
@@ -81,7 +85,7 @@ def iter_user_rating_groups(dataset_key: str, config: dict[str, Any]):
 
 
 def load_movies(dataset_key: str, config: dict[str, Any]) -> dict[str, dict[str, str]]:
-    """读取 MovieLens 电影元数据。"""
+    """读取 item 元数据，并以内部 ``movie_id`` 兼容既有链路。"""
 
     paths = resolve_dataset_paths(config, dataset_key)
     movies_format = paths["movies_format"]
@@ -92,6 +96,8 @@ def load_movies(dataset_key: str, config: dict[str, Any]) -> dict[str, dict[str,
         return _read_movielens_csv_movies(paths["movies_path"])
     if movies_format == "double_colon_movies_dat":
         return _read_movielens_1m_movies(paths["movies_path"])
+    if movies_format == "amazon_reviews_2023_parquet_metadata":
+        return _read_amazon_reviews_2023_metadata(paths["movies_path"])
 
     raise ValueError(f"暂不支持的 movies_format: {movies_format}")
 
@@ -207,6 +213,29 @@ def _iter_movielens_1m_ratings(ratings_path):
             }
 
 
+def _iter_amazon_reviews_2023_ratings(ratings_path):
+    """读取 Amazon Reviews 2023 interaction CSV。
+
+    外部 item id 是 ``parent_asin``；内部保留为 ``movie_id``，以复用现有
+    split、candidate、training、inference、SASRec 代码。
+    """
+
+    with ratings_path.open("r", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        for row in reader:
+            user_id = _first_present(row, "user_id", "reviewerID", "reviewer_id")
+            parent_asin = _first_present(row, "parent_asin", "asin", "item_id")
+            rating = _first_present(row, "rating", "overall")
+            timestamp = _first_present(row, "timestamp", "unixReviewTime")
+            yield {
+                "user_id": str(user_id),
+                "movie_id": str(parent_asin),
+                "parent_asin": str(parent_asin),
+                "rating": float(rating),
+                "timestamp": _parse_amazon_timestamp(timestamp),
+            }
+
+
 def _read_movielens_100k_movies(movies_path) -> dict[str, dict[str, str]]:
     movies = {}
     with movies_path.open("r", encoding="latin-1") as handle:
@@ -249,12 +278,72 @@ def _read_movielens_1m_movies(movies_path) -> dict[str, dict[str, str]]:
     return movies
 
 
+def _read_amazon_reviews_2023_metadata(metadata_path) -> dict[str, dict[str, str]]:
+    """读取 Amazon Reviews 2023 parquet metadata shard。"""
+
+    try:
+        import pandas as pd
+    except ImportError as exc:  # pragma: no cover - depends on runtime packaging.
+        raise RuntimeError(
+            "读取 Amazon parquet metadata 需要 pandas 和 pyarrow/fastparquet。"
+        ) from exc
+
+    paths = _amazon_metadata_files(metadata_path)
+    movies: dict[str, dict[str, str]] = {}
+    for path in paths:
+        try:
+            frame = pd.read_parquet(path, columns=["parent_asin", "title"])
+        except Exception as exc:  # pragma: no cover - exercised in integration env.
+            raise RuntimeError(
+                f"无法读取 Amazon parquet metadata: {path}. "
+                "请确认环境安装了 pyarrow 或 fastparquet。"
+            ) from exc
+
+        for row in frame.itertuples(index=False):
+            parent_asin = str(getattr(row, "parent_asin", "") or "").strip()
+            title = str(getattr(row, "title", "") or "").strip()
+            if not parent_asin or not _valid_title(title):
+                continue
+            movies[parent_asin] = {
+                "movie_id": parent_asin,
+                "parent_asin": parent_asin,
+                "title": title,
+                "genres": "",
+            }
+    return movies
+
+
+def _amazon_metadata_files(metadata_path) -> list[Any]:
+    path = metadata_path
+    if path.is_dir():
+        files = sorted(path.glob("*.parquet"))
+    else:
+        files = [path]
+    if not files:
+        raise FileNotFoundError(f"Amazon metadata parquet 文件不存在: {path}")
+    return files
+
+
 def _first_present(row: dict[str, Any], *keys: str) -> str:
     for key in keys:
         value = row.get(key)
         if value is not None:
             return value
     raise KeyError(f"缺少字段，候选字段: {keys}")
+
+
+def _parse_amazon_timestamp(value: Any) -> int:
+    numeric = int(float(str(value).strip()))
+    if numeric > 10_000_000_000:
+        return numeric // 1000
+    return numeric
+
+
+def _valid_title(value: Any) -> bool:
+    if value is None:
+        return False
+    title = str(value).strip()
+    return bool(title) and title.lower() not in {"nan", "none", "null"}
 
 
 def _split_double_colon(line: str, expected_fields: int) -> list[str]:

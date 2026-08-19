@@ -60,7 +60,7 @@ def build_fixed_candidate_sets(
         shuffle_order=shuffle_order,
         candidate_method=candidate_method,
     )
-    all_movie_ids = sorted(str(movie_id) for movie_id in load_movies(dataset_key, config))
+    all_movie_ids = _candidate_item_universe(config, dataset_key)
     base_seed = int(config["seed"]["random_seed"])
     method = str(config.get("negative_sampling", {}).get("method", "random"))
     movie_popularity = (
@@ -363,6 +363,29 @@ def _load_movie_popularity(config: dict[str, Any], dataset_key: str) -> Counter[
             for interaction in record.get("interactions", []):
                 popularity[str(interaction["movie_id"])] += 1
     return popularity
+
+
+def _candidate_item_universe(config: dict[str, Any], dataset_key: str) -> list[str]:
+    raw_info = config.get("raw_files", {}).get(dataset_key, {})
+    if raw_info.get("candidate_item_universe") != "observed_interactions":
+        return sorted(str(movie_id) for movie_id in load_movies(dataset_key, config))
+
+    full_sequences_path = resolve_configured_output_path(
+        config,
+        dataset_key,
+        "full_sequences",
+    )
+    item_ids = set()
+    with open_text_auto(full_sequences_path, "rt", encoding="utf-8") as handle:
+        for line in handle:
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            for interaction in record.get("interactions", []):
+                item_ids.add(str(interaction["movie_id"]))
+    if not item_ids:
+        raise ValueError(f"observed interaction item universe is empty: {dataset_key}")
+    return sorted(item_ids)
 
 
 def _permute_candidate_record(

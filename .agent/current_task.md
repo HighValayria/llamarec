@@ -1,65 +1,77 @@
 # Current Task
 
 ## Stage Goal
-- Open the Cross-dataset Validation stage using `amazon-books` as the selected
-  second dataset.
-- First answer the Dataset Feasibility Gate before any GPU training.
-- Validate, when data is feasible, whether MovieLens-1M findings transfer:
-  Y/N task-interface separation, N-K0 ranking specialist behavior, M1 unified
-  tradeoff, PopMatch candidate difficulty, and closest-exposure SASRec
-  positioning.
+- Continue the active Cross-dataset Validation stage, rerouted on 2026-08-19
+  from the rejected Amazon-books catalog to user-provided local Amazon Reviews
+  2023 5-core Musical_Instruments.
+- Integrate Amazon Musical Instruments through a dataset adapter, reuse the
+  strict temporal Y/N pipeline, build fixed Random-k5 and PopMatch-k5
+  candidates, then stop and report before GPU training.
 
 ## Scope
-- Dataset: `amazon-books`.
-- Raw local files currently found under `data/raw/Amazon-books/`.
+- Active dataset: `amazon-musical-instruments`.
+- Rejected prior source: `Amazon-books` catalog as interaction source.
+- Local raw files:
+  - `data/raw/amazon_reviews_2023/musical_instruments/interactions/Musical_Instruments.csv`
+  - `data/raw/amazon_reviews_2023/musical_instruments/metadata/full-00000-of-00002.parquet`
+  - `data/raw/amazon_reviews_2023/musical_instruments/metadata/full-00001-of-00002.parquet`
 - Stage-local artifacts under `.agent/cross_dataset_validation/`.
-- Initial work is CPU-only data and code feasibility auditing.
+- This turn is CPU/data preparation only.
 
 ## Non-Goals
-- No GPU training until the Amazon Books feasibility gate passes.
+- No GPU training, Base inference, Y-K0/N-K0/M1 fine-tuning, SASRec training, or
+  seed43/44.
+- No web search, dataset download, Hugging Face dataset loading, wget/curl, git
+  clone, or replacement with non-local data.
 - No KAR, review-text augmentation, description augmentation, hard-negative
   training, new M variant, LoRA sweep, 7B, third dataset, or strict FLOPs match.
-- Do not force the catalog dataset into a different task definition.
 - Do not write formal wiki during this stage until stage-end authorization.
 
 ## Long-Term Constraints
-- Paper Result Consolidation was wiki-synced and committed before opening this
+- Continue the current Cross-dataset Validation stage; do not create a new
   stage.
-- A one-time direct relevant wiki read was used at stage opening on
-  2026-08-18 and then revoked.
-- Subsequent stage work should rely on this current task, stage-local
-  artifacts, current code/config, and raw Amazon Books files.
-- The strict history rule remains `timestamp < target_timestamp`.
-- Candidate protocols must keep train seed and candidate seed separate.
-- SASRec exposure matching must be recomputed from actual N-K0 N-task exposure
-  on the second dataset.
+- Do not read formal wiki again. Stage opening wiki read was already completed
+  and revoked on 2026-08-18.
+- Use only local user-provided data.
+- Amazon input information is limited to interaction `user_id`, `parent_asin`,
+  `rating`, `timestamp`, and metadata `parent_asin`, `title`.
+- Strict history remains `timestamp < target_timestamp`.
+- Y label rule remains `rating >= 4 -> Yes`, `rating < 4 -> No`.
+- N ground truth remains the actual next full-sequence interaction, not the
+  next positive interaction.
+- Same-timestamp N ambiguity skips only that N sample, not the entire user.
+- Candidate seed and model training seed must remain separate.
 
 ## Evidence Sources
-- User directive on 2026-08-18 selecting `amazon-books`.
-- One-time direct wiki read at stage opening:
-  - `wiki/index.md`
-  - `wiki/current_state.md`
-  - `wiki/reports/paper-result-consolidation.md`
-  - `wiki/reports/multiseed-stability.md`
-  - `wiki/reports/sample-efficiency-training-efficiency.md`
-  - `wiki/reports/fair-budget-baseline-positioning.md`
-  - `wiki/reports/phase-2c-popmatch-hard-candidate-diagnosis.md`
-- Raw files:
-  - `data/raw/Amazon-books/Amazon_popular_books_dataset.csv`
-  - `data/raw/Amazon-books/Amazon_popular_books_dataset.json`
-  - `data/raw/Amazon-books/README.md`
+- User migration directive on 2026-08-19.
+- User-provided raw audit for Amazon Reviews 2023 5-core Musical_Instruments.
+- Local raw file presence checks.
+- Current code/config inspection:
+  - `configs/experiment.yaml`
+  - `src/data/preprocess.py`
+  - `src/data/build_step2.py`
+  - `src/data/build_preference.py`
+  - `src/data/build_next_item.py`
+  - `src/data/split.py`
+  - `src/eval/candidate_sets.py`
+  - `src/inference/prompts.py`
 - Stage artifacts:
-  - `.agent/cross_dataset_validation/dataset_stats.json`
-  - `.agent/cross_dataset_validation/dataset_feasibility.md`
+  - `.agent/cross_dataset_validation/dataset_source_decision.md`
+  - `.agent/cross_dataset_validation/amazon_dataset_stats.json`
+  - `.agent/cross_dataset_validation/amazon_preprocessing_report.md`
   - `.agent/cross_dataset_validation/code_reuse_audit.md`
   - `.agent/cross_dataset_validation/protocol.yaml`
   - `.agent/cross_dataset_validation/resolved_cloud_commands.md`
-  - `.agent/cross_dataset_validation/cloud_commands.sh`
+  - `.agent/cross_dataset_validation/seed42_plan.md`
 
 ## Related Code
 - `configs/experiment.yaml`
-- `src/data/build_step2.py`
 - `src/data/preprocess.py`
+- `src/data/build_step2.py`
+- `src/data/build_preference.py`
+- `src/data/build_next_item.py`
+- `src/data/split.py`
+- `src/data/stats.py`
 - `src/eval/candidate_sets.py`
 - `src/inference/prompts.py`
 - `src/inference/base_zero_shot.py`
@@ -70,49 +82,54 @@
 - `src/train/train_n.py`
 - `src/train/train_m.py`
 - `src/baselines/sasrec.py`
+- `tests/test_amazon_reviews_preprocess.py`
 
 ## Current Progress
-- Paper Result Consolidation wiki sync was applied and committed.
-- Cross-dataset Validation stage opened with `amazon-books` selected by the
-  user.
-- Raw Amazon Books files were inspected locally.
-- Dataset Feasibility Gate currently blocks training:
-  - 2269 item rows and 2269 unique ASINs.
-  - 100% title coverage.
-  - no user/reviewer id column.
-  - no per-user interaction rows.
-  - `rating` is aggregate average rating, not per-interaction rating.
-  - `timestamp` is catalog scrape timestamp, not interaction timestamp.
-  - strict Y samples: 0.
-  - strict N samples: 0.
-  - PopMatch-k5: blocked because no legal N targets or training-split item
-    popularity.
-- Code reuse audit found current code is conceptually reusable but
-  MovieLens-shaped around `movie_id`, `load_movies()`, and "movie" prompt text.
+- Rejected `Amazon-books` catalog as interaction source remains recorded.
+- Active source corrected to Amazon Reviews 2023 5-core Musical_Instruments.
+- Raw feasibility from user audit:
+  - interactions: 511,836
+  - users: 57,439
+  - items: 24,587
+  - positive ratio at `rating >= 4`: 85.4680%
+  - title coverage for interaction items: 24,584 / 24,587 = 0.999878
+  - multi-item user-timestamp buckets: 12 / 511,824
+  - approximate legal strict-Y targets: 454,396
+  - legal strict-N targets: 454,374
+- Added `amazon-musical-instruments` raw file config.
+- Added Amazon Reviews 2023 CSV interaction adapter in `src/data/preprocess.py`.
+- Added Amazon parquet metadata reader in `src/data/preprocess.py`.
+- Adapter maps `parent_asin` to internal `movie_id` and retains `parent_asin`.
+- Missing-title policy: drop interactions whose `parent_asin` lacks valid
+  metadata title.
+- Seed42 plan and CPU-only cloud commands are prepared, but formal strict
+  preprocessing and candidate construction have not been run yet.
 
 ## Verification Results
-- `tools/wiki_guard.py` passed after Paper Result Consolidation wiki sync.
-- `tools/stage_guard.py` passed before closure commit.
-- Local Amazon Books CSV feasibility statistics were computed from the raw CSV.
-- Local Python lacks `yaml`, so some CLI `--help` checks that import project
-  config fail locally; cloud/venv should be used for final resolved commands
-  after data is unblocked.
+- `py_compile` passed for `src/data/preprocess.py` and
+  `tests/test_amazon_reviews_preprocess.py`.
+- Local bundled Python lacks `pytest`, `PyYAML`, and a parquet engine, so full
+  local `build_step2` and tests cannot run here.
+- Formal verification remains pending in the project `.venv` or cloud runtime:
+  strict Step2 build, Random-k5 build, PopMatch-k5 build, and candidate
+  diagnostics.
 
 ## Unresolved Questions
-- Can the user provide an Amazon Books review interaction file, not only the
-  product catalog?
-- Should the current catalog file be used as item metadata after interaction
-  data is added?
-- If Amazon Books review interactions are unavailable, should the stage switch
-  to another Amazon review category with interaction rows?
+- Does the cloud/project `.venv` have `pandas` and `pyarrow` or `fastparquet`?
+- After missing-title drops, what are the formal retained users/items/interactions?
+- What are the formal Y train/validation/test counts and label distributions?
+- What are the formal N train/validation/test counts and skipped ambiguous N
+  target counts?
+- Does PopMatch-k5 reach acceptable matching quality and build success?
 
 ## Pending Wiki Sync
-- None yet. At stage end, propose a cross-dataset validation report and current
-  state update based on the final gate/result status.
+- None. Do not write formal wiki until this stage reaches a real stop point and
+  the user grants stage-end write authorization.
 
 ## Invalidating Conditions
-- Treating aggregate product ratings as user preference labels.
-- Treating catalog scrape timestamp as an interaction timestamp.
-- Creating synthetic users or sequences to force the dataset through Y/N.
-- Launching GPU training before strict Y/N samples and fixed candidate files
-  exist.
+- Treating aggregate catalog ratings as user labels.
+- Treating catalog scrape timestamps as interaction timestamps.
+- Using review text, product description, brand, category, price, images, or
+  LLM-generated knowledge.
+- Creating synthetic users or synthetic sequences.
+- Launching GPU training before strict Y/N samples and fixed candidates exist.

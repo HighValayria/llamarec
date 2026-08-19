@@ -36,6 +36,7 @@ paths:
   raw_movielens_100k: data/raw/ml-100k
   raw_movielens_1m: data/raw/ml-1m
   raw_movielens_32m: data/raw/ml-32m
+  raw_amazon_musical_instruments: data/raw/amazon_reviews_2023/musical_instruments
 
 storage:
   gzip_processed_datasets:
@@ -75,6 +76,22 @@ raw_files:
         - movie_id
         - rating
         - timestamp
+  amazon-musical-instruments:
+    ratings: data/raw/amazon_reviews_2023/musical_instruments/interactions/Musical_Instruments.csv
+    movies: data/raw/amazon_reviews_2023/musical_instruments/metadata
+    ratings_format: amazon_reviews_2023_csv
+    movies_format: amazon_reviews_2023_parquet_metadata
+    item_type: book_or_music_product
+    candidate_item_universe: observed_interactions
+    columns:
+      ratings:
+        - user_id
+        - parent_asin
+        - rating
+        - timestamp
+      movies:
+        - parent_asin
+        - title
 
 dataset:
   development: movielens-100k

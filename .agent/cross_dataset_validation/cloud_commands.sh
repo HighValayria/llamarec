@@ -2,39 +2,66 @@
 set -euo pipefail
 
 cd /root/llamarec
+git fetch origin main
+git checkout main
+git pull --ff-only origin main
 source .venv/bin/activate
 
-echo "== git =="
-git rev-parse --short HEAD
-
-echo "== raw Amazon Books files =="
-find data/raw/Amazon-books -maxdepth 1 -type f -printf "%p %s bytes\n" | sort
-
-echo "== inspect header =="
+echo "== environment check =="
 python - <<'PY'
-import csv, json
-from pathlib import Path
-p = Path("data/raw/Amazon-books/Amazon_popular_books_dataset.csv")
-with p.open(newline="", encoding="utf-8-sig") as f:
-    r = csv.DictReader(f)
-    first = next(r)
-    print(json.dumps({"columns": r.fieldnames, "first_row": first}, ensure_ascii=False, indent=2)[:4000])
+import importlib.util as u
+print("yaml", bool(u.find_spec("yaml")))
+print("pandas", bool(u.find_spec("pandas")))
+print("pyarrow", bool(u.find_spec("pyarrow")))
+print("fastparquet", bool(u.find_spec("fastparquet")))
 PY
 
-echo "== required interaction columns =="
-python - <<'PY'
-import csv
-from pathlib import Path
-p = Path("data/raw/Amazon-books/Amazon_popular_books_dataset.csv")
-with p.open(newline="", encoding="utf-8-sig") as f:
-    cols = csv.DictReader(f).fieldnames or []
-lower = {c.lower() for c in cols}
-print("has_user_id", bool(lower & {"user_id", "userid", "reviewerid", "reviewer_id"}))
-print("has_item_id", bool(lower & {"asin", "item_id", "parent_asin"}))
-print("has_rating", "rating" in lower)
-print("has_timestamp", "timestamp" in lower or "unixreviewtime" in lower)
-print("columns", cols)
-PY
+echo "== raw file check =="
+find data/raw/amazon_reviews_2023/musical_instruments -maxdepth 3 -type f -printf "%p %s bytes\n" | sort
+head -5 data/raw/amazon_reviews_2023/musical_instruments/interactions/Musical_Instruments.csv
 
-echo "== decision =="
-echo "STOP before GPU training if has_user_id is False. Current local gate is blocked."
+echo "== strict step2 build =="
+python -m src.data.build_step2 \
+  --config configs/experiment.yaml \
+  --dataset amazon-musical-instruments \
+  --inspection-limit 20
+
+echo "== random-k5 candidates =="
+python -m src.eval.candidate_sets \
+  --config configs/experiment.yaml \
+  --dataset amazon-musical-instruments \
+  --candidate-num 5 \
+  --variant-name random_k5_seed42 \
+  --seed 42 \
+  --candidate-method random \
+  --output-dir data/candidates/amazon-musical-instruments/variants/random_k5_seed42
+
+echo "== popmatch-k5 candidates =="
+python -m src.eval.candidate_sets \
+  --config configs/experiment.yaml \
+  --dataset amazon-musical-instruments \
+  --candidate-num 5 \
+  --variant-name popmatch_k5_seed42 \
+  --seed 42 \
+  --candidate-method popularity_matched \
+  --output-dir data/candidates/amazon-musical-instruments/variants/popmatch_k5_seed42
+
+echo "== candidate diagnostics =="
+python -m src.analysis.candidate_set_diagnostics \
+  --config configs/experiment.yaml \
+  --dataset amazon-musical-instruments \
+  --valid-candidates data/candidates/amazon-musical-instruments/variants/random_k5_seed42/valid.jsonl \
+  --test-candidates data/candidates/amazon-musical-instruments/variants/random_k5_seed42/test.jsonl \
+  --output-dir outputs/cross_dataset_validation/amazon-musical-instruments/candidate_diagnostics/random_k5_seed42
+
+python -m src.analysis.candidate_set_diagnostics \
+  --config configs/experiment.yaml \
+  --dataset amazon-musical-instruments \
+  --valid-candidates data/candidates/amazon-musical-instruments/variants/popmatch_k5_seed42/valid.jsonl \
+  --test-candidates data/candidates/amazon-musical-instruments/variants/popmatch_k5_seed42/test.jsonl \
+  --output-dir outputs/cross_dataset_validation/amazon-musical-instruments/candidate_diagnostics/popmatch_k5_seed42
+
+echo "== stop point summary =="
+cat data/processed/amazon-musical-instruments/stats.json
+find data/candidates/amazon-musical-instruments/variants -maxdepth 2 -type f -printf "%p %s bytes\n" | sort
+find outputs/cross_dataset_validation/amazon-musical-instruments/candidate_diagnostics -maxdepth 3 -type f -printf "%p %s bytes\n" | sort

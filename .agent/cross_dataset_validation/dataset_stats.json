@@ -1,5 +1,7 @@
 {
   "dataset_key": "amazon-books",
+  "stage_local_status": "rejected_as_interaction_source",
+  "superseded_by": "amazon-musical-instruments",
   "raw_dir": "data/raw/Amazon-books",
   "primary_file": "data/raw/Amazon-books/Amazon_popular_books_dataset.csv",
   "source_type": "product_catalog_with_aggregate_book_metadata",

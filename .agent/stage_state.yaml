@@ -1,8 +1,8 @@
 stage:
   status: active
   name: cross-dataset-validation
-  goal: Validate completed MovieLens-1M paper claims on Amazon Books, starting with a dataset feasibility gate before any GPU training.
-  scope: amazon-books feasibility audit, dataset/code abstraction audit, candidate protocol planning, seed42 experiment plan if feasible
+  goal: Validate completed MovieLens-1M paper claims on Amazon Musical Instruments, starting with strict data/candidate feasibility before any GPU training.
+  scope: amazon-musical-instruments adapter, strict preprocessing, random-k5/popmatch-k5 candidate feasibility, seed42 experiment plan if feasible
   started: 2026-08-18
   closed: null
 
@@ -61,3 +61,5 @@ notes:
   - Cross-dataset Validation stage opened on 2026-08-18 with Amazon Books selected by the user as the second dataset.
   - Cross-dataset Validation stage-start direct wiki read was compressed into current_task and revoked on 2026-08-18 before any training.
   - Amazon Books feasibility gate currently blocks GPU training because the supplied raw files are product catalog metadata, not user-item interaction logs.
+  - Cross-dataset Validation was rerouted within the same stage on 2026-08-19 from the rejected Amazon-books catalog to user-provided local Amazon Reviews 2023 5-core Musical_Instruments.
+  - Amazon Musical Instruments raw feasibility is treated as pass from user-provided local audit; formal strict preprocessing and candidate feasibility remain pending before GPU training.

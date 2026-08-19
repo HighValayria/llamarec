@@ -1,0 +1,68 @@
+{
+  "dataset_key": "amazon-musical-instruments",
+  "raw_source": "user-provided local Amazon Reviews 2023 5-core Musical_Instruments",
+  "raw_interactions": {
+    "path": "data/raw/amazon_reviews_2023/musical_instruments/interactions/Musical_Instruments.csv",
+    "rows": 511836,
+    "columns": ["user_id", "parent_asin", "rating", "timestamp"],
+    "users": 57439,
+    "items": 24587,
+    "rating_distribution": {
+      "1": 22352,
+      "2": 17542,
+      "3": 34486,
+      "4": 76105,
+      "5": 361351
+    },
+    "positive_rating_threshold": 4,
+    "positive_ratio": 0.85468,
+    "negative_ratio": 0.14532,
+    "null_user_id": 0,
+    "null_parent_asin": 0,
+    "null_rating": 0,
+    "null_timestamp": 0,
+    "duplicate_rows": 0,
+    "duplicate_user_item_timestamp_rows": 0,
+    "timestamp_range": {
+      "min_date": "2003-05-26",
+      "max_date": "2023-09-03"
+    },
+    "user_timestamp_buckets": 511824,
+    "multi_item_timestamp_buckets": 12,
+    "multi_item_bucket_ratio": 0.0000234
+  },
+  "raw_metadata": {
+    "paths": [
+      "data/raw/amazon_reviews_2023/musical_instruments/metadata/full-00000-of-00002.parquet",
+      "data/raw/amazon_reviews_2023/musical_instruments/metadata/full-00001-of-00002.parquet"
+    ],
+    "rows": 213593,
+    "unique_parent_asin": 213593,
+    "columns": 16,
+    "contains_parent_asin": true,
+    "contains_title": true,
+    "valid_title_ratio": 0.999925,
+    "interaction_item_title_coverage": {
+      "covered": 24584,
+      "total": 24587,
+      "ratio": 0.999878
+    },
+    "missing_title_interaction_items": [
+      "B000P5V2UM",
+      "B0BWJ4X2ZY",
+      "B01M5CXA0N"
+    ]
+  },
+  "raw_strict_temporal_precheck": {
+    "approx_legal_strict_y_targets": 454396,
+    "legal_strict_n_targets": 454374,
+    "users_with_at_least_1_legal_n_target": 57439,
+    "users_with_at_least_2_legal_n_targets": 57439,
+    "users_with_at_least_3_legal_n_targets": 57437,
+    "status": "raw_feasibility_pass_user_audit"
+  },
+  "formal_pipeline_outputs": {
+    "status": "pending_cloud_or_venv_run",
+    "reason": "Local bundled Python lacks PyYAML and a parquet engine; formal counts must be produced by src.data.build_step2 in the project runtime."
+  }
+}
