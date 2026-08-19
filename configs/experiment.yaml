@@ -82,6 +82,7 @@ raw_files:
     ratings_format: amazon_reviews_2023_csv
     movies_format: amazon_reviews_2023_parquet_metadata
     item_type: book_or_music_product
+    prompt_item_type: item
     candidate_item_universe: observed_interactions
     columns:
       ratings:

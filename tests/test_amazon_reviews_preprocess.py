@@ -42,6 +42,7 @@ def test_amazon_reviews_csv_is_standardized_and_drops_missing_titles(tmp_path, m
             "rating": 5.0,
             "timestamp": 1415286067,
             "title": "Book A",
+            "item_type": "item",
         },
         {
             "user_id": "u1",
@@ -50,6 +51,7 @@ def test_amazon_reviews_csv_is_standardized_and_drops_missing_titles(tmp_path, m
             "rating": 3.0,
             "timestamp": 1418071619,
             "title": "Book B",
+            "item_type": "item",
         },
     ]
 
@@ -85,6 +87,7 @@ def _config(repo_root: Path):
                 "movies": "data/raw/amazon_reviews_2023/musical_instruments/metadata",
                 "ratings_format": "amazon_reviews_2023_csv",
                 "movies_format": "amazon_reviews_2023_parquet_metadata",
+                "prompt_item_type": "item",
             }
         },
     }

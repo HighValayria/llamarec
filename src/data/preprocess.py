@@ -30,6 +30,11 @@ def iter_ratings(dataset_key: str, config: dict[str, Any]):
 
     paths = resolve_dataset_paths(config, dataset_key)
     movies = load_movies(dataset_key, config)
+    prompt_item_type = (
+        config.get("raw_files", {})
+        .get(dataset_key, {})
+        .get("prompt_item_type", "movie")
+    )
     ratings_format = paths["ratings_format"]
 
     if ratings_format == "tab_separated_no_header":
@@ -49,6 +54,7 @@ def iter_ratings(dataset_key: str, config: dict[str, Any]):
             continue
         # prompt 当前只需要 title。genres 不参与 MVP 任务语义，避免在 32M 中重复膨胀。
         row["title"] = str(movie_meta.get("title"))
+        row["item_type"] = str(prompt_item_type)
         yield row
 
 

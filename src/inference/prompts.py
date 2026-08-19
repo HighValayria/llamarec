@@ -9,6 +9,7 @@ from typing import Any
 def render_yesno_prompt(sample: dict[str, Any]) -> str:
     """渲染 Y 任务 prompt，不泄漏 target rating。"""
 
+    target_label = _target_item_label(sample.get("target", {}))
     lines = [
         "Task: Preference Prediction",
         "",
@@ -18,11 +19,11 @@ def render_yesno_prompt(sample: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
-            "Target movie:",
+            f"Target {target_label}:",
             _movie_title(sample["target"]),
             "",
             "Question:",
-            "Would the user like the target movie?",
+            f"Would the user like the target {target_label}?",
             "",
             "Answer with exactly one option:",
             "Yes",
@@ -128,3 +129,10 @@ def _format_rating(rating: Any) -> str:
     if numeric.is_integer():
         return str(int(numeric))
     return str(numeric)
+
+
+def _target_item_label(item: dict[str, Any]) -> str:
+    value = str(item.get("item_type") or "movie").strip().lower()
+    if value in {"movie", "item", "book", "product"}:
+        return value
+    return "item"

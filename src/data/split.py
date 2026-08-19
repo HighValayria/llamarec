@@ -320,13 +320,18 @@ def _history_before_timestamp(
 
 
 def _target_view(interaction: dict[str, Any], sequence_index: int) -> dict[str, Any]:
-    return {
+    target = {
         "movie_id": interaction["movie_id"],
         "title": interaction.get("title", "Unknown"),
         "rating": interaction["rating"],
         "timestamp": interaction["timestamp"],
         "sequence_index": sequence_index,
     }
+    if "parent_asin" in interaction:
+        target["parent_asin"] = interaction["parent_asin"]
+    if "item_type" in interaction:
+        target["item_type"] = interaction["item_type"]
+    return target
 
 
 def _same_target(left: dict[str, Any], right: dict[str, Any]) -> bool:
