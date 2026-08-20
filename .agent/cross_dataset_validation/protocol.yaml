@@ -3,7 +3,7 @@ dataset:
   key: amazon-musical-instruments
   selected_by_user: true
   raw_dir: data/raw/amazon_reviews_2023/musical_instruments
-  current_gate_status: raw_feasibility_pass_formal_build_pending
+  current_gate_status: formal_cpu_and_candidate_gate_pass
 previous_dataset_source:
   key: amazon-books
   status: rejected_as_interaction_source
@@ -30,18 +30,34 @@ current_amazon_books_catalog:
 current_amazon_musical_instruments:
   usable_as_item_metadata: true
   usable_as_interactions: true
-  formal_strict_outputs: pending
-candidate_protocols_when_unblocked:
+  formal_strict_outputs: pass
+  candidate_outputs: pass
+formal_counts:
+  users: 57439
+  items: 24584
+  interactions: 511792
+  y_samples:
+    train: 396908
+    validation: 57442
+    test: 57442
+  n_samples:
+    train: 339449
+    validation: 57439
+    test: 57439
+candidate_protocols:
   random_k5:
     candidate_num: 5
     candidate_seed: 42
     item_universe: observed_interactions_after_title_join
+    status: pass
   popmatch_k5:
     candidate_num: 5
     candidate_seed: 42
     item_universe: observed_interactions_after_title_join
     popularity_source: training_split_interactions_only
-seed42_matrix_when_unblocked:
+    status: pass
+    test_mean_abs_popularity_gap: 29.3606869897
+seed42_matrix_when_approved:
   - Base
   - Y-K0
   - N-K0

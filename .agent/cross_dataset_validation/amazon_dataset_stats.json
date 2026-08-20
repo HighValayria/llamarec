@@ -4,7 +4,12 @@
   "raw_interactions": {
     "path": "data/raw/amazon_reviews_2023/musical_instruments/interactions/Musical_Instruments.csv",
     "rows": 511836,
-    "columns": ["user_id", "parent_asin", "rating", "timestamp"],
+    "columns": [
+      "user_id",
+      "parent_asin",
+      "rating",
+      "timestamp"
+    ],
     "users": 57439,
     "items": 24587,
     "rating_distribution": {
@@ -62,7 +67,92 @@
     "status": "raw_feasibility_pass_user_audit"
   },
   "formal_pipeline_outputs": {
-    "status": "pending_cloud_or_venv_run",
-    "reason": "Local bundled Python lacks PyYAML and a parquet engine; formal counts must be produced by src.data.build_step2 in the project runtime."
+    "status": "formal_cpu_gate_pass_user_reported_cloud_run",
+    "reported_at": "2026-08-19",
+    "user_count": 57439,
+    "item_count_internal_movie_count": 24584,
+    "interaction_count": 511792,
+    "dropped_interactions_vs_raw": 44,
+    "rating_distribution": {
+      "1.0": 22349,
+      "2.0": 17539,
+      "3.0": 34486,
+      "4.0": 76096,
+      "5.0": 361322
+    },
+    "yes_no_label_distribution": {
+      "Yes": 437418,
+      "No": 74374
+    },
+    "timestamp_bucket_size_distribution": {
+      "size=1": 511764,
+      "size=2": 14,
+      "size=3": 0,
+      "size>=4": 0
+    },
+    "singleton_timestamp_bucket_ratio": 0.999972644388778,
+    "split_user_count": {
+      "total": 57439,
+      "y_included": 57439,
+      "n_included": 57439
+    },
+    "y_split_user_count": {
+      "total": 57439,
+      "included": 57439,
+      "skipped": 0,
+      "skipped_by_reason": {}
+    },
+    "n_split_user_count": {
+      "total": 57439,
+      "included": 57439,
+      "skipped": 0,
+      "skipped_by_reason": {}
+    },
+    "y_sample_count": {
+      "train": 396908,
+      "validation": 57442,
+      "test": 57442
+    },
+    "n_sample_count": {
+      "train": 339449,
+      "validation": 57439,
+      "test": 57439
+    },
+    "preference_sample_count": {
+      "train": 396908,
+      "validation": 57442,
+      "test": 57442
+    },
+    "next_item_sample_count": {
+      "train": 339449,
+      "validation": 57439,
+      "test": 57439
+    },
+    "y_user_count_by_split": {
+      "train": 57439,
+      "validation": 57439,
+      "test": 57439
+    },
+    "n_user_count_by_split": {
+      "train": 57437,
+      "validation": 57439,
+      "test": 57439
+    },
+    "legal_next_item_sample_count_summary": {
+      "min": 2,
+      "p50": 6,
+      "p90": 14,
+      "p95": 19,
+      "max": 287,
+      "mean": 7.909730322603109
+    },
+    "n_skipped_user_count_insufficient_legal_samples": 0,
+    "split_source_sequence": "full_sequence",
+    "timestamp_tie_policy": {
+      "same_timestamp_not_ordered": true,
+      "skip_entire_user_on_tie": false,
+      "y_policy": "same timestamp targets share strict history",
+      "n_policy": "skip only ambiguous next-item samples"
+    }
   }
 }

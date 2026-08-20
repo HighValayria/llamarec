@@ -1,6 +1,39 @@
 {
   "dataset_key": "amazon-musical-instruments",
   "candidate_protocol": "random_k5_seed42",
-  "status": "pending_formal_build",
-  "reason": "Strict N validation/test candidate records must be generated after src.data.build_step2 succeeds."
+  "status": "formal_candidate_gate_pass_user_reported_cloud_run",
+  "reported_at": "2026-08-19",
+  "candidate_num": 5,
+  "candidate_seed": 42,
+  "method": "random",
+  "files": {
+    "validation": {
+      "path": "data/candidates/amazon-musical-instruments/variants/random_k5_seed42/valid.jsonl",
+      "bytes": 143438155,
+      "lines": 57439
+    },
+    "test": {
+      "path": "data/candidates/amazon-musical-instruments/variants/random_k5_seed42/test.jsonl",
+      "bytes": 157376717,
+      "lines": 57439
+    }
+  },
+  "diagnostics": {
+    "validation": {
+      "samples": 57439,
+      "candidate_num_min": 5,
+      "candidate_num_max": 5,
+      "mean_abs_popularity_gap": 141.1943844774,
+      "mean_min_abs_popularity_gap": 124.5300927941,
+      "mean_max_abs_popularity_gap": 161.1433694876
+    },
+    "test": {
+      "samples": 57439,
+      "candidate_num_min": 5,
+      "candidate_num_max": 5,
+      "mean_abs_popularity_gap": 130.7513710197,
+      "mean_min_abs_popularity_gap": 114.1830463622,
+      "mean_max_abs_popularity_gap": 150.990842459
+    }
+  }
 }
