@@ -18,3 +18,7 @@ Include:
 - Reproducibility checklist.
 
 Do not move diagnostic-only findings into main contributions.
+
+Draft v0 split: the main paper keeps four compact tables and three planned
+figures. Appendix absorbs diagnostic variants, full protocol expansions,
+candidate-order perturbations, cold/tail buckets, and reproducibility details.

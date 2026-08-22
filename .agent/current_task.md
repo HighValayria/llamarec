@@ -95,11 +95,24 @@
      regime.
   5. Cross-dataset evidence supports directionally similar N-task ranking
      behavior but not multi-seed cross-dataset stability.
+- Manuscript Draft v0 moved the stage from evidence audit into drafting:
+  - final RQs recorded in `.agent/paper_writing_submission/rqs_final.md`
+  - four main tables created under `.agent/paper_writing_submission/tables/`
+  - Draft v0 manuscript files created under
+    `.agent/paper_writing_submission/manuscript/`
+  - experiment protocol and traceability gates added under
+    `.agent/paper_writing_submission/plan/`
+  - no new experiments were started.
 
 ## Verification Results
 - `git diff --check` passed on 2026-08-22.
 - `python tools/stage_guard.py` passed on 2026-08-22 with 0 errors and 0
   warnings using the bundled Codex Python runtime.
+- Draft v0 `git diff --check` passed on 2026-08-22.
+- Draft v0 `python tools/stage_guard.py` passed on 2026-08-22 with 0 errors
+  and 0 warnings using the bundled Codex Python runtime.
+- Draft v0 acceptance review is recorded in
+  `.agent/paper_writing_submission/submission/draft_v0_acceptance_review.md`.
 
 ## Unresolved Questions
 - Amazon binary metrics are present as diagnostic test outputs, but not yet a

@@ -36,3 +36,13 @@ Current stage has not yet performed citation retrieval or source verification.
 
 Impact: Related Work cannot be drafted as final prose until evidence-driven
 writing/literature review stage is run.
+
+## Draft v0 Decision
+
+No missing evidence currently blocks a complete empirical paper draft. The two
+most useful optional patches are validation-calibrated Amazon binary evaluation
+from existing adapters, if the paper needs a strong cross-dataset preference
+claim, and Amazon PopMatch seed43/44 for N-K0 and M1, if the narrow seed42
+margin is judged too fragile for the target venue.
+
+Neither patch should run without explicit user approval.

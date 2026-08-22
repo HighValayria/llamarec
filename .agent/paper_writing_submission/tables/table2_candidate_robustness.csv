@@ -1,0 +1,13 @@
+dataset,protocol,model,candidate_count,hr1,ndcg5,mrr,samples,delta_hr1_vs_reference,notes
+MovieLens-1M,Canonical Random-k5,N-K0,5,0.7189427313,0.8773024023,0.8356446402,5675,,easy-negative reference protocol
+MovieLens-1M,Canonical Random-k5,M1,5,0.6949779736,0.8673895627,0.8223230543,5675,-0.0239647577,N-K0 remains above M1
+MovieLens-1M,PopMatch-k5,N-K0,5,0.5446696035,0.7877973813,0.7170837004,5675,-0.1742731278,primary controlled ranking protocol
+MovieLens-1M,PopMatch-k5,M1,5,0.5244052863,0.7785009376,0.7046637298,5675,-0.1705726873,unified model remains close but below N-K0
+MovieLens-1M,Random-k20,N-K0,20,0.4163876652,,,5675,-0.3025550661,candidate-size stress
+MovieLens-1M,Random-k20,M1,20,0.3711013216,,,5675,-0.3238766520,N-K0_minus_M1_HR@1=0.0452863436
+MovieLens-1M,Random-k50,N-K0,50,0.1994713656,,,5675,-0.5194713657,candidate-size stress
+MovieLens-1M,Random-k50,M1,50,0.1219383260,,,5675,-0.5730396476,N-K0_minus_M1_HR@1=0.0775330396
+Amazon Musical Instruments,Random-k5,N-K0,5,0.5172269712,0.7703895001,0.6943197711,57439,,supplemental easy-negative protocol
+Amazon Musical Instruments,Random-k5,M1,5,0.5160431066,0.7693689176,0.6930160692,57439,-0.0011838646,N-K0 and M1 nearly tied
+Amazon Musical Instruments,PopMatch-k5,N-K0,5,0.4668779053,0.7420073620,0.6569789980,57439,-0.0503490660,primary Amazon ranking protocol
+Amazon Musical Instruments,PopMatch-k5,M1,5,0.4581730183,0.7383638504,0.6520839499,57439,-0.0578700883,N-K0 margin remains positive but narrow

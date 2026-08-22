@@ -1,0 +1,6 @@
+finding,movielens_seed42,movielens_seed43,movielens_seed44,amazon_seed42,status,notes
+Y-K0 binary stability,F1 available; aggregate range 0.0097766064,F1 available,F1 available,diagnostic-only binary outputs,MovieLens stable; Amazon binary not paper-grade,Do not claim cross-dataset calibrated binary stability
+N-K0 > M1 on PopMatch ranking,delta_HR@1=0.0227312775,delta_HR@1=0.0207929515,delta_HR@1=0.0103964758,delta_HR@1=0.0087048869,reproduced directionally,Amazon margin is narrow and seed42-only
+N-K0 > SASRec closest exposure,delta_HR@1=0.2766519824,delta_HR@1=0.2879295154,delta_HR@1=0.2851101322,delta_HR@1=0.2912132871,reproduced strongly,Closest-exposure regime only
+SASRec high exposure > N-K0,delta_HR@1=0.0777092511,delta_HR@1=0.0858149780,delta_HR@1=0.0921585903,not_evaluated,MovieLens only,Do not infer Amazon high-exposure behavior
+Candidate difficulty changes ranking separation,Random/PopMatch/k20/k50 available,order perturbation support,order perturbation support,Random/PopMatch available,supported,Random-k5 is supplemental rather than primary

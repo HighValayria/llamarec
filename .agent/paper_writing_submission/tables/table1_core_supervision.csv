@@ -1,0 +1,9 @@
+dataset,protocol,interface,model,binary_auc,binary_f1_type,binary_f1,ranking_scoring,hr1,ndcg5,mrr,samples,evidence_status,notes
+MovieLens-1M,PopMatch-k5,Preference,Base,0.6217848091,fixed_or_reported,0.6978069304,zero-shot candidate-label,0.3148898678,0.6636020792,0.5531365639,5675,computed,Base reference under hard-candidate protocol
+MovieLens-1M,PopMatch-k5,Preference,Y-K0,0.7690355691,fixed_or_reported,0.7799656403,P(Yes)-based ranking,0.1853744493,0.5801737577,0.4442819383,5675,computed,Y learns preference but P(Yes) ranking is weak for next-item selection
+MovieLens-1M,PopMatch-k5,Ranking,N-K0,,,,candidate-label next-item ranking,0.5446696035,0.7877973813,0.7170837004,5675,computed,strongest LLM ranking model
+MovieLens-1M,PopMatch-k5,Unified,M1,0.7664120559,fixed_or_reported,0.7275700935,M-N candidate-label ranking,0.5244052863,0.7785009376,0.7046637298,5675,computed,unified tradeoff below N-K0 ranking
+Amazon Musical Instruments,PopMatch-k5,Preference,Base,unavailable,diagnostic_only,unavailable,zero-shot candidate-label,0.3573007887,0.6829490861,0.5789568064,57439,computed,Amazon binary rows are diagnostic-only for paper claims
+Amazon Musical Instruments,PopMatch-k5,Preference,Y-K0,unavailable,diagnostic_only,unavailable,P(Yes)-based ranking,0.2297916050,0.6099650726,0.4830304033,57439,computed,ranking-side semantic separation reproduces
+Amazon Musical Instruments,PopMatch-k5,Ranking,N-K0,,,,candidate-label next-item ranking,0.4668779053,0.7420073620,0.6569789980,57439,computed,strongest Amazon LLM ranking row
+Amazon Musical Instruments,PopMatch-k5,Unified,M1,unavailable,diagnostic_only,unavailable,M-N candidate-label ranking,0.4581730183,0.7383638504,0.6520839499,57439,computed,directionally below N-K0 with narrow margin

@@ -1,0 +1,8 @@
+dataset,model,budget_regime,n_task_sample_exposure,total_supervision_exposure,optimizer_steps,effective_batch,hr1,ndcg5,mrr,samples,evidence_status,notes
+MovieLens-1M,N-K0,LLM N-task anchor,12000,12000,1500,8,0.5466079295,0.7884963692,0.7180411160,5675,computed,main closest-exposure LLM anchor
+MovieLens-1M,SASRec,closest N-task exposure,11776,11776,23,512,0.2699559471,0.6348928207,0.5156622614,5675,computed,roughly exposure matched to N-K0
+MovieLens-1M,SASRec,high sequential exposure,1534656,1534656,3000,512,0.6243171806,0.8283562609,0.7708663730,5675,computed,separate high-exposure regime
+MovieLens-1M,M1,supplemental unified model,12000,24000,3000,8,0.5238766520,0.7781912330,0.7042525698,5675,computed,N exposure matched but total Y+N supervision doubled
+Amazon Musical Instruments,N-K0,LLM N-task anchor,12000,12000,1500,8,0.4668779053,0.7420073620,0.6569789980,57439,computed,seed42 PopMatch-k5
+Amazon Musical Instruments,SASRec,closest N-task exposure,11776,11776,23,512,0.1756646181,0.5685149085,0.4295165306,57439,computed,seed42 PopMatch-k5 closest-exposure row
+Amazon Musical Instruments,SASRec,high sequential exposure,not_evaluated,not_evaluated,not_evaluated,not_evaluated,,,,,not_evaluated,not run in current stage
