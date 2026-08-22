@@ -1,69 +1,61 @@
 # Current Task
 
 ## Stage Goal
-- Start the Paper Writing / Submission Package stage.
-- Convert the completed experimental system into a venue-neutral manuscript
-  package with traceable claims, consistent experiment language, frozen table
+- Active stage: Paper Writing / Submission Package.
+- Convert completed MovieLens-1M and Amazon Musical Instruments evidence into
+  a venue-neutral manuscript package with traceable claims, frozen table/figure
   plans, explicit limitations, and a submission checklist.
-- First milestone: perform a final evidence-gap audit, freeze research
-  questions and main claims, inventory tables/figures, then report back before
-  drafting full manuscript sections.
+- First milestone: stage creation, one-time relevant wiki read, context
+  compression, evidence-gap audit, claim freeze proposal, table/figure
+  inventory, and report back before drafting full manuscript sections.
 
 ## Scope
 - Stage-local paper artifacts under `.agent/paper_writing_submission/`.
-- Durable wiki context after one-time stage-opening read authorization.
-- Existing results, CSV/JSON/Markdown reports, and stage artifacts only.
-- Necessary code/config checks for experiment definitions and supported CLI
-  behavior.
+- Existing experiment outputs, analysis summaries, and result-consolidation
+  artifacts only.
+- Claim/evidence audit, RQ/claim freeze, table schemas, figure plan,
+  appendix/reproducibility plan, and submission checklist.
 
 ## Non-Goals
-- No new LLM training.
-- No Amazon seed43/44 unless later explicitly approved as a minimal robustness
-  extension.
-- No new SASRec checkpoint.
-- No M3/M4, KAR, hard-negative training, 7B, MovieLens-32M, third dataset,
-  LoRA sweep, or strict compute/FLOPs matching.
+- No new LLM training or baseline training.
+- No Amazon seed43/44 unless later explicitly approved.
+- No new SASRec checkpoint, M3/M4, KAR, hard-negative training, 7B,
+  MovieLens-32M, third dataset, LoRA sweep, or strict FLOPs matching.
 - No formal wiki writes until stage-end synchronization authorization.
 - No venue-specific LaTeX template until a target venue is chosen.
 
 ## Long-Term Constraints
-- This is an empirical/systematic analysis paper, not a new model-architecture
-  paper.
-- Positioning should be a systematic empirical study of recommendation
+- Position the paper as a systematic empirical study of recommendation
   supervision semantics, multi-task tradeoffs, hard-candidate robustness, and
   sample-efficiency-aware baseline positioning for recommendation-tuned LLMs.
-- Claims must distinguish Random-k5, PopMatch-k5, k20/k50 robustness,
-  closest-exposure SASRec, and high-exposure SASRec regimes.
+- Claims must distinguish Random-k5, PopMatch-k5, k20/k50 candidate-size
+  stress, closest-exposure SASRec, and high-exposure SASRec regimes.
 - Cross-dataset wording must treat Amazon Musical Instruments seed42 as
   directional validation, not multi-seed stability.
-- Evidence gaps must be recorded first; no supplementary experiment can start
-  without explicit user approval.
-- Formal wiki reads are currently pending stage-opening authorization.
+- Random-k5 is not the primary hard-candidate evidence.
+- High-exposure SASRec can outperform N-K0, but that is a separate budget
+  regime from sample-exposure matched comparisons.
 
 ## Evidence Sources
 - User migration directive for Paper Writing / Submission Package on
   2026-08-22.
-- Closed Cross-dataset Validation wiki sync at commit
-  `6b47df0 Sync cross-dataset validation wiki`.
-- Pending one-time wiki read authorization for:
-  - `wiki/index.md`
-  - `wiki/current_state.md`
-  - directly relevant result reports
-  - relevant Paper Result Consolidation stage artifacts.
-- Existing stage artifacts, to be inspected after stage initialization:
-  - `.agent/paper_result_consolidation/`
-  - `.agent/cross_dataset_validation/`
-  - `.agent/multiseed_stability/`
-  - `.agent/sample_efficiency_training_efficiency/`
-  - `.agent/cold_tail_item_slice_diagnostic/`
+- One-time stage-start wiki read authorized by user on 2026-08-22, limited to:
+  `wiki/index.md`, `wiki/current_state.md`, and directly relevant reports:
+  Phase 2B synthesis, Phase 2C PopMatch, fair-budget baseline positioning,
+  sample-efficiency curve, cold/tail diagnostic, multiseed stability,
+  paper-result consolidation, and cross-dataset validation.
+- The wiki read was compressed into this file and revoked on 2026-08-22.
+- Stage-local evidence inputs from `.agent/paper_result_consolidation/`,
+  including claims, evidence matrix, paper-ready claims, Results draft,
+  limitations, table plan, artifact map, validated findings, and open
+  questions.
+- Current stage artifacts under `.agent/paper_writing_submission/`.
 
 ## Related Code
 - `configs/experiment.yaml`
 - `configs/y.yaml`
 - `configs/n.yaml`
 - `configs/m.yaml`
-- `src/data/preprocess.py`
-- `src/data/build_step2.py`
 - `src/eval/candidate_sets.py`
 - `src/inference/base_zero_shot.py`
 - `src/inference/evaluate_y_adapter.py`
@@ -79,27 +71,50 @@
 - `src/analysis/multiseed_stability_summary.py`
 
 ## Current Progress
-- New stage requested by the user.
-- Cross-dataset Validation is closed and wiki-synced.
-- Stage initialization is in progress.
-- One-time wiki read authorization has not yet been granted in this stage, so
-  formal wiki has not been read for Paper Writing.
+- Stage opened and pushed in commit `8a8d8a9`.
+- One-time relevant wiki read completed and revoked.
+- First-milestone paper artifacts created:
+  - `.agent/paper_writing_submission/evidence_gap_audit.md`
+  - `.agent/paper_writing_submission/claims_final.yaml`
+  - `.agent/paper_writing_submission/claim_evidence_matrix_final.csv`
+  - `.agent/paper_writing_submission/plan/outline.md`
+  - `.agent/paper_writing_submission/plan/project-overview.md`
+  - `.agent/paper_writing_submission/tables/table-schema.md`
+  - `.agent/paper_writing_submission/figures/figure_plan.md`
+  - `.agent/paper_writing_submission/submission/paper_claim_checklist.md`
+  - `.agent/paper_writing_submission/submission/missing_evidence.md`
+- Proposed RQs are frozen around supervision semantics, multi-task tradeoffs,
+  candidate difficulty, LLM-vs-SASRec budget regimes, and cross-dataset
+  validity.
+- Proposed main claims are frozen as:
+  1. Preference and next-item supervision induce distinct capabilities.
+  2. Multi-task tuning unifies both capabilities but specialists retain
+     advantages.
+  3. Candidate-difficulty protocol strongly changes ranking conclusions.
+  4. LLM-vs-SASRec conclusions depend on supervision exposure and budget
+     regime.
+  5. Cross-dataset evidence supports directionally similar N-task ranking
+     behavior but not multi-seed cross-dataset stability.
 
 ## Verification Results
-- Pending.
+- `git diff --check` passed on 2026-08-22.
+- `python tools/stage_guard.py` passed on 2026-08-22 with 0 errors and 0
+  warnings using the bundled Codex Python runtime.
 
 ## Unresolved Questions
-- Does the user authorize a one-time stage-opening read of the directly
-  relevant wiki files listed in the migration directive?
-- Are Amazon binary metrics already sufficient for Claim 1, or is there a
-  paper-facing binary evidence gap to record?
-- Does the narrow Amazon N-K0 over M1 margin require optional seed43/44 later,
-  or only cautious wording?
-- Is the current empirical contribution enough for the target paper, or should
-  a future method-extension stage be considered after the manuscript audit?
+- Amazon binary metrics are present as diagnostic test outputs, but not yet a
+  validation-calibrated paper-grade binary claim; treat as a non-blocking
+  evidence gap.
+- Amazon N-K0 over M1 is positive but narrow under seed42; multi-seed Amazon is
+  optional robustness work, not required before drafting if wording remains
+  cautious.
+- Target venue and template remain unset.
+- A future method-extension stage may be useful only after manuscript gaps are
+  visible; it is not part of this stage.
 
 ## Pending Wiki Sync
-No pending wiki sync.
+No pending wiki sync during this active stage. Stage-end wiki updates should
+summarize the paper package artifacts only after explicit write authorization.
 
 ## Invalidating Conditions
 - Starting new experiments during paper writing without explicit user approval.

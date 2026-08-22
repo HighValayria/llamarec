@@ -1,0 +1,51 @@
+research_questions:
+  - id: RQ1
+    title: Supervision Semantics
+    question: Do preference supervision and next-item supervision teach LLMs different recommendation semantics?
+  - id: RQ2
+    title: Specialized vs Unified Multi-task Learning
+    question: Can a multi-task LLM retain both recommendation abilities, and what is the cost of unification?
+  - id: RQ3
+    title: Candidate Difficulty / Robustness
+    question: How do candidate construction and candidate-set difficulty affect recommendation conclusions?
+  - id: RQ4
+    title: LLM vs Specialized Sequential Recommender
+    question: How does recommendation-tuned LLM performance compare with SASRec under different supervision budgets?
+  - id: RQ5
+    title: Cross-dataset Validity
+    question: Which findings directionally reproduce from MovieLens-1M to Amazon Musical Instruments?
+
+main_claims:
+  - id: MC1
+    rq: RQ1
+    claim: Preference and next-item supervision induce distinct recommendation capabilities in LLMs.
+    allowed_wording: Binary preference quality does not automatically transfer to next-interaction candidate ranking.
+    boundary: Strong on MovieLens; Amazon supports the ranking-side direction but lacks validation-calibrated binary reporting.
+  - id: MC2
+    rq: RQ2
+    claim: Multi-task tuning can unify both capabilities in one model, but specialized supervision retains task-specific advantages.
+    allowed_wording: M1 is a unified tradeoff; N-K0 remains the cleaner ranking specialist.
+    boundary: Do not claim M1 positive transfer or dominance.
+  - id: MC3
+    rq: RQ3
+    claim: Evaluation conclusions depend strongly on candidate difficulty.
+    allowed_wording: PopMatch-k5 and candidate-size stress tests reveal weaknesses that Random-k5 may obscure.
+    boundary: Random-k5 is a reference/easy-negative setting, not the primary hard-candidate claim.
+  - id: MC4
+    rq: RQ4
+    claim: The relative advantage of recommendation-tuned LLMs and SASRec depends strongly on supervision exposure.
+    allowed_wording: N-K0 leads at closest N-task exposure while high-exposure SASRec is stronger in its own regime.
+    boundary: This is not strict compute/FLOPs matching.
+
+cross_dataset_support:
+  - MC1: directional support through Amazon N-K0 ranking advantage over Y-K0 P(Yes) ranking.
+  - MC2: directional support; Amazon N-K0 exceeds M1 on PopMatch-k5 with narrow margin.
+  - MC3: support; Amazon PopMatch reduces popularity gap and changes model separation.
+  - MC4: support for closest-exposure direction; Amazon N-K0 far exceeds SASRec-exp-match.
+
+diagnostic_only:
+  - M0/M2 development variants.
+  - Coldest target-popularity bucket because n=26.
+  - Candidate-order perturbation details.
+  - Amazon Books failed catalog source.
+  - Raw preprocessing diagnostics except reproducibility appendix.

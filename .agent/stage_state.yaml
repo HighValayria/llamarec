@@ -9,8 +9,8 @@ stage:
 wiki_access:
   read_authorized: false
   read_authorized_by: user
-  read_authorized_at: null
-  read_revoked_at: null
+  read_authorized_at: 2026-08-22
+  read_revoked_at: 2026-08-22
   write_authorized: false
   write_authorized_by: user
   write_authorized_at: null
@@ -65,4 +65,5 @@ notes:
   - Amazon Musical Instruments raw feasibility passed from user-provided local audit; formal strict preprocessing, candidate feasibility, and seed42 full-test GPU runs were completed before stage close.
   - Cross-dataset Validation seed42 full-test runs completed on 2026-08-22 for Amazon Musical Instruments.
   - Cross-dataset Validation wiki sync was authorized by the user on 2026-08-22, applied, and write authorization was revoked after guard checks.
-  - Paper Writing / Submission Package stage opened on 2026-08-22; one-time directly relevant wiki read authorization is pending.
+  - Paper Writing / Submission Package stage opened on 2026-08-22; one-time directly relevant wiki read authorization was granted by the user on 2026-08-22.
+  - Paper Writing / Submission Package stage-start wiki read was limited to directly relevant result reports and paper consolidation artifacts, compressed into current_task, and revoked on 2026-08-22.
