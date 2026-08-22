@@ -6,7 +6,7 @@
   2023 5-core Musical_Instruments.
 - Integrate Amazon Musical Instruments through a dataset adapter, reuse the
   strict temporal Y/N pipeline, build fixed Random-k5 and PopMatch-k5
-  candidates, then proceed to seed42 GPU experiments only after user approval.
+  candidates, and complete seed42 cross-dataset validation.
 
 ## Scope
 - Active dataset: `amazon-musical-instruments`.
@@ -17,9 +17,11 @@
   - `data/raw/amazon_reviews_2023/musical_instruments/metadata/full-00001-of-00002.parquet`
 - Stage-local artifacts under `.agent/cross_dataset_validation/`.
 - Formal CPU/data/candidate gate is complete.
+- Seed42 full-test GPU queue is complete.
 
 ## Non-Goals
-- No seed43/44 until seed42 synthesis is reviewed.
+- No seed43/44 unless seed42 synthesis review explicitly decides the small
+  N-K0 over M1 margin needs robustness evidence.
 - No web search, dataset download, Hugging Face dataset loading, wget/curl, git
   clone, or replacement with non-local data.
 - No KAR, review-text augmentation, description augmentation, hard-negative
@@ -45,6 +47,7 @@
 - User migration directive on 2026-08-19.
 - User-provided raw audit for Amazon Reviews 2023 5-core Musical_Instruments.
 - User-reported formal cloud CPU/data/candidate outputs on 2026-08-19.
+- User-reported seed42 full-test cloud metrics on 2026-08-22.
 - Current code/config inspection:
   - `configs/experiment.yaml`
   - `src/data/preprocess.py`
@@ -62,6 +65,8 @@
   - `.agent/cross_dataset_validation/protocol.yaml`
   - `.agent/cross_dataset_validation/resolved_cloud_commands.md`
   - `.agent/cross_dataset_validation/seed42_plan.md`
+  - `.agent/cross_dataset_validation/seed42_result_summary.md`
+  - `.agent/cross_dataset_validation/seed42_result_summary.json`
 
 ## Related Code
 - `configs/experiment.yaml`
@@ -111,6 +116,15 @@
   - all candidate files use exactly five candidates per record
   - PopMatch reduces mean absolute popularity gap by about 76.1% on validation
     and 77.5% on test relative to Random-k5.
+- Seed42 full-test run completed on 2026-08-22:
+  - Base popmatch HR@1 / NDCG@5 / MRR: 0.3573007887 / 0.6829490861 / 0.5789568064
+  - Y-K0 popmatch HR@1 / NDCG@5 / MRR: 0.2297916050 / 0.6099650726 / 0.4830304033
+  - N-K0 popmatch HR@1 / NDCG@5 / MRR: 0.4668779053 / 0.7420073620 / 0.6569789980
+  - M1 popmatch HR@1 / NDCG@5 / MRR: 0.4581730183 / 0.7383638504 / 0.6520839499
+  - SASRec-exp-match popmatch HR@1 / NDCG@5 / MRR: 0.1756646181 / 0.5685149085 / 0.4295165306
+  - N-K0 minus M1 on PopMatch: +0.0087048869 HR@1, +0.0036435116 NDCG@5, +0.0048950481 MRR
+  - N-K0 minus SASRec-exp-match on PopMatch: +0.2912132871 HR@1, +0.1734924534 NDCG@5, +0.2274624674 MRR
+  - On Random-k5, N-K0 and M1 are nearly tied: N-K0 minus M1 is +0.0011838646 HR@1.
 
 ## Verification Results
 - `py_compile` passed for `src/data/preprocess.py` and
@@ -119,13 +133,16 @@
   local `build_step2` and tests cannot run here.
 - Project/cloud runtime completed strict Step2 build, Random-k5 build,
   PopMatch-k5 build, and candidate diagnostics.
-- Seed42 GPU experiments remain pending explicit user approval.
+- Project/cloud runtime completed all planned seed42 full-test GPU jobs:
+  Base, Y-K0, N-K0, M1, and SASRec-exp-match on Random-k5 and PopMatch-k5.
+- Stage-local seed42 result summary recorded in
+  `.agent/cross_dataset_validation/seed42_result_summary.md`.
 
 ## Unresolved Questions
-- What are the seed42 Base, Y-K0, N-K0, M1, and SASRec-exp-match metrics on
-  Amazon Musical Instruments?
-- Does the MovieLens direction replicate on Amazon under fixed PopMatch-k5?
-- Is Random-k5 materially easier than PopMatch-k5 for this dataset?
+- Should Amazon seed43/44 be run to test the small N-K0 over M1 margin, or is
+  MovieLens multi-seed plus Amazon seed42 enough for the paper boundary?
+- Should the stage now move to final synthesis/wiki sync, or should it first
+  add an automated summary script for Amazon outputs?
 
 ## Pending Wiki Sync
 - None yet. Do not write formal wiki until this stage reaches a real stop point

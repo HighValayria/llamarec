@@ -1,0 +1,196 @@
+{
+  "dataset_key": "amazon-musical-instruments",
+  "stage": "cross-dataset-validation",
+  "run": "seed42_full_test",
+  "reported_at": "2026-08-22",
+  "status": "complete_user_reported_cloud_run",
+  "samples": 57439,
+  "candidate_sets": {
+    "random_k5_seed42": {
+      "candidate_num": 5,
+      "test_samples": 57439
+    },
+    "popmatch_k5_seed42": {
+      "candidate_num": 5,
+      "test_samples": 57439
+    }
+  },
+  "metrics": {
+    "base_random": {
+      "binary": {
+        "AUC": 0.6086838368056374,
+        "F1": 0.39789760560638504,
+        "Accuracy": 0.35385258173461925
+      },
+      "ranking": {
+        "HR@1": 0.33874196974181303,
+        "NDCG@5": 0.6734956068193678,
+        "MRR": 0.5664174167377307,
+        "samples": 57439
+      }
+    },
+    "base_popmatch": {
+      "binary": {
+        "AUC": 0.6084359088476263,
+        "F1": 0.39902747386336007,
+        "Accuracy": 0.35453152745377947
+      },
+      "ranking": {
+        "HR@1": 0.3573007886627553,
+        "NDCG@5": 0.682949086094977,
+        "MRR": 0.5789568063510632,
+        "samples": 57439
+      }
+    },
+    "y_random": {
+      "binary": {
+        "AUC": 0.4902616516540602,
+        "F1": 0.905970519250205,
+        "Accuracy": 0.8283137773754395
+      },
+      "ranking": {
+        "HR@1": 0.22115635717892024,
+        "NDCG@5": 0.6029133520354469,
+        "MRR": 0.47396687500365003,
+        "samples": 57439
+      }
+    },
+    "y_popmatch": {
+      "binary": {
+        "AUC": 0.4902616516540602,
+        "F1": 0.905970519250205,
+        "Accuracy": 0.8283137773754395
+      },
+      "ranking": {
+        "HR@1": 0.22979160500705095,
+        "NDCG@5": 0.6099650726300693,
+        "MRR": 0.48303040326840563,
+        "samples": 57439
+      }
+    },
+    "n_random": {
+      "ranking": {
+        "HR@1": 0.5172269712216438,
+        "NDCG@5": 0.7703895001422367,
+        "MRR": 0.6943197711195055,
+        "samples": 57439
+      }
+    },
+    "n_popmatch": {
+      "ranking": {
+        "HR@1": 0.46687790525601075,
+        "NDCG@5": 0.7420073619665548,
+        "MRR": 0.6569789980094768,
+        "samples": 57439
+      }
+    },
+    "m_random": {
+      "binary": {
+        "AUC": 0.5128936309696364,
+        "F1": 0.9032109784242935,
+        "Accuracy": 0.8240486055499461
+      },
+      "ranking": {
+        "HR@1": 0.5160431066000453,
+        "NDCG@5": 0.7693689176414547,
+        "MRR": 0.6930160692212577,
+        "samples": 57439
+      }
+    },
+    "m_popmatch": {
+      "binary": {
+        "AUC": 0.5128936309696364,
+        "F1": 0.9032109784242935,
+        "Accuracy": 0.8240486055499461
+      },
+      "ranking": {
+        "HR@1": 0.45817301833249185,
+        "NDCG@5": 0.7383638504065729,
+        "MRR": 0.6520839499294846,
+        "samples": 57439
+      }
+    },
+    "sasrec_random": {
+      "ranking": {
+        "HR@1": 0.4496596389212904,
+        "NDCG@5": 0.7293161170115697,
+        "MRR": 0.6405569386653585,
+        "samples": 57439
+      }
+    },
+    "sasrec_popmatch": {
+      "ranking": {
+        "HR@1": 0.17566461811661066,
+        "NDCG@5": 0.5685149085373556,
+        "MRR": 0.429516530580329,
+        "samples": 57439
+      }
+    }
+  },
+  "comparisons": {
+    "popmatch": {
+      "n_minus_m1": {
+        "delta_HR@1": 0.0087048869,
+        "delta_NDCG@5": 0.0036435116,
+        "delta_MRR": 0.0048950481
+      },
+      "n_minus_sasrec_exp_match": {
+        "delta_HR@1": 0.2912132871,
+        "delta_NDCG@5": 0.1734924534,
+        "delta_MRR": 0.2274624674
+      },
+      "n_minus_base": {
+        "delta_HR@1": 0.1095771166,
+        "delta_NDCG@5": 0.0590582759,
+        "delta_MRR": 0.0780221917
+      },
+      "n_minus_y": {
+        "delta_HR@1": 0.2370863002,
+        "delta_NDCG@5": 0.1320422893,
+        "delta_MRR": 0.1739485947
+      }
+    },
+    "random": {
+      "n_minus_m1": {
+        "delta_HR@1": 0.0011838646,
+        "delta_NDCG@5": 0.0010205825,
+        "delta_MRR": 0.0013037019
+      },
+      "n_minus_sasrec_exp_match": {
+        "delta_HR@1": 0.0675673323,
+        "delta_NDCG@5": 0.0410733831,
+        "delta_MRR": 0.0537628325
+      }
+    },
+    "candidate_set_effect": {
+      "base_popmatch_minus_random": {
+        "delta_HR@1": 0.0185588189,
+        "delta_NDCG@5": 0.0094534793,
+        "delta_MRR": 0.0125393896
+      },
+      "n_popmatch_minus_random": {
+        "delta_HR@1": -0.050349066,
+        "delta_NDCG@5": -0.0283821382,
+        "delta_MRR": -0.0373407731
+      },
+      "m1_popmatch_minus_random": {
+        "delta_HR@1": -0.0578700883,
+        "delta_NDCG@5": -0.0310050672,
+        "delta_MRR": -0.0409321193
+      },
+      "sasrec_popmatch_minus_random": {
+        "delta_HR@1": -0.2739950208,
+        "delta_NDCG@5": -0.1608012085,
+        "delta_MRR": -0.2110404081
+      }
+    }
+  },
+  "direct_answers": {
+    "cross_dataset_direction_replicates_on_popmatch": "yes, with a small N-K0 over M1 margin and a large N-K0 over SASRec-exp-match margin",
+    "n_k0_above_m1_on_popmatch": "yes by HR@1, NDCG@5, and MRR",
+    "n_k0_above_sasrec_exp_match_on_popmatch": "yes by a large margin",
+    "random_k5_primary_claim_suitable": "no, Random-k5 leaves N-K0 and M1 nearly tied and should be treated as an easier/supplemental condition",
+    "need_seed43_44_now": "not required before seed42 synthesis; consider only if the small N-K0 vs M1 margin needs robustness evidence"
+  },
+  "boundary": "Single Amazon seed42 full-test result. Do not claim multi-seed Amazon stability unless seed43/44 are run."
+}
