@@ -1,0 +1,102 @@
+{
+  "stage": "cross-dataset-validation",
+  "dataset": "amazon-musical-instruments",
+  "status": "synthesis_ready",
+  "formal_wiki_sync": "pending_user_authorization",
+  "data_gate": {
+    "users": 57439,
+    "items": 24584,
+    "interactions": 511792,
+    "y_samples": {
+      "train": 396908,
+      "validation": 57442,
+      "test": 57442
+    },
+    "n_samples": {
+      "train": 339449,
+      "validation": 57439,
+      "test": 57439
+    }
+  },
+  "candidate_gate": {
+    "random_k5_seed42": {
+      "validation_rows": 57439,
+      "test_rows": 57439,
+      "test_mean_abs_popularity_gap": 130.7513710197
+    },
+    "popmatch_k5_seed42": {
+      "validation_rows": 57439,
+      "test_rows": 57439,
+      "test_mean_abs_popularity_gap": 29.3606869897,
+      "test_gap_reduction_vs_random": 0.7754446708
+    }
+  },
+  "primary_popmatch_metrics": {
+    "base": {
+      "HR@1": 0.3573007887,
+      "NDCG@5": 0.6829490861,
+      "MRR": 0.5789568064
+    },
+    "y_k0": {
+      "HR@1": 0.229791605,
+      "NDCG@5": 0.6099650726,
+      "MRR": 0.4830304033
+    },
+    "n_k0": {
+      "HR@1": 0.4668779053,
+      "NDCG@5": 0.742007362,
+      "MRR": 0.656978998
+    },
+    "m1": {
+      "HR@1": 0.4581730183,
+      "NDCG@5": 0.7383638504,
+      "MRR": 0.6520839499
+    },
+    "sasrec_exp_match": {
+      "HR@1": 0.1756646181,
+      "NDCG@5": 0.5685149085,
+      "MRR": 0.4295165306
+    }
+  },
+  "primary_popmatch_comparisons": {
+    "n_k0_minus_m1": {
+      "delta_HR@1": 0.0087048869,
+      "delta_NDCG@5": 0.0036435116,
+      "delta_MRR": 0.0048950481
+    },
+    "n_k0_minus_sasrec_exp_match": {
+      "delta_HR@1": 0.2912132871,
+      "delta_NDCG@5": 0.1734924534,
+      "delta_MRR": 0.2274624674
+    },
+    "n_k0_minus_base": {
+      "delta_HR@1": 0.1095771166,
+      "delta_NDCG@5": 0.0590582759,
+      "delta_MRR": 0.0780221917
+    },
+    "n_k0_minus_y_k0": {
+      "delta_HR@1": 0.2370863002,
+      "delta_NDCG@5": 0.1320422893,
+      "delta_MRR": 0.1739485947
+    }
+  },
+  "direct_answers": {
+    "cross_dataset_direction_replicates_on_popmatch": "yes",
+    "n_k0_over_m1_margin": "small",
+    "n_k0_over_sasrec_exp_match_margin": "large",
+    "random_k5_role": "supplemental/easier condition",
+    "run_seed43_44_now": "not recommended unless robustness for the small N-K0 over M1 margin is needed"
+  },
+  "allowed_claims": [
+    "N-K0 remains above M1 on Amazon Musical Instruments under PopMatch-k5.",
+    "N-K0 is far above sample-exposure-matched SASRec on Amazon Musical Instruments under PopMatch-k5.",
+    "The Amazon result directionally replicates the MovieLens specialist-vs-unified direction, but with a narrower N-K0 over M1 margin.",
+    "Random-k5 should be treated as supplemental because N-K0 and M1 are nearly tied there."
+  ],
+  "disallowed_claims": [
+    "Amazon multi-seed stability.",
+    "Large N-K0 over M1 advantage on Amazon.",
+    "Strict compute matching.",
+    "Generalization to all Amazon categories."
+  ]
+}
