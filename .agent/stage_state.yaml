@@ -1,10 +1,10 @@
 stage:
-  status: active
+  status: closed
   name: cross-dataset-validation
   goal: Validate completed MovieLens-1M paper claims on Amazon Musical Instruments, starting with strict data/candidate feasibility before any GPU training.
   scope: amazon-musical-instruments adapter, strict preprocessing, random-k5/popmatch-k5 candidate feasibility, seed42 experiment plan if feasible
   started: 2026-08-18
-  closed: null
+  closed: 2026-08-22
 
 wiki_access:
   read_authorized: false
@@ -13,8 +13,8 @@ wiki_access:
   read_revoked_at: 2026-08-18
   write_authorized: false
   write_authorized_by: user
-  write_authorized_at: 2026-08-18
-  write_revoked_at: 2026-08-18
+  write_authorized_at: 2026-08-22
+  write_revoked_at: 2026-08-22
 
 current_task: .agent/current_task.md
 template: .agent/templates/current_task.md
@@ -62,4 +62,6 @@ notes:
   - Cross-dataset Validation stage-start direct wiki read was compressed into current_task and revoked on 2026-08-18 before any training.
   - Amazon Books feasibility gate currently blocks GPU training because the supplied raw files are product catalog metadata, not user-item interaction logs.
   - Cross-dataset Validation was rerouted within the same stage on 2026-08-19 from the rejected Amazon-books catalog to user-provided local Amazon Reviews 2023 5-core Musical_Instruments.
-  - Amazon Musical Instruments raw feasibility is treated as pass from user-provided local audit; formal strict preprocessing and candidate feasibility remain pending before GPU training.
+  - Amazon Musical Instruments raw feasibility passed from user-provided local audit; formal strict preprocessing, candidate feasibility, and seed42 full-test GPU runs were completed before stage close.
+  - Cross-dataset Validation seed42 full-test runs completed on 2026-08-22 for Amazon Musical Instruments.
+  - Cross-dataset Validation wiki sync was authorized by the user on 2026-08-22, applied, and write authorization was revoked after guard checks.

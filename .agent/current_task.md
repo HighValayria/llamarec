@@ -145,17 +145,7 @@
   Amazon seed43/44 N-K0-vs-M1 robustness check?
 
 ## Pending Wiki Sync
-- `wiki/current_state.md`: update high-level project snapshot with completed
-  Amazon Musical Instruments cross-dataset seed42 result.
-- `wiki/reports/`: create or update a durable cross-dataset validation report
-  with dataset adapter, data gate, candidate gate, seed42 metrics, and
-  allowed/disallowed claims. If creating a new report, add it to wiki
-  navigation during the authorized sync.
-- `wiki/history/2026-08.md`: add a concise semantic history entry for the
-  Amazon Musical Instruments dataset route and seed42 cross-dataset result.
-- Optional `wiki/index.md`: update only if a new report file is created and
-  needs navigation.
-- Do not write formal wiki until the user grants one-time write authorization.
+No pending wiki sync.
 
 ## Invalidating Conditions
 - Treating aggregate catalog ratings as user labels.

@@ -5,8 +5,8 @@ status: current
 authority: descriptive
 source: mixed
 created: 2026-07-28
-updated: 2026-08-18
-last_verified: 2026-08-18
+updated: 2026-08-22
+last_verified: 2026-08-22
 related_code:
   - task.md
   - README.md
@@ -63,6 +63,7 @@ related_code:
   - wiki/reports/cold-tail-item-slice-diagnostic.md
   - wiki/reports/multiseed-stability.md
   - wiki/reports/paper-result-consolidation.md
+  - wiki/reports/cross-dataset-validation.md
 ---
 
 # Current Project State
@@ -106,6 +107,7 @@ Core reports are:
 - [Cold/Tail Item Slice Diagnostic](reports/cold-tail-item-slice-diagnostic.md)
 - [Multi-seed Stability](reports/multiseed-stability.md)
 - [Paper Result Consolidation](reports/paper-result-consolidation.md)
+- [Cross-dataset Validation](reports/cross-dataset-validation.md)
 
 The current best dedicated binary model is Y-K0. Among LLM runs, the current
 best dedicated ranking model is N-K0 and the current best multi-task diagnostic
@@ -423,6 +425,44 @@ The consolidated paper claims are:
 The recommended next stage is compact cross-dataset validation. The chosen
 second dataset is Amazon Books. The first task in that stage is a dataset
 feasibility audit before any GPU training.
+
+## Cross-dataset Validation Status
+
+The Cross-dataset Validation stage is complete for the current scope. The
+original Amazon Books catalog source was rejected as an interaction dataset and
+the stage was rerouted to user-provided local Amazon Reviews 2023 5-core
+Musical_Instruments.
+
+The active second dataset is `amazon-musical-instruments`. The adapter uses
+only interaction `user_id`, `parent_asin`, `rating`, `timestamp`, and metadata
+`parent_asin`/`title`. Review text, descriptions, brand/category/price fields,
+images, and external product knowledge were not used.
+
+Formal retained Amazon data includes 57,439 users, 24,584 items, and 511,792
+interactions. The strict split produced 396,908 Y train samples, 57,442 Y
+validation samples, 57,442 Y test samples, 339,449 N train samples, 57,439 N
+validation samples, and 57,439 N test samples. No users were skipped for
+insufficient legal N samples.
+
+The `popmatch_k5_seed42` candidate set contains 57,439 validation and 57,439
+test records. Its test mean absolute popularity gap is `29.3606869897`, down
+from `130.7513710197` for Random-k5 seed42.
+
+On Amazon seed42 full-test PopMatch-k5, N-K0 reaches HR@1 `0.4668779053`,
+NDCG@5 `0.7420073620`, and MRR `0.6569789980`. M1 reaches HR@1
+`0.4581730183`, NDCG@5 `0.7383638504`, and MRR `0.6520839499`. The N-K0
+minus M1 margin is small but positive: HR@1 `+0.0087048869`, NDCG@5
+`+0.0036435116`, and MRR `+0.0048950481`.
+
+SASRec-exp-match is far below N-K0 under Amazon PopMatch-k5, with HR@1
+`0.1756646181`, NDCG@5 `0.5685149085`, and MRR `0.4295165306`. N-K0 minus
+SASRec-exp-match is HR@1 `+0.2912132871`, NDCG@5 `+0.1734924534`, and MRR
+`+0.2274624674`.
+
+The safe interpretation is directional cross-dataset replication: N-K0 remains
+above M1 and far above sample-exposure-matched SASRec under PopMatch-k5, but
+the Amazon N-K0 over M1 margin is narrow. Random-k5 is supplemental because
+N-K0 and M1 are nearly tied there.
 
 ## Current Interpretation
 
