@@ -1,6 +1,6 @@
 # Batch 1 GPU Commands
 
-Status: draft only. Do not run before explicit GPU approval.
+Status: cloud-ready after commit sync.
 
 The cloud readback confirms the formal LLM training setup:
 
@@ -14,6 +14,31 @@ lr_scheduler_type = SchedulerType.LINEAR
 
 Exposure per optimizer step is therefore `1 * 8 * 1 = 8` task samples.
 
+## Cloud Run
+
+After pulling the latest commit on the GPU host:
+
+```bash
+cd /root/llamarec
+git pull origin main
+bash -n .agent/exposure_scaling/commands/gpu_batch1_train.sh
+bash -n .agent/exposure_scaling/commands/gpu_batch1_eval.sh
+bash .agent/exposure_scaling/commands/gpu_batch1_train_nohup.sh
+```
+
+The nohupped launcher prints the PID and log path, then tails the log. Pressing
+Ctrl-C stops only the tail process, not the training job. To resume watching:
+
+```bash
+tail -n 80 -f logs/exposure_scaling/gpu_batch1_train_*.log
+```
+
+After training finishes:
+
+```bash
+bash .agent/exposure_scaling/commands/gpu_batch1_eval_nohup.sh
+```
+
 ## First Batch
 
 Run, in order:
@@ -23,7 +48,12 @@ Run, in order:
 3. `N-K0 48k`: resume from existing N 24k if present; otherwise resume N 12k to `max_steps=6000`.
 4. Run fixed PopMatch validation first, then paper-grade test only after retained checkpoints are frozen.
 
-Script draft: `.agent/exposure_scaling/commands/gpu_batch1_train.sh`.
+## Download Behavior
+
+The training and evaluation code loads `meta-llama/Llama-3.2-3B-Instruct` via
+Transformers. If the GPU host has no Hugging Face cache for that model/tokenizer,
+Transformers will download it. If the model is already cached on the host, this
+step should be a cache hit.
 
 ## Why Not N 24k?
 
