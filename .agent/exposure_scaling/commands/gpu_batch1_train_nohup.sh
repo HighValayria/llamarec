@@ -6,9 +6,18 @@ cd "$ROOT"
 
 LOG_DIR=${LOG_DIR:-logs/exposure_scaling}
 mkdir -p "$LOG_DIR"
+export HF_HUB_OFFLINE=${HF_HUB_OFFLINE:-1}
+export TRANSFORMERS_OFFLINE=${TRANSFORMERS_OFFLINE:-1}
+export HF_HUB_DISABLE_TELEMETRY=${HF_HUB_DISABLE_TELEMETRY:-1}
 TS=$(date +%Y%m%d_%H%M%S)
 LOG="$LOG_DIR/gpu_batch1_train_${TS}.log"
+PREFLIGHT_LOG="$LOG_DIR/gpu_cache_preflight_${TS}.log"
 PID_FILE="$LOG.pid"
+
+echo "running local-only cache preflight"
+bash .agent/exposure_scaling/commands/gpu_cache_preflight.sh | tee "$PREFLIGHT_LOG"
+echo "preflight_log: $PREFLIGHT_LOG"
+echo ""
 
 nohup bash .agent/exposure_scaling/commands/gpu_batch1_train.sh > "$LOG" 2>&1 &
 PID=$!

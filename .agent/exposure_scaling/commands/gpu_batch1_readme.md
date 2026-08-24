@@ -39,6 +39,21 @@ After training finishes:
 bash .agent/exposure_scaling/commands/gpu_batch1_eval_nohup.sh
 ```
 
+
+## Cache Preflight
+
+Before launching training, the nohupped launcher now runs:
+
+```bash
+bash .agent/exposure_scaling/commands/gpu_cache_preflight.sh
+```
+
+This forces `HF_HUB_OFFLINE=1` and `TRANSFORMERS_OFFLINE=1`, then verifies the
+configured base model through `local_files_only=True`. It prints the active user,
+cache environment variables, Hugging Face cache scan results, tokenizer/config
+resolution, and whether all indexed weight shards exist. If the cloud would need
+to download anything, this preflight fails before the GPU job starts.
+
 ## First Batch
 
 Run, in order:
