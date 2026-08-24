@@ -1,0 +1,30 @@
+stage: LLM Exposure Scaling & Convergence Validation
+dataset: movielens-1m
+first_round_gpu_jobs_allowed: false
+primary_axis:
+  name: task-sample exposure
+  definition: optimization-consumed task training examples
+  forbidden_aliases: [compute scaling, FLOPs scaling, token scaling, wall-clock scaling]
+candidate_protocol:
+  primary: k5_popmatch_seed42
+  validation_file: data/candidates/movielens-1m/variants/k5_popmatch_seed42/valid.jsonl
+  test_file: data/candidates/movielens-1m/variants/k5_popmatch_seed42/test.jsonl
+  test_samples: 5675
+  freeze: true
+training_protocol_freeze:
+  base_model: meta-llama/Llama-3.2-3B-Instruct
+  qlora: unchanged from configs/experiment.yaml
+  learning_rate: 0.0002
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 8
+  llm_effective_batch: 8
+  sasrec_batch_size: 512
+  max_train_samples_per_task: 200000
+adaptive_rule:
+  first_inspect_points: [12000, 24000, 48000]
+  continue_to_96000_if_validation_still_improves: true
+  continue_to_near_full_pool_if_96000_still_improves: true
+  plateau_labels: [clear plateau, likely plateau, still improving]
+test_usage:
+  rule: Do not tune exposure ladder from repeated test inspection.
+  preferred_continuation_signal: validation loss and validation PopMatch metrics

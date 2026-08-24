@@ -1,0 +1,8 @@
+model,seed,checkpoint_or_run,task_exposure_y,task_exposure_n,total_exposure,optimizer_steps,effective_batch,local_state_available,resume_state_status,known_metric_source
+Y-K0,42,/root/llamarec/outputs/y/movielens-1m/pool200k_1m_y_1500,12000,0,12000,1500,8,no,cloud inventory required,.agent/multiseed_stability/final/multiseed_metrics.csv
+N-K0,42,/root/llamarec/outputs/n/movielens-1m/pool200k_1m_n_1500,0,12000,12000,1500,8,no,cloud inventory required,.agent/sample_efficiency_training_efficiency/final_curve/sample_efficiency_curve.csv
+N-K0,42,/root/llamarec/outputs/n/movielens-1m/sample_efficiency_n_s3000,0,24000,24000,3000,8,no,cloud inventory required,.agent/sample_efficiency_training_efficiency/final_curve/sample_efficiency_curve.csv
+M1,42,/root/llamarec/outputs/m/movielens-1m/diag_m1_1m_m_200k_3000,12000,12000,24000,3000,8,no,cloud inventory required,.agent/multiseed_stability/final/multiseed_metrics.csv
+SASRec,42,/root/llamarec/outputs/baselines/movielens-1m/sasrec_exp_match_k5_popmatch_seed42_s23,0,11776,11776,23,512,no,not HF resume,.agent/sample_efficiency_training_efficiency/final_curve/sample_efficiency_curve.csv
+SASRec,42,/root/llamarec/outputs/baselines/movielens-1m/sample_efficiency_sasrec_s47,0,24064,24064,47,512,no,not HF resume,.agent/sample_efficiency_training_efficiency/final_curve/sample_efficiency_curve.csv
+SASRec,42,/root/llamarec/outputs/baselines/movielens-1m/sasrec_fixed_canonical_k5_200k_s3000,0,1534656,1534656,3000,512,no,model artifact expected on cloud,.agent/sample_efficiency_training_efficiency/final_curve/sample_efficiency_curve.csv

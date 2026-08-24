@@ -1,0 +1,149 @@
+{
+  "dataset": "movielens-1m",
+  "definition": "task-sample exposure = task training examples actually consumed during optimization",
+  "pools": {
+    "Y": {
+      "available_train_samples": 976284,
+      "formal_loaded_cap": 200000
+    },
+    "N": {
+      "available_train_samples": 212725,
+      "formal_loaded_cap": 200000
+    }
+  },
+  "llm_current": [
+    {
+      "model": "Y-K0",
+      "optimizer_steps": 1500,
+      "effective_batch_size": 8,
+      "samples_consumed_total": 12000,
+      "y_exposure": 12000,
+      "n_exposure": 0,
+      "unique_samples_consumed": {
+        "Y": 12000
+      },
+      "repeated_samples": {
+        "Y": 0
+      },
+      "fraction_loaded_pool_covered": {
+        "Y": 0.06
+      },
+      "fraction_available_pool_covered": {
+        "Y": 0.0122915
+      },
+      "training_seed": 42,
+      "evidence_status": "derived; formal trainer_state not local"
+    },
+    {
+      "model": "N-K0",
+      "optimizer_steps": 1500,
+      "effective_batch_size": 8,
+      "samples_consumed_total": 12000,
+      "y_exposure": 0,
+      "n_exposure": 12000,
+      "unique_samples_consumed": {
+        "N": 12000
+      },
+      "repeated_samples": {
+        "N": 0
+      },
+      "fraction_loaded_pool_covered": {
+        "N": 0.06
+      },
+      "fraction_available_pool_covered": {
+        "N": 0.0564112
+      },
+      "training_seed": 42,
+      "evidence_status": "derived; formal trainer_state not local"
+    },
+    {
+      "model": "M1",
+      "optimizer_steps": 3000,
+      "effective_batch_size": 8,
+      "samples_consumed_total": 24000,
+      "y_exposure": 12000,
+      "n_exposure": 12000,
+      "unique_samples_consumed": {
+        "Y": 12000,
+        "N": 12000
+      },
+      "repeated_samples": {
+        "Y": 0,
+        "N": 0
+      },
+      "fraction_loaded_pool_covered": {
+        "Y": 0.06,
+        "N": 0.06
+      },
+      "fraction_available_pool_covered": {
+        "Y": 0.0122915,
+        "N": 0.0564112
+      },
+      "training_seed": 42,
+      "evidence_status": "deterministic from SequentialSampler and 1:1 interleaved dataset"
+    }
+  ],
+  "sasrec_existing": [
+    {
+      "point": "sasrec_s6",
+      "optimizer_steps": 6,
+      "effective_batch_size": 512,
+      "n_exposure": 3072,
+      "unique_samples_consumed": 3072,
+      "repeated_samples": 0
+    },
+    {
+      "point": "sasrec_s12",
+      "optimizer_steps": 12,
+      "effective_batch_size": 512,
+      "n_exposure": 6144,
+      "unique_samples_consumed": 6144,
+      "repeated_samples": 0
+    },
+    {
+      "point": "sasrec_s23",
+      "optimizer_steps": 23,
+      "effective_batch_size": 512,
+      "n_exposure": 11776,
+      "unique_samples_consumed": 11776,
+      "repeated_samples": 0
+    },
+    {
+      "point": "sasrec_s47",
+      "optimizer_steps": 47,
+      "effective_batch_size": 512,
+      "n_exposure": 24064,
+      "unique_samples_consumed": 24064,
+      "repeated_samples": 0
+    },
+    {
+      "point": "sasrec_s1500",
+      "optimizer_steps": 1500,
+      "effective_batch_size": 512,
+      "n_exposure": 767424,
+      "unique_samples_consumed": 200000,
+      "repeated_samples": 567424
+    },
+    {
+      "point": "sasrec_s3000",
+      "optimizer_steps": 3000,
+      "effective_batch_size": 512,
+      "n_exposure": 1534656,
+      "unique_samples_consumed": 200000,
+      "repeated_samples": 1334656
+    }
+  ],
+  "resume_status": {
+    "preferred": true,
+    "local_checkpoint_state_available": true,
+    "cloud_check_required": [
+      "trainer_state.json",
+      "optimizer.pt",
+      "scheduler.pt",
+      "rng_state*.pth"
+    ],
+    "cloud_training_args_confirmed": true,
+    "lr_scheduler_type": "SchedulerType.LINEAR",
+    "confirmed_train_batch_size_field": 1
+  }
+}

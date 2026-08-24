@@ -1,0 +1,11 @@
+open_questions:
+  - id: OQ1
+    question: Do cloud checkpoints contain optimizer, scheduler, trainer, and RNG state for strict resume?
+  - id: OQ2
+    question: Are validation PopMatch metrics available for existing N 12k and 24k points?
+  - id: OQ3
+    question: What are actual wall-clock GPU hours for Y/N 1500 or 3000 steps from cloud logs?
+  - id: OQ4
+    question: Can token exposure diagnostics be recovered from encoded_dataset_summary.json?
+  - id: OQ5
+    question: Does Y P(Yes)-ranking improve at 24k/48k exposure, and does it approach N-K0?

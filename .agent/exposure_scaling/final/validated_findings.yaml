@@ -1,0 +1,22 @@
+validated_findings:
+  - id: VF1
+    finding: MovieLens-1M Y train pool has 976284 samples and N train pool has 212725 samples.
+    evidence: data/processed/movielens-1m/stats.json and line counts
+  - id: VF2
+    finding: Current Y-K0 and N-K0 1500-step anchors correspond to 12000 task-sample exposure at effective batch 8.
+    evidence: code/config audit plus existing stage-local reports
+  - id: VF3
+    finding: Current M1 3000-step anchor corresponds to 12000 Y plus 12000 N exposure.
+    evidence: src/train/multitask_dataset.py and src/train/train_m.py
+  - id: VF4
+    finding: Existing N-K0 curve already includes 24000 N-task exposure.
+    evidence: .agent/sample_efficiency_training_efficiency/final_curve/sample_efficiency_curve.csv
+  - id: VF5
+    finding: Existing SASRec curve includes 11776 and 24064 closest-exposure rows plus 767424 and 1534656 high-exposure anchors.
+    evidence: .agent/sample_efficiency_training_efficiency/final_curve/sample_efficiency_curve.csv
+  - id: VF6
+    finding: Cloud training args confirm per_device_train_batch_size=1, gradient_accumulation_steps=8, world_size=1, and linear scheduler for Y-K0, N-K0, and M1.
+    evidence: user-provided cloud readback from training_args.bin and trainer_state.json on 2026-08-24
+  - id: VF7
+    finding: Y-K0/N-K0/M1 checkpoints contain trainer, optimizer, scheduler, RNG, and training args state for strict resume.
+    evidence: user-provided cloud find output for checkpoint-1500 and checkpoint-3000 directories

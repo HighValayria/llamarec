@@ -1,0 +1,8 @@
+model,point,N-task exposure,total exposure,optimizer steps,effective batch,HR@1,NDCG@5,MRR,status
+SASRec,sasrec_s23,11776,11776,23,512,0.2699559471,0.6348928207,0.5156622614,existing_12k_aligned
+SASRec,sasrec_s47,24064,24064,47,512,0.2840528634,0.6429537473,0.5261879589,existing_24k_aligned
+SASRec,sasrec_s94,48128,48128,94,512,,,,planned_48k_aligned_if_needed
+SASRec,sasrec_s188,96256,96256,188,512,,,,planned_96k_aligned_if_needed
+SASRec,sasrec_s391,200000,200000,391,512,,,,planned_near_full_if_needed
+SASRec,sasrec_s1500,767424,767424,1500,512,0.6088105727,0.8198039644,0.7595506608,existing_high_anchor
+SASRec,sasrec_s3000,1534656,1534656,3000,512,0.6243171806,0.8283562609,0.7708663730,existing_high_anchor

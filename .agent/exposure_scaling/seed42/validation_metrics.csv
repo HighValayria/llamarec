@@ -1,0 +1,5 @@
+model,point,exposure,validation_loss,validation_primary_metric,validation_popmatch_HR@1,validation_popmatch_NDCG@5,validation_popmatch_MRR,status
+N-K0,n_s1500,12000,,,,,missing_or_not_local
+N-K0,n_s3000,24000,,,,,missing_or_not_local
+Y-K0,y_s1500,12000,,,,,missing_or_not_local
+M1,m_s3000,12000_per_task,,,,,missing_or_not_local

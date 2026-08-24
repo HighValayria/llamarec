@@ -1,0 +1,6 @@
+model,point,Y-task exposure,total exposure,optimizer steps,effective batch,binary_AUC,F1@0.5,calibrated_F1,ranking_HR@1,ranking_NDCG@5,ranking_MRR,status
+Y-K0,y_s1500,12000,12000,1500,8,0.7690966770,,0.7799722571,0.3048458150,0.6503957066,0.5365521292,existing_seed42
+Y-K0,y_s3000,24000,24000,3000,8,,,,,,planned
+Y-K0,y_s6000,48000,48000,6000,8,,,,,,planned
+Y-K0,y_s12000,96000,96000,12000,8,,,,,,conditional_planned
+Y-K0,y_s25000,200000,200000,25000,8,,,,,,conditional_near_full

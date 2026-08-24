@@ -1,0 +1,13 @@
+wiki_update_proposal:
+  status: draft_only_no_write_authorization
+  proposed_updates_after_stage_end:
+    - file: wiki/reports/sample-efficiency-training-efficiency.md
+      operation: update
+      reason: Add final LLM exposure-scaling/convergence findings if new curve changes durable interpretation.
+    - file: wiki/current_state.md
+      operation: update_if_high_level_claims_change
+      reason: Only needed if paper main checkpoint or SASRec/LLM interpretation changes.
+    - file: wiki/history/2026-08.md
+      operation: update_after_authorization
+      reason: Record semantic stage result if durable project state changes.
+  do_not_write_now: true

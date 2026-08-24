@@ -1,0 +1,10 @@
+rejected_findings:
+  - id: RF1
+    rejected: Current 12k LLM checkpoints are proven converged.
+    reason: No higher-exposure Y curve and only limited N 24k point exist; convergence is not established.
+  - id: RF2
+    rejected: High-exposure SASRec is proven stronger than high-exposure LLM.
+    reason: Existing high-exposure SASRec is only compared against low-exposure LLM anchors.
+  - id: RF3
+    rejected: It is safe to rerun from scratch with larger max_steps and call it a pure exposure intervention.
+    reason: LLM scheduler appears total-step-dependent unless cloud config proves otherwise.

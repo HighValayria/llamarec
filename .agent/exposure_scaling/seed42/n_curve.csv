@@ -1,0 +1,8 @@
+model,point,N-task exposure,total exposure,optimizer steps,effective batch,HR@1,NDCG@5,MRR,samples,candidate_protocol,status
+N-K0,n_s375,3000,3000,375,8,0.4313656388,0.7260192668,0.6355653451,5675,k5_popmatch_seed42,existing
+N-K0,n_s750,6000,6000,750,8,0.5222907489,0.7761254710,0.7016299559,5675,k5_popmatch_seed42,existing
+N-K0,n_s1500,12000,12000,1500,8,0.5466079295,0.7884963692,0.7180411160,5675,k5_popmatch_seed42,existing
+N-K0,n_s3000,24000,24000,3000,8,0.5612334802,0.7968087155,0.7289720999,5675,k5_popmatch_seed42,existing
+N-K0,n_s6000,48000,48000,6000,8,,,,,k5_popmatch_seed42,planned
+N-K0,n_s12000,96000,96000,12000,8,,,,,k5_popmatch_seed42,conditional_planned
+N-K0,n_s25000,200000,200000,25000,8,,,,,k5_popmatch_seed42,conditional_near_full
