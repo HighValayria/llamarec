@@ -7,6 +7,11 @@ set -euo pipefail
 ROOT=${ROOT:-/root/llamarec}
 cd "$ROOT"
 
+export HF_HUB_OFFLINE=${HF_HUB_OFFLINE:-1}
+export TRANSFORMERS_OFFLINE=${TRANSFORMERS_OFFLINE:-1}
+export HF_HUB_DISABLE_TELEMETRY=${HF_HUB_DISABLE_TELEMETRY:-1}
+export LLAMAREC_BASE_MODEL=${LLAMAREC_BASE_MODEL:-models/Llama-3.2-3B-Instruct}
+
 VALID_POPMATCH=data/candidates/movielens-1m/variants/k5_popmatch_seed42/valid.jsonl
 TEST_POPMATCH=data/candidates/movielens-1m/variants/k5_popmatch_seed42/test.jsonl
 
@@ -38,7 +43,7 @@ require_dir "$Y48/adapter"
 require_dir "$N48/adapter"
 
 python -m src.inference.evaluate_y_adapter \
-  --config configs/y.yaml \
+  --config configs/y_local_model.yaml \
   --dataset movielens-1m \
   --adapter-dir "$Y24/adapter" \
   --mode real \
@@ -49,7 +54,7 @@ python -m src.inference.evaluate_y_adapter \
   --output-dir "$Y24/popmatch_eval"
 
 python -m src.inference.evaluate_y_adapter \
-  --config configs/y.yaml \
+  --config configs/y_local_model.yaml \
   --dataset movielens-1m \
   --adapter-dir "$Y48/adapter" \
   --mode real \
@@ -60,7 +65,7 @@ python -m src.inference.evaluate_y_adapter \
   --output-dir "$Y48/popmatch_eval"
 
 python -m src.inference.evaluate_n_adapter \
-  --config configs/n.yaml \
+  --config configs/n_local_model.yaml \
   --dataset movielens-1m \
   --adapter-dir "$N48/adapter" \
   --mode real \

@@ -1,0 +1,36 @@
+# M-K0 任务配置外壳。共享实验语义位于 `configs/experiment.yaml`。
+
+inherits: configs/experiment.yaml
+variant: m_k0
+task: y_plus_n_multitask
+output_dir: outputs/m
+preference_train_dataset_path: data/processed/{dataset}/preference_train.jsonl
+next_item_train_dataset_path: data/processed/{dataset}/next_item_train.jsonl
+task_schedule: alternating_y_n_batches
+# 默认采样比例；可由 train_m.py 的 --task-ratio-y / --task-ratio-n 覆盖。
+optimizer_step_ratio:
+  y: 1
+  n: 1
+required_inference_modes:
+  - m_yesno_p_yes
+  - m_next_item_candidate_probability
+implementation_status: smoke_training_ready
+entrypoint: python -m src.train.train_m
+smoke_defaults:
+  max_y_train_samples: 1000
+  max_n_train_samples: 1000
+  max_y_valid_samples: 1000
+  max_n_valid_samples: 1000
+  task_ratio_y: 1
+  task_ratio_n: 1
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 8
+  learning_rate: 0.0002
+  max_steps: 100
+model:
+  base_model:
+    name_or_path: models/Llama-3.2-3B-Instruct
+    model_family: llama
+    require_instruct_chat_format: true
+    local_download_required: false
+    access_check_stage: repo_local_model

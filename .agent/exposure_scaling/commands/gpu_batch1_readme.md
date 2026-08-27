@@ -63,12 +63,18 @@ Run, in order:
 3. `N-K0 48k`: resume from existing N 24k if present; otherwise resume N 12k to `max_steps=6000`.
 4. Run fixed PopMatch validation first, then paper-grade test only after retained checkpoints are frozen.
 
-## Download Behavior
+## Model Path Behavior
 
-The training and evaluation code loads `meta-llama/Llama-3.2-3B-Instruct` via
-Transformers. If the GPU host has no Hugging Face cache for that model/tokenizer,
-Transformers will download it. If the model is already cached on the host, this
-step should be a cache hit.
+This batch uses repo-local config files:
+
+- `configs/y_local_model.yaml`
+- `configs/n_local_model.yaml`
+- `configs/m_local_model.yaml`
+
+Those configs set `model.base_model.name_or_path` to
+`models/Llama-3.2-3B-Instruct`, matching the GPU host directory shown by
+`ls models`. With `HF_HUB_OFFLINE=1` and `TRANSFORMERS_OFFLINE=1`, any accidental
+fallback to Hugging Face download should fail before training starts.
 
 ## Why Not N 24k?
 

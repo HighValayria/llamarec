@@ -4,7 +4,7 @@
 - Active stage: LLM Exposure Scaling & Convergence Validation.
 - Determine whether current low-exposure LLM checkpoints are undertrained, whether Y/N/M relative conclusions survive larger task-sample exposure, and how N-K0 compares with SASRec along a performance-vs-exposure frontier.
 - Paper Writing / Submission Package is paused, not completed, because manuscript drafting exposed a claim-relevant training-exposure / convergence gap.
-- First milestone is audit-only: create stage context, account for exposure, inventory existing checkpoints/results, freeze protocol/ladder/commands, estimate cost, and stop before GPU jobs.
+- Current milestone is cloud execution readiness: keep exposure accounting fixed, run cloud jobs through git-synced scripts, and collect validation-first metrics before deciding whether to extend to 96k.
 
 ## Scope
 - MovieLens-1M only, seed42 first.
@@ -13,7 +13,7 @@
 - Y-K0, N-K0, M1, and SASRec exposure accounting and scaling plan.
 
 ## Non-Goals
-- No GPU training or inference before explicit user approval.
+- No untracked/manual GPU commands; cloud runs should use the git-synced `.agent/exposure_scaling/commands/gpu_batch1_train_nohup.sh` and `.agent/exposure_scaling/commands/gpu_batch1_eval_nohup.sh` launchers.
 - No Amazon scaling in the first round.
 - No new model architecture, KAR, hard negatives, new candidate protocol, third dataset, LoRA sweep, 7B, MovieLens-32M, strict FLOPs matching, or direct million-exposure LLM run.
 - Do not directly modify formal `wiki/` during this stage.
@@ -53,7 +53,8 @@
 - Current M1 3000-step anchor corresponds to 24,000 total exposure split as 12,000 Y + 12,000 N under the 1:1 sequential schedule.
 - Existing N-K0 curve already has 3k, 6k, 12k, and 24k PopMatch-k5 points; 48k, 96k, and near-full-pool points are missing.
 - Existing SASRec curve already has 3,072, 6,144, 11,776, 24,064, 767,424, and 1,534,656 N-task exposure points; 48k, 96k, and near-200k aligned points are missing.
-- User-provided cloud inventory confirms Y-K0/N-K0/M1 checkpoints include trainer, optimizer, scheduler, RNG, and training args state; strict resume is likely available.
+- User-provided cloud inventory confirms Y-K0/N-K0/M1 checkpoints include trainer, optimizer, scheduler, RNG, and training args state; strict resume is available at the inspected anchors.
+- User-provided cloud shell evidence on 2026-08-28 shows the base model exists at `models/Llama-3.2-3B-Instruct`; batch scripts now use repo-local model configs instead of the default Hugging Face repo id.
 
 ## Verification Results
 - No GPU job was started.
@@ -73,7 +74,7 @@
 - Proposed stage-end durable sync should be limited to final exposure accounting, convergence finding, stable model comparison, and paper claim revisions after explicit one-time write authorization.
 
 ## Invalidating Conditions
-- Starting GPU jobs before user approval.
+- Running GPU jobs outside the git-synced nohup scripts or without preserving logs.
 - Claiming current 12k checkpoints are plateaued before 24k/48k validation is inspected.
 - Comparing N-K0 X total samples against M1 X total samples instead of matching M1 at X N + X Y exposure.
 - Treating high-exposure SASRec as evidence against high-exposure LLM without a matched or clearly separated high-exposure LLM point.

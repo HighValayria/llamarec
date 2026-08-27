@@ -1,0 +1,27 @@
+# N-K0 任务配置外壳。共享实验语义位于 `configs/experiment.yaml`。
+
+inherits: configs/experiment.yaml
+variant: n_k0
+task: full_sequence_next_item_prediction
+output_dir: outputs/n
+train_dataset_path: data/processed/{dataset}/next_item_train.jsonl
+valid_candidates: data/candidates/{dataset}/valid.jsonl
+test_candidates: data/candidates/{dataset}/test.jsonl
+required_inference_modes:
+  - candidate_label_probability
+implementation_status: smoke_training_ready
+entrypoint: python -m src.train.train_n
+smoke_defaults:
+  max_train_samples: 1000
+  max_valid_samples: 1000
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 8
+  learning_rate: 0.0002
+  max_steps: 100
+model:
+  base_model:
+    name_or_path: models/Llama-3.2-3B-Instruct
+    model_family: llama
+    require_instruct_chat_format: true
+    local_download_required: false
+    access_check_stage: repo_local_model

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Batch 1 draft for LLM Exposure Scaling & Convergence Validation.
-# Do not run until the user explicitly approves GPU jobs.
+# Batch 1 cloud training for LLM Exposure Scaling & Convergence Validation.
+# Uses repo-local base model configs: models/Llama-3.2-3B-Instruct.
 # Assumes cloud readback confirmed:
 #   per_device_train_batch_size=1
 #   gradient_accumulation_steps=8
@@ -11,6 +11,11 @@ set -euo pipefail
 
 ROOT=${ROOT:-/root/llamarec}
 cd "$ROOT"
+
+export HF_HUB_OFFLINE=${HF_HUB_OFFLINE:-1}
+export TRANSFORMERS_OFFLINE=${TRANSFORMERS_OFFLINE:-1}
+export HF_HUB_DISABLE_TELEMETRY=${HF_HUB_DISABLE_TELEMETRY:-1}
+export LLAMAREC_BASE_MODEL=${LLAMAREC_BASE_MODEL:-models/Llama-3.2-3B-Instruct}
 
 VALID_POPMATCH=data/candidates/movielens-1m/variants/k5_popmatch_seed42/valid.jsonl
 TEST_POPMATCH=data/candidates/movielens-1m/variants/k5_popmatch_seed42/test.jsonl
@@ -49,7 +54,7 @@ fi
 
 # Y-K0 24k: 3000 steps * 8 samples/step = 24000 Y exposure.
 python -m src.train.train_y \
-  --config configs/y.yaml \
+  --config configs/y_local_model.yaml \
   --dataset movielens-1m \
   --run-name exposure_y_s3000 \
   --max-train-samples 200000 \
@@ -66,7 +71,7 @@ require_resume_state "$Y24"
 
 # Y-K0 48k: 6000 steps * 8 samples/step = 48000 Y exposure.
 python -m src.train.train_y \
-  --config configs/y.yaml \
+  --config configs/y_local_model.yaml \
   --dataset movielens-1m \
   --run-name exposure_y_s6000 \
   --max-train-samples 200000 \
@@ -80,7 +85,7 @@ python -m src.train.train_y \
 
 # N-K0 48k: 6000 steps * 8 samples/step = 48000 N exposure.
 python -m src.train.train_n \
-  --config configs/n.yaml \
+  --config configs/n_local_model.yaml \
   --dataset movielens-1m \
   --run-name exposure_n_s6000 \
   --max-train-samples 200000 \

@@ -9,6 +9,7 @@ mkdir -p "$LOG_DIR"
 export HF_HUB_OFFLINE=${HF_HUB_OFFLINE:-1}
 export TRANSFORMERS_OFFLINE=${TRANSFORMERS_OFFLINE:-1}
 export HF_HUB_DISABLE_TELEMETRY=${HF_HUB_DISABLE_TELEMETRY:-1}
+export LLAMAREC_BASE_MODEL=${LLAMAREC_BASE_MODEL:-models/Llama-3.2-3B-Instruct}
 TS=$(date +%Y%m%d_%H%M%S)
 LOG="$LOG_DIR/gpu_batch1_eval_${TS}.log"
 PREFLIGHT_LOG="$LOG_DIR/gpu_cache_preflight_eval_${TS}.log"

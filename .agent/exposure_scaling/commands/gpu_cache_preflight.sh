@@ -15,7 +15,7 @@ import platform
 import sys
 from pathlib import Path
 
-MODEL_ID = os.environ.get("LLAMAREC_BASE_MODEL", "meta-llama/Llama-3.2-3B-Instruct")
+MODEL_ID = os.environ.get("LLAMAREC_BASE_MODEL", "models/Llama-3.2-3B-Instruct")
 
 print("== runtime ==")
 print(f"python={sys.executable}")
@@ -24,6 +24,15 @@ print(f"cwd={Path.cwd()}")
 print(f"home={Path.home()}")
 print(f"user={os.environ.get('USER') or os.environ.get('USERNAME')}")
 print(f"model_id={MODEL_ID}")
+model_path = Path(MODEL_ID)
+if not model_path.is_absolute():
+    model_path = Path.cwd() / model_path
+print(f"model_path={model_path}")
+print(f"local_model_dir_found={model_path.is_dir()}")
+if model_path.is_dir():
+    for filename in ["config.json", "tokenizer.json", "tokenizer.model", "model.safetensors.index.json", "pytorch_model.bin.index.json"]:
+        candidate = model_path / filename
+        print(f"local_file {filename} exists={candidate.exists()}")
 
 print("\n== env ==")
 for key in [

@@ -12,7 +12,7 @@ Target: 48,000 N exposure = 6,000 optimizer steps at effective batch 8.
 
 ```bash
 python -m src.train.train_n \
-  --config configs/n.yaml \
+  --config configs/n_local_model.yaml \
   --dataset movielens-1m \
   --run-name exposure_n_s6000 \
   --max-train-samples 200000 \
@@ -29,7 +29,7 @@ python -m src.train.train_n \
 
 ```bash
 python -m src.train.train_y \
-  --config configs/y.yaml \
+  --config configs/y_local_model.yaml \
   --dataset movielens-1m \
   --run-name exposure_y_s3000 \
   --max-train-samples 200000 \
@@ -44,7 +44,7 @@ python -m src.train.train_y \
 
 ```bash
 python -m src.train.train_y \
-  --config configs/y.yaml \
+  --config configs/y_local_model.yaml \
   --dataset movielens-1m \
   --run-name exposure_y_s6000 \
   --max-train-samples 200000 \
