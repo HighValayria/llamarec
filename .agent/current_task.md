@@ -51,10 +51,11 @@
 - Data pool audit confirms MovieLens-1M has 976,284 Y train samples and 212,725 N train samples. Formal capped training pools are 200,000 samples per task for the audited LLM/SASRec rows.
 - Current Y-K0 and N-K0 1500-step anchors each correspond to 12,000 task-sample exposure with effective batch 8.
 - Current M1 3000-step anchor corresponds to 24,000 total exposure split as 12,000 Y + 12,000 N under the 1:1 sequential schedule.
-- Existing N-K0 curve already has 3k, 6k, 12k, and 24k PopMatch-k5 points; 48k, 96k, and near-full-pool points are missing.
+- Existing N-K0 curve has 3k, 6k, 12k, 24k, and now cloud-validated 48k PopMatch-k5 points; 96k is the next validation-approved continuation.
 - Existing SASRec curve already has 3,072, 6,144, 11,776, 24,064, 767,424, and 1,534,656 N-task exposure points; 48k, 96k, and near-200k aligned points are missing.
 - User-provided cloud inventory confirms Y-K0/N-K0/M1 checkpoints include trainer, optimizer, scheduler, RNG, and training args state; strict resume is available at the inspected anchors.
 - User-provided cloud shell evidence on 2026-08-28 shows the base model exists at `models/Llama-3.2-3B-Instruct`; batch scripts now use repo-local model configs instead of the default Hugging Face repo id.
+- Cloud batch1 training and evaluation completed. Validation-first result: stop Y at 48k; continue N from 48k to 96k.
 
 ## Verification Results
 - No GPU job was started.
@@ -75,7 +76,7 @@
 
 ## Invalidating Conditions
 - Running GPU jobs outside the git-synced nohup scripts or without preserving logs.
-- Claiming current 12k checkpoints are plateaued before 24k/48k validation is inspected.
+- Claiming N-K0 has plateaued before inspecting N96 validation, or claiming Y benefits from 96k despite 24k->48k validation stagnation.
 - Comparing N-K0 X total samples against M1 X total samples instead of matching M1 at X N + X Y exposure.
 - Treating high-exposure SASRec as evidence against high-exposure LLM without a matched or clearly separated high-exposure LLM point.
 - Reading formal wiki again without renewed authorization.
