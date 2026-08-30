@@ -14,7 +14,6 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 ## Non-Goals
 
 - Do not read or modify the formal `wiki/` during the active stage.
-- Do not start new GPU work in the first M1/SASRec alignment planning round.
 - Do not claim convergence from test metrics.
 - Do not run blind single-seed N-K0 beyond 200k as part of the current minimum plan.
 
@@ -28,12 +27,11 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 
 ## Evidence Sources
 
-- Cloud user-provided logs and metric tables for Y24/Y48 and N24/N48/N96/N200.
+- Cloud user-provided logs and metric tables for Y24/Y48, N24/N48/N96/N200, and SASRec s23/s47/s94/s188/s391.
 - `.agent/exposure_scaling/exposure_accounting.json`.
-- `.agent/exposure_scaling/seed42/m1_curve.csv`.
-- `.agent/exposure_scaling/sasrec_existing_curve.csv`.
-- `.agent/sample_efficiency_training_efficiency/final_curve/sample_efficiency_curve.csv`.
+- `.agent/exposure_scaling/alignment/` artifacts.
 - Current code in `src/train/train_m.py`, `src/train/multitask_dataset.py`, `src/inference/evaluate_m_adapter.py`, `src/baselines/sasrec.py`, and `src/analysis/training_budget_audit.py`.
+
 
 ## Related Code
 
@@ -48,20 +46,15 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 - `configs/y_local_model.yaml`
 - `configs/n_local_model.yaml`
 - `configs/m_local_model.yaml`
-
 ## Current Progress
 
 - Confirmed the earlier 12k exposure inference: 1500 LLM optimizer steps times effective batch 8 equals 12000 examples.
-- Confirmed actual cloud LLM settings from trainer state: per-device batch 1, gradient accumulation 8, world size 1.
-- Added cloud-local model configs using `models/Llama-3.2-3B-Instruct` to avoid accidental Hugging Face resolution/download attempts.
-- Added and pushed nohup/offline/preflight scripts for Y/N scaling and N96/N200 continuations.
 - Completed Y scaling through Y48 and stopped Y because validation does not improve meaningfully.
 - Completed N scaling through N200. Validation keeps improving: N24 HR@1 0.5774, N48 0.6030, N96 0.6238, N200 0.6516.
-- Started M1 + SASRec alignment planning without launching GPU jobs.
 - Confirmed M1 existing point is M1-12: 3000 steps, 12000 Y exposure, 12000 N exposure, total 24000.
 - Confirmed M1 matched N-task exposure targets: M1-48 = 12000 steps, M1-96 = 24000 steps, M1-200 = 50000 steps.
-- Confirmed SASRec aligned targets with batch 512: s23 ~= 12k, s47 ~= 24k, s94 ~= 48k, s188 ~= 96k, s391 = 200k.
-- Created alignment artifacts under `.agent/exposure_scaling/alignment/` with audit, plans, tables, and guarded cloud command scripts.
+- Completed fresh SASRec alignment runs for s23/s47/s94/s188/s391.
+- Validation-first matched comparisons show N-K0 beats SASRec at 24k/48k/96k/200k; the gap narrows at 200k but remains large.
 
 ## Verification Results
 
@@ -73,13 +66,19 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
   - N48 HR@1 0.6029955947, NDCG@5 0.8200163654, MRR 0.7595418502.
   - N96 HR@1 0.6237885463, NDCG@5 0.8302923694, MRR 0.7732422907.
   - N200 HR@1 0.6516299559, NDCG@5 0.8431902590, MRR 0.7904170338.
-- N validation deltas remain positive through N200.
-- SASRec currently has known test-only curve entries for s6/s12/s23/s47/s1500/s3000 in stage-local artifacts; cloud inventory is still needed for actual model directories and validation files.
+- SASRec validation:
+  - S47 HR@1 0.2731277533, NDCG@5 0.6364143897, MRR 0.5176035242.
+  - S94 HR@1 0.2930396476, NDCG@5 0.6480369393, MRR 0.5328986784.
+  - S188 HR@1 0.3281057269, NDCG@5 0.6716306227, MRR 0.5636093979.
+  - S391 HR@1 0.4748898678, NDCG@5 0.7561054438, MRR 0.6746901615.
+- N minus SASRec validation gaps:
+  - N24-S47: HR@1 +0.3043171806, NDCG@5 +0.1703542950, MRR +0.2244023495.
+  - N48-S94: HR@1 +0.3099559471, NDCG@5 +0.1719794261, MRR +0.2266431718.
+  - N96-S188: HR@1 +0.2956828194, NDCG@5 +0.1586617467, MRR +0.2096328928.
+  - N200-S391: HR@1 +0.1767400881, NDCG@5 +0.0870848151, MRR +0.1157268722.
 
 ## Unresolved Questions
 
-- Which SASRec model directories are present on the cloud for s23/s47/s1500/s3000?
-- Do existing SASRec points already have validation metrics on the cloud, or must they be re-evaluated?
 - How close is M1-48 to N48 under validation-first comparison?
 - Should M1-96 be run after M1-48, or does M1-48 already settle the claim?
 
@@ -93,5 +92,4 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 
 - Cloud runs used a different model path, task ratio, batch size, gradient accumulation, candidate set, or random seed than recorded here.
 - M1 resume checkpoint lacks optimizer/scheduler/RNG state and the continuation is not a true resume.
-- SASRec existing checkpoints cannot be found, requiring fresh reruns of supposed existing points.
 - Candidate files differ from fixed `k5_popmatch_seed42` validation/test paths.

@@ -15,6 +15,19 @@ N-K0 has completed validation-first scaling through 200k exposure and keeps impr
 
 Y-K0 does not improve from 24k to 48k, so Y scaling is stopped.
 
+## SASRec Matched-Exposure Result
+
+Fresh SASRec alignment runs are complete for s23/s47/s94/s188/s391. Validation-first matched comparisons show N-K0 wins at every matched point:
+
+| pair | HR@1 gap | NDCG@5 gap | MRR gap |
+|---|---:|---:|---:|
+| N24 - SASRec s47 | +0.3043171806 | +0.1703542950 | +0.2244023495 |
+| N48 - SASRec s94 | +0.3099559471 | +0.1719794261 | +0.2266431718 |
+| N96 - SASRec s188 | +0.2956828194 | +0.1586617467 | +0.2096328928 |
+| N200 - SASRec s391 | +0.1767400881 | +0.0870848151 | +0.1157268722 |
+
+The gap narrows by 200k but remains large. SASRec s1500/s3000 remain repeated-exposure anchors, not fair N200 comparators.
+
 ## Main Implication
 
 Do not claim N-K0 has converged. It has not converged through 200k under the validation-first criterion.
@@ -23,6 +36,5 @@ Do not blindly continue single-seed N-K0 beyond 200k. Beyond 200k becomes repeat
 
 ## Next Minimum Work
 
-1. SASRec alignment: train/evaluate fresh s23/s47/s94/s188/s391 so current PopMatch candidates are included in the SASRec mapping.
-2. M1 alignment: run M1-48 from the existing checkpoint-3000, then compare M1 N-interface validation against N48.
-3. Stop after those results and decide whether M1-96 is worth the cost.
+1. M1 alignment: run M1-48 from the existing checkpoint-3000, then compare M1 N-interface validation against N48.
+2. Stop after M1-48 and decide whether M1-96 is worth the cost.
