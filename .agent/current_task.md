@@ -4,7 +4,7 @@
 - Active stage: LLM Exposure Scaling & Convergence Validation.
 - Determine whether current low-exposure LLM checkpoints are undertrained, whether Y/N/M relative conclusions survive larger task-sample exposure, and how N-K0 compares with SASRec along a performance-vs-exposure frontier.
 - Paper Writing / Submission Package is paused, not completed, because manuscript drafting exposed a claim-relevant training-exposure / convergence gap.
-- Current milestone is cloud execution readiness: keep exposure accounting fixed, run cloud jobs through git-synced scripts, and collect validation-first metrics before deciding whether to extend to 96k.
+- Current milestone is consolidation after cloud execution: freeze the N-K0 24k/48k/96k/200k validation curve, audit SASRec comparison, and decide which variance checks are needed before paper writing resumes.
 
 ## Scope
 - MovieLens-1M only, seed42 first.
@@ -51,15 +51,16 @@
 - Data pool audit confirms MovieLens-1M has 976,284 Y train samples and 212,725 N train samples. Formal capped training pools are 200,000 samples per task for the audited LLM/SASRec rows.
 - Current Y-K0 and N-K0 1500-step anchors each correspond to 12,000 task-sample exposure with effective batch 8.
 - Current M1 3000-step anchor corresponds to 24,000 total exposure split as 12,000 Y + 12,000 N under the 1:1 sequential schedule.
-- Existing N-K0 curve has 3k, 6k, 12k, 24k, 48k, and now cloud-validated 96k PopMatch-k5 points; 200k near-full-pool is the next validation-approved continuation.
+- Existing N-K0 curve has 3k, 6k, 12k, 24k, 48k, 96k, and now cloud-validated 200k PopMatch-k5 points. The 200k near-full-pool point improves further and is the current single-seed anchor.
 - Existing SASRec curve already has 3,072, 6,144, 11,776, 24,064, 767,424, and 1,534,656 N-task exposure points; 48k, 96k, and near-200k aligned points are missing.
 - User-provided cloud inventory confirms Y-K0/N-K0/M1 checkpoints include trainer, optimizer, scheduler, RNG, and training args state; strict resume is available at the inspected anchors.
 - User-provided cloud shell evidence on 2026-08-28 shows the base model exists at `models/Llama-3.2-3B-Instruct`; batch scripts now use repo-local model configs instead of the default Hugging Face repo id.
 - Cloud batch1 training and evaluation completed. Validation-first result: stop Y at 48k; continue N from 48k to 96k.
 - N96 cloud training and evaluation completed. Validation-first result: continue N from 96k to near-full-pool 200k.
+- N200 cloud training and evaluation completed. Validation-first result: N still improves at 200k; stop blind single-seed escalation and consolidate curve/SASRec/multiseed evidence.
 
 ## Verification Results
-- No GPU job was started.
+- Cloud GPU jobs were run via git-synced nohup scripts; batch1, N96, and N200 training/evaluation completed with preserved logs on the cloud host.
 - Local code audit found LLM TrainingArguments do not explicitly set `lr_scheduler_type`; Transformers default scheduler is total-step-dependent unless the cloud environment proves otherwise. Resume from an existing checkpoint is therefore preferred to changing `max_steps` from scratch.
 - M1 uses `SequentialSampler` over an explicitly interleaved Y/N dataset, making per-task exposure accounting deterministic under single-process training.
 - SASRec exposure accounting uses the implemented training loop, including the short final batch in each 200,000-sample epoch.
@@ -77,7 +78,7 @@
 
 ## Invalidating Conditions
 - Running GPU jobs outside the git-synced nohup scripts or without preserving logs.
-- Claiming N-K0 has plateaued before inspecting N200 validation, or claiming Y benefits from 96k/200k despite 24k->48k validation stagnation.
+- Claiming N-K0 has plateaued despite N200 validation improving over N96, or claiming Y benefits from 96k/200k despite 24k->48k validation stagnation.
 - Comparing N-K0 X total samples against M1 X total samples instead of matching M1 at X N + X Y exposure.
 - Treating high-exposure SASRec as evidence against high-exposure LLM without a matched or clearly separated high-exposure LLM point.
 - Reading formal wiki again without renewed authorization.
