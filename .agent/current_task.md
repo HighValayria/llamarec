@@ -1,84 +1,97 @@
 # Current Task
 
 ## Stage Goal
-- Active stage: LLM Exposure Scaling & Convergence Validation.
-- Determine whether current low-exposure LLM checkpoints are undertrained, whether Y/N/M relative conclusions survive larger task-sample exposure, and how N-K0 compares with SASRec along a performance-vs-exposure frontier.
-- Paper Writing / Submission Package is paused, not completed, because manuscript drafting exposed a claim-relevant training-exposure / convergence gap.
-- Current milestone is consolidation after cloud execution: freeze the N-K0 24k/48k/96k/200k validation curve, audit SASRec comparison, and decide which variance checks are needed before paper writing resumes.
+
+Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, then align follow-up comparisons against M1 and SASRec by actual per-task exposure.
 
 ## Scope
-- MovieLens-1M only, seed42 first.
+
 - Stage-local artifacts under `.agent/exposure_scaling/`.
-- Existing code, configs, formal data files, stage-local result artifacts, and authorized one-time relevant wiki context.
-- Y-K0, N-K0, M1, and SASRec exposure accounting and scaling plan.
+- Training/evaluation launchers for cloud execution.
+- Configs and code paths needed for Y-K0, N-K0, M1, and SASRec exposure accounting.
+- Validation-first comparison protocol using fixed PopMatch-k5 seed42 candidates.
 
 ## Non-Goals
-- No untracked/manual GPU commands; cloud runs should use the git-synced `.agent/exposure_scaling/commands/gpu_batch1_train_nohup.sh` and `.agent/exposure_scaling/commands/gpu_batch1_eval_nohup.sh` launchers.
-- No Amazon scaling in the first round.
-- No new model architecture, KAR, hard negatives, new candidate protocol, third dataset, LoRA sweep, 7B, MovieLens-32M, strict FLOPs matching, or direct million-exposure LLM run.
-- Do not directly modify formal `wiki/` during this stage.
+
+- Do not read or modify the formal `wiki/` during the active stage.
+- Do not start new GPU work in the first M1/SASRec alignment planning round.
+- Do not claim convergence from test metrics.
+- Do not run blind single-seed N-K0 beyond 200k as part of the current minimum plan.
 
 ## Long-Term Constraints
-- Primary x-axis is task-sample exposure: task training examples actually consumed during optimization.
-- Do not describe this as compute scaling, FLOPs scaling, token scaling, or wall-clock scaling.
-- Main evaluation protocol stays fixed to MovieLens-1M PopMatch-k5 `k5_popmatch_seed42`; Random-k5 is supplementary only.
-- Training protocol should isolate exposure/max_steps while keeping base model, QLoRA config, LR, scheduler, prompt, candidate protocol, and inference fixed.
-- Test metrics must not guide ad hoc training-budget tuning; validation behavior should drive adaptive continuation where possible.
+
+- Validation metrics decide continuation; test metrics are report-only after decisions are fixed.
+- For LLM runs, effective exposure is `per_device_train_batch_size * gradient_accumulation_steps * world_size * optimizer_steps`.
+- Current formal LLM runs use `per_device_train_batch_size=1`, `gradient_accumulation_steps=8`, `world_size=1`, so effective batch is 8 examples per optimizer step.
+- M1 uses 1:1 Y/N task sampling; with the current effective batch 8, each optimizer step consumes 4 Y and 4 N examples.
+- SASRec aligned accounting uses batch size 512, no gradient accumulation, and processed-example exposure.
 
 ## Evidence Sources
-- User migration directive on 2026-08-24 for LLM Exposure Scaling & Convergence Validation; it explicitly authorized a one-time, directly relevant wiki read.
-- One-time stage-start wiki read on 2026-08-24: `wiki/index.md`, `wiki/current_state.md`, `wiki/reports/fair-budget-baseline-positioning.md`, `wiki/reports/sample-efficiency-training-efficiency.md`, `wiki/reports/multiseed-stability.md`, and `wiki/reports/paper-result-consolidation.md`.
-- The wiki context was compressed into `.agent/exposure_scaling/stage_context.md`; direct wiki read access is revoked for the rest of the stage.
-- Current code/config evidence from `configs/experiment.yaml`, `configs/y.yaml`, `configs/n.yaml`, `configs/m.yaml`, `src/train/train_y.py`, `src/train/train_n.py`, `src/train/train_m.py`, `src/train/preference_dataset.py`, `src/train/next_item_dataset.py`, `src/train/multitask_dataset.py`, `src/baselines/sasrec.py`, `src/analysis/training_budget_audit.py`, and `src/analysis/sample_efficiency_curve.py`.
-- Formal local data counts from `data/processed/movielens-1m/stats.json`, `preference_train.jsonl`, `next_item_train.jsonl`, and fixed PopMatch candidate files.
+
+- Cloud user-provided logs and metric tables for Y24/Y48 and N24/N48/N96/N200.
+- `.agent/exposure_scaling/exposure_accounting.json`.
+- `.agent/exposure_scaling/seed42/m1_curve.csv`.
+- `.agent/exposure_scaling/sasrec_existing_curve.csv`.
+- `.agent/sample_efficiency_training_efficiency/final_curve/sample_efficiency_curve.csv`.
+- Current code in `src/train/train_m.py`, `src/train/multitask_dataset.py`, `src/inference/evaluate_m_adapter.py`, `src/baselines/sasrec.py`, and `src/analysis/training_budget_audit.py`.
 
 ## Related Code
-- `configs/experiment.yaml`
-- `configs/y.yaml`
-- `configs/n.yaml`
-- `configs/m.yaml`
+
 - `src/train/train_y.py`
 - `src/train/train_n.py`
 - `src/train/train_m.py`
 - `src/train/multitask_dataset.py`
+- `src/inference/evaluate_n_adapter.py`
+- `src/inference/evaluate_m_adapter.py`
 - `src/baselines/sasrec.py`
 - `src/analysis/training_budget_audit.py`
-- `src/analysis/sample_efficiency_curve.py`
+- `configs/y_local_model.yaml`
+- `configs/n_local_model.yaml`
+- `configs/m_local_model.yaml`
 
 ## Current Progress
-- New stage opened and Paper Writing routed to paused/waiting-for-evidence.
-- Focused wiki context read once, compressed, and revoked.
-- Data pool audit confirms MovieLens-1M has 976,284 Y train samples and 212,725 N train samples. Formal capped training pools are 200,000 samples per task for the audited LLM/SASRec rows.
-- Current Y-K0 and N-K0 1500-step anchors each correspond to 12,000 task-sample exposure with effective batch 8.
-- Current M1 3000-step anchor corresponds to 24,000 total exposure split as 12,000 Y + 12,000 N under the 1:1 sequential schedule.
-- Existing N-K0 curve has 3k, 6k, 12k, 24k, 48k, 96k, and now cloud-validated 200k PopMatch-k5 points. The 200k near-full-pool point improves further and is the current single-seed anchor.
-- Existing SASRec curve already has 3,072, 6,144, 11,776, 24,064, 767,424, and 1,534,656 N-task exposure points; 48k, 96k, and near-200k aligned points are missing.
-- User-provided cloud inventory confirms Y-K0/N-K0/M1 checkpoints include trainer, optimizer, scheduler, RNG, and training args state; strict resume is available at the inspected anchors.
-- User-provided cloud shell evidence on 2026-08-28 shows the base model exists at `models/Llama-3.2-3B-Instruct`; batch scripts now use repo-local model configs instead of the default Hugging Face repo id.
-- Cloud batch1 training and evaluation completed. Validation-first result: stop Y at 48k; continue N from 48k to 96k.
-- N96 cloud training and evaluation completed. Validation-first result: continue N from 96k to near-full-pool 200k.
-- N200 cloud training and evaluation completed. Validation-first result: N still improves at 200k; stop blind single-seed escalation and consolidate curve/SASRec/multiseed evidence.
+
+- Confirmed the earlier 12k exposure inference: 1500 LLM optimizer steps times effective batch 8 equals 12000 examples.
+- Confirmed actual cloud LLM settings from trainer state: per-device batch 1, gradient accumulation 8, world size 1.
+- Added cloud-local model configs using `models/Llama-3.2-3B-Instruct` to avoid accidental Hugging Face resolution/download attempts.
+- Added and pushed nohup/offline/preflight scripts for Y/N scaling and N96/N200 continuations.
+- Completed Y scaling through Y48 and stopped Y because validation does not improve meaningfully.
+- Completed N scaling through N200. Validation keeps improving: N24 HR@1 0.5774, N48 0.6030, N96 0.6238, N200 0.6516.
+- Started M1 + SASRec alignment planning without launching GPU jobs.
+- Confirmed M1 existing point is M1-12: 3000 steps, 12000 Y exposure, 12000 N exposure, total 24000.
+- Confirmed M1 matched N-task exposure targets: M1-48 = 12000 steps, M1-96 = 24000 steps, M1-200 = 50000 steps.
+- Confirmed SASRec aligned targets with batch 512: s23 ~= 12k, s47 ~= 24k, s94 ~= 48k, s188 ~= 96k, s391 = 200k.
+- Created alignment artifacts under `.agent/exposure_scaling/alignment/` with audit, plans, tables, and guarded cloud command scripts.
 
 ## Verification Results
-- Cloud GPU jobs were run via git-synced nohup scripts; batch1, N96, and N200 training/evaluation completed with preserved logs on the cloud host.
-- Local code audit found LLM TrainingArguments do not explicitly set `lr_scheduler_type`; Transformers default scheduler is total-step-dependent unless the cloud environment proves otherwise. Resume from an existing checkpoint is therefore preferred to changing `max_steps` from scratch.
-- M1 uses `SequentialSampler` over an explicitly interleaved Y/N dataset, making per-task exposure accounting deterministic under single-process training.
-- SASRec exposure accounting uses the implemented training loop, including the short final batch in each 200,000-sample epoch.
+
+- Y-K0 validation:
+  - Y24 HR@1 0.2156828194, NDCG@5 0.6002715889, MRR 0.4704082232.
+  - Y48 HR@1 0.2165638767, NDCG@5 0.5994649797, MRR 0.4694772394.
+- N-K0 validation:
+  - N24 HR@1 0.5774449339, NDCG@5 0.8067686847, MRR 0.7420058737.
+  - N48 HR@1 0.6029955947, NDCG@5 0.8200163654, MRR 0.7595418502.
+  - N96 HR@1 0.6237885463, NDCG@5 0.8302923694, MRR 0.7732422907.
+  - N200 HR@1 0.6516299559, NDCG@5 0.8431902590, MRR 0.7904170338.
+- N validation deltas remain positive through N200.
+- SASRec currently has known test-only curve entries for s6/s12/s23/s47/s1500/s3000 in stage-local artifacts; cloud inventory is still needed for actual model directories and validation files.
 
 ## Unresolved Questions
-- Do the formal cloud checkpoints contain `trainer_state.json`, `optimizer.pt`, `scheduler.pt`, and RNG state files at the exact resume point?
-- Were the formal LLM runs single-process world size 1 as expected from the configured single-RTX-4090 profile?
-- Are validation PopMatch metrics already available for existing 12k/24k N-K0 points, or must they be generated before adaptive stopping?
-- Exact GPU hours are not recoverable from local artifacts; estimates need cloud log calibration.
-- Token exposure diagnostics are not yet available because formal `encoded_dataset_summary.json` files are not local.
+
+- Which SASRec model directories are present on the cloud for s23/s47/s1500/s3000?
+- Do existing SASRec points already have validation metrics on the cloud, or must they be re-evaluated?
+- How close is M1-48 to N48 under validation-first comparison?
+- Should M1-96 be run after M1-48, or does M1-48 already settle the claim?
 
 ## Pending Wiki Sync
-- No formal wiki edits during the stage.
-- Proposed stage-end durable sync should be limited to final exposure accounting, convergence finding, stable model comparison, and paper claim revisions after explicit one-time write authorization.
+
+- Potential report update: record validation-first Y/N exposure scaling outcomes and the decision to stop blind N single-seed scaling beyond 200k.
+- Potential guide update: document cloud-local model path/offline preflight practice for LlamaRec training launchers.
+- Potential report update after approval and completion: add M1/SASRec matched-exposure alignment findings.
 
 ## Invalidating Conditions
-- Running GPU jobs outside the git-synced nohup scripts or without preserving logs.
-- Claiming N-K0 has plateaued despite N200 validation improving over N96, or claiming Y benefits from 96k/200k despite 24k->48k validation stagnation.
-- Comparing N-K0 X total samples against M1 X total samples instead of matching M1 at X N + X Y exposure.
-- Treating high-exposure SASRec as evidence against high-exposure LLM without a matched or clearly separated high-exposure LLM point.
-- Reading formal wiki again without renewed authorization.
+
+- Cloud runs used a different model path, task ratio, batch size, gradient accumulation, candidate set, or random seed than recorded here.
+- M1 resume checkpoint lacks optimizer/scheduler/RNG state and the continuation is not a true resume.
+- SASRec existing checkpoints cannot be found, requiring fresh reruns of supposed existing points.
+- Candidate files differ from fixed `k5_popmatch_seed42` validation/test paths.

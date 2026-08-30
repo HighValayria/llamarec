@@ -1,0 +1,9 @@
+family,run,split,status,n_task_exposure,y_task_exposure,total_exposure,HR@1,NDCG@5,MRR
+N-K0,N24,validation,complete,24000,0,24000,0.5774449339,0.8067686847,0.7420058737
+N-K0,N48,validation,complete,48000,0,48000,0.6029955947,0.8200163654,0.7595418502
+N-K0,N96,validation,complete,96000,0,96000,0.6237885463,0.8302923694,0.7732422907
+N-K0,N200,validation,complete,200000,0,200000,0.6516299559,0.8431902590,0.7904170338
+M1,m_s3000,test,existing_current,12000,12000,24000,0.5238766520,0.7781912330,0.7042525698
+M1,m_s12000,validation,recommended_next,48000,48000,96000,,,
+M1,m_s24000,validation,conditional,96000,96000,192000,,,
+M1,m_s50000,validation,expensive_conditional,200000,200000,400000,,,

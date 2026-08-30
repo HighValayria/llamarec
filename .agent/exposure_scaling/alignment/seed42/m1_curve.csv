@@ -1,0 +1,5 @@
+run,status,optimizer_steps,effective_batch,total_exposure,y_exposure,n_exposure,validation_status,n_HR@1,n_NDCG@5,n_MRR,y_metric_status,notes
+m_s3000,existing_current,3000,8,24000,12000,12000,test_known,0.5238766520,0.7781912330,0.7042525698,known_binary_metrics_existing,existing M1 point; not matched to N24/N48/N96/N200 except N12
+m_s12000,recommended_next,12000,8,96000,48000,48000,missing,,,,missing,resume from checkpoint-3000; compare to N48 validation
+m_s24000,conditional,24000,8,192000,96000,96000,missing,,,,missing,run only if M1-48 changes claim
+m_s50000,expensive_conditional,50000,8,400000,200000,200000,missing,,,,missing,one full 200k+200k interleaved pass; do not run first

@@ -1,0 +1,10 @@
+run,status,optimizer_steps,batch_size,actual_exposure,target_exposure,mismatch_pct,split,HR@1,NDCG@5,MRR,next_action
+sasrec_s6,existing_low_anchor,6,512,3072,3000,2.4000,test,0.2112775330,0.6011741153,0.4713597651,optional
+sasrec_s12,existing_low_anchor,12,512,6144,6000,2.4000,test,0.2421145374,0.6176512047,0.4930631424,optional
+sasrec_s23,existing_near_12k,23,512,11776,12000,-1.8667,test,0.2699559471,0.6348928207,0.5156622614,run_validation_if_model_exists
+sasrec_s47,existing_near_24k,47,512,24064,24000,0.2667,test,0.2840528634,0.6429537473,0.5261879589,run_validation_if_model_exists
+sasrec_s94,planned_48k,94,512,48128,48000,0.2667,missing,,,,train_eval_if_missing
+sasrec_s188,planned_96k,188,512,96256,96000,0.2667,missing,,,,train_eval_if_missing
+sasrec_s391,planned_200k,391,512,200000,200000,0.0000,missing,,,,train_eval_if_missing
+sasrec_s1500,existing_high_repeated_anchor,1500,512,767424,200000,283.7120,test,0.6088105727,0.8198039644,0.7595506608,report_as_repeated_exposure_anchor
+sasrec_s3000,existing_high_repeated_anchor,3000,512,1534656,200000,667.3280,test,0.6243171806,0.8283562609,0.7708663730,report_as_repeated_exposure_anchor
