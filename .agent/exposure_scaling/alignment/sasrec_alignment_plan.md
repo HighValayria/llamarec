@@ -16,8 +16,8 @@ For `train_examples=200000`, `batch_size=512`:
 
 | target N exposure | SASRec point | actual SASRec exposure | mismatch | status |
 |---:|---|---:|---:|---|
-| 12000 | s23 | 11776 | -1.8667% | existing test metric; validation eval needed if model exists |
-| 24000 | s47 | 24064 | +0.2667% | existing test metric; validation eval needed if model exists |
+| 12000 | s23 | 11776 | -1.8667% | train/eval fresh alignment run |
+| 24000 | s47 | 24064 | +0.2667% | train/eval fresh alignment run |
 | 48000 | s94 | 48128 | +0.2667% | train/eval if not already present on cloud |
 | 96000 | s188 | 96256 | +0.2667% | train/eval if not already present on cloud |
 | 200000 | s391 | 200000 | 0.0000% | train/eval if not already present on cloud |
@@ -35,9 +35,9 @@ They answer a different question: what happens after many repeated passes over t
 
 First SASRec experiment:
 
-1. Inventory cloud model directories for s23/s47/s1500/s3000.
-2. If s23 and s47 model dirs exist, run validation+test evaluation into new alignment output dirs so valid/test are paired under the same protocol.
-3. Train/evaluate s94, s188, and s391 if absent.
+1. Inventory cloud model directories and existing eval outputs.
+2. Train/evaluate fresh s23, s47, s94, s188, and s391 alignment runs so current PopMatch candidates are included in the SASRec item mapping.
+3. Keep existing s1500/s3000 PopMatch eval outputs only as repeated-exposure anchors.
 4. Stop and compare validation-first against N24/N48/N96/N200.
 
 SASRec should run before new M1 LLM training because it is comparatively cheap and immediately clarifies whether N-K0's scaling advantage is LLM-specific or just an exposure artifact.

@@ -3,7 +3,7 @@ N_vs_M1,12000,N12,,,,M1-12,existing_test_known,12000,,,,needs_N12_validation_or_
 N_vs_M1,48000,N48,0.6029955947,0.8200163654,0.7595418502,M1-48,recommended_next,48000,,,,run_M1-48_before_claim
 N_vs_M1,96000,N96,0.6237885463,0.8302923694,0.7732422907,M1-96,conditional,96000,,,,only_if_M1-48_warrants
 N_vs_M1,200000,N200,0.6516299559,0.8431902590,0.7904170338,M1-200,expensive_conditional,200000,,,,not_first_round
-N_vs_SASRec,24000,N24,0.5774449339,0.8067686847,0.7420058737,sasrec_s47,existing_test_validation_needed,24064,,,,need_validation_eval
+N_vs_SASRec,24000,N24,0.5774449339,0.8067686847,0.7420058737,sasrec_s47,fresh_alignment_needed,24064,,,,need_train_eval
 N_vs_SASRec,48000,N48,0.6029955947,0.8200163654,0.7595418502,sasrec_s94,train_eval_needed_if_missing,48128,,,,need_train_eval
 N_vs_SASRec,96000,N96,0.6237885463,0.8302923694,0.7732422907,sasrec_s188,train_eval_needed_if_missing,96256,,,,need_train_eval
 N_vs_SASRec,200000,N200,0.6516299559,0.8431902590,0.7904170338,sasrec_s391,train_eval_needed_if_missing,200000,,,,need_train_eval

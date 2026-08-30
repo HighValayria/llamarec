@@ -26,9 +26,9 @@ cd /root/llamarec && bash .agent/exposure_scaling/alignment/commands/sasrec_comm
 
 Expected content:
 
-- Evaluate existing s23/s47 if model dirs exist.
-- Evaluate high repeated anchors s1500/s3000 if model dirs exist.
-- Train/evaluate s94, s188, s391 if their alignment outputs are absent.
+- Train/evaluate fresh aligned s23/s47/s94/s188/s391 runs.
+- Do not reuse old s23/s47 model dirs for eval-only if their `mappings.json` lacks current candidate/history items.
+- Keep existing s1500/s3000 PopMatch eval metrics as repeated-exposure anchors, not matched-exposure comparators.
 
 Planning estimate: usually much cheaper than LLM jobs; budget roughly 0.5-2 h including evaluation, but the inventory output should be trusted over this estimate.
 

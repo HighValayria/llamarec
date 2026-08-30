@@ -23,6 +23,6 @@ Do not blindly continue single-seed N-K0 beyond 200k. Beyond 200k becomes repeat
 
 ## Next Minimum Work
 
-1. SASRec alignment: evaluate existing s23/s47 on validation if model dirs exist; train/evaluate s94/s188/s391 if missing.
+1. SASRec alignment: train/evaluate fresh s23/s47/s94/s188/s391 so current PopMatch candidates are included in the SASRec mapping.
 2. M1 alignment: run M1-48 from the existing checkpoint-3000, then compare M1 N-interface validation against N48.
 3. Stop after those results and decide whether M1-96 is worth the cost.

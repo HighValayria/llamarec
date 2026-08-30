@@ -17,6 +17,8 @@ inventory() {
     outputs/baselines/movielens-1m/sample_efficiency_sasrec_s47 \
     outputs/baselines/movielens-1m/sasrec_fixed_popmatch_k5_200k_s1500 \
     outputs/baselines/movielens-1m/sasrec_fixed_popmatch_k5_200k_s3000 \
+    outputs/baselines/movielens-1m/alignment_sasrec_s23 \
+    outputs/baselines/movielens-1m/alignment_sasrec_s47 \
     outputs/baselines/movielens-1m/alignment_sasrec_s94 \
     outputs/baselines/movielens-1m/alignment_sasrec_s188 \
     outputs/baselines/movielens-1m/alignment_sasrec_s391
@@ -81,10 +83,8 @@ train_eval_point() {
 minimal() {
   require_compute_approval
   inventory
-  eval_existing_or_warn s23 outputs/baselines/movielens-1m/sasrec_exp_match_k5_popmatch_seed42_s23 outputs/baselines/movielens-1m/alignment_sasrec_s23_popmatch_eval
-  eval_existing_or_warn s47 outputs/baselines/movielens-1m/sample_efficiency_sasrec_s47 outputs/baselines/movielens-1m/alignment_sasrec_s47_popmatch_eval
-  eval_existing_or_warn s1500 outputs/baselines/movielens-1m/sasrec_fixed_popmatch_k5_200k_s1500 outputs/baselines/movielens-1m/alignment_sasrec_s1500_popmatch_eval
-  eval_existing_or_warn s3000 outputs/baselines/movielens-1m/sasrec_fixed_popmatch_k5_200k_s3000 outputs/baselines/movielens-1m/alignment_sasrec_s3000_popmatch_eval
+  train_eval_point s23 23
+  train_eval_point s47 47
   train_eval_point s94 94
   train_eval_point s188 188
   train_eval_point s391 391
