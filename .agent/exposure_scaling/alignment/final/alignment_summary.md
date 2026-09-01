@@ -1,6 +1,6 @@
 # Alignment Summary
 
-Date: 2026-08-30
+Date: 2026-09-01
 
 ## Current Status
 
@@ -17,16 +17,17 @@ Y-K0 does not improve from 24k to 48k, so Y scaling is stopped.
 
 ## SASRec Matched-Exposure Result
 
-Fresh SASRec alignment runs are complete for s23/s47/s94/s188/s391. Validation-first matched comparisons show N-K0 wins at every matched point:
+Fresh SASRec alignment runs are complete for s23/s47/s94/s188/s391. Validation-first matched comparisons show N-K0 wins at every matched point. The gap narrows by 200k but remains large.
+
+## M1 Matched-Exposure Result
+
+M1-48 validation-only PopMatch evaluation is complete. At matched 48k N-task exposure, N48 still beats M1-48, but only narrowly:
 
 | pair | HR@1 gap | NDCG@5 gap | MRR gap |
 |---|---:|---:|---:|
-| N24 - SASRec s47 | +0.3043171806 | +0.1703542950 | +0.2244023495 |
-| N48 - SASRec s94 | +0.3099559471 | +0.1719794261 | +0.2266431718 |
-| N96 - SASRec s188 | +0.2956828194 | +0.1586617467 | +0.2096328928 |
-| N200 - SASRec s391 | +0.1767400881 | +0.0870848151 | +0.1157268722 |
+| N48 - M1-48 | +0.0088105727 | +0.0046919704 | +0.0062026432 |
 
-The gap narrows by 200k but remains large. SASRec s1500/s3000 remain repeated-exposure anchors, not fair N200 comparators.
+This preserves the validation-first direction `N-K0 > M1` at 48k, but weakens any broad claim that N is decisively better than M1 at high matched exposure. M1-96 is now the useful conditional next point if the claim needs high-exposure alignment.
 
 ## Main Implication
 
@@ -36,5 +37,5 @@ Do not blindly continue single-seed N-K0 beyond 200k. Beyond 200k becomes repeat
 
 ## Next Minimum Work
 
-1. M1 alignment: run M1-48 from the existing checkpoint-3000, then compare M1 N-interface validation against N48.
-2. Stop after M1-48 and decide whether M1-96 is worth the cost.
+1. Decide whether the paper/claim needs M1-96. If yes, resume M1 from checkpoint-12000 to checkpoint-24000 and evaluate validation first.
+2. Do not run M1-200 unless M1-96 shows a possible crossover or the final argument specifically needs a 200k M1 endpoint.

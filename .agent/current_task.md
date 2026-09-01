@@ -27,11 +27,10 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 
 ## Evidence Sources
 
-- Cloud user-provided logs and metric tables for Y24/Y48, N24/N48/N96/N200, and SASRec s23/s47/s94/s188/s391.
+- Cloud user-provided logs and metric tables for Y24/Y48, N24/N48/N96/N200, SASRec s23/s47/s94/s188/s391, and M1-48.
 - `.agent/exposure_scaling/exposure_accounting.json`.
 - `.agent/exposure_scaling/alignment/` artifacts.
 - Current code in `src/train/train_m.py`, `src/train/multitask_dataset.py`, `src/inference/evaluate_m_adapter.py`, `src/baselines/sasrec.py`, and `src/analysis/training_budget_audit.py`.
-
 
 ## Related Code
 
@@ -46,41 +45,28 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 - `configs/y_local_model.yaml`
 - `configs/n_local_model.yaml`
 - `configs/m_local_model.yaml`
+
 ## Current Progress
 
-- Confirmed the earlier 12k exposure inference: 1500 LLM optimizer steps times effective batch 8 equals 12000 examples.
 - Completed Y scaling through Y48 and stopped Y because validation does not improve meaningfully.
 - Completed N scaling through N200. Validation keeps improving: N24 HR@1 0.5774, N48 0.6030, N96 0.6238, N200 0.6516.
 - Confirmed M1 existing point is M1-12: 3000 steps, 12000 Y exposure, 12000 N exposure, total 24000.
-- Confirmed M1 matched N-task exposure targets: M1-48 = 12000 steps, M1-96 = 24000 steps, M1-200 = 50000 steps.
 - Completed fresh SASRec alignment runs for s23/s47/s94/s188/s391.
-- Validation-first matched comparisons show N-K0 beats SASRec at 24k/48k/96k/200k; the gap narrows at 200k but remains large.
+- Completed M1-48 validation-only PopMatch evaluation.
+- Validation-first matched comparisons show N-K0 beats SASRec at 24k/48k/96k/200k.
+- Validation-first matched comparison also shows N48 beats M1-48, but the gap is small.
 
 ## Verification Results
 
-- Y-K0 validation:
-  - Y24 HR@1 0.2156828194, NDCG@5 0.6002715889, MRR 0.4704082232.
-  - Y48 HR@1 0.2165638767, NDCG@5 0.5994649797, MRR 0.4694772394.
-- N-K0 validation:
-  - N24 HR@1 0.5774449339, NDCG@5 0.8067686847, MRR 0.7420058737.
-  - N48 HR@1 0.6029955947, NDCG@5 0.8200163654, MRR 0.7595418502.
-  - N96 HR@1 0.6237885463, NDCG@5 0.8302923694, MRR 0.7732422907.
-  - N200 HR@1 0.6516299559, NDCG@5 0.8431902590, MRR 0.7904170338.
-- SASRec validation:
-  - S47 HR@1 0.2731277533, NDCG@5 0.6364143897, MRR 0.5176035242.
-  - S94 HR@1 0.2930396476, NDCG@5 0.6480369393, MRR 0.5328986784.
-  - S188 HR@1 0.3281057269, NDCG@5 0.6716306227, MRR 0.5636093979.
-  - S391 HR@1 0.4748898678, NDCG@5 0.7561054438, MRR 0.6746901615.
-- N minus SASRec validation gaps:
-  - N24-S47: HR@1 +0.3043171806, NDCG@5 +0.1703542950, MRR +0.2244023495.
-  - N48-S94: HR@1 +0.3099559471, NDCG@5 +0.1719794261, MRR +0.2266431718.
-  - N96-S188: HR@1 +0.2956828194, NDCG@5 +0.1586617467, MRR +0.2096328928.
-  - N200-S391: HR@1 +0.1767400881, NDCG@5 +0.0870848151, MRR +0.1157268722.
+- N48 validation: HR@1 0.6029955947, NDCG@5 0.8200163654, MRR 0.7595418502.
+- M1-48 validation: HR@1 0.5941850220, NDCG@5 0.8153243950, MRR 0.7533392070.
+- N48 minus M1-48 validation gaps: HR@1 +0.0088105727, NDCG@5 +0.0046919704, MRR +0.0062026432.
+- SASRec matched validation gaps remain positive for N-K0 at 24k/48k/96k/200k.
 
 ## Unresolved Questions
 
-- How close is M1-48 to N48 under validation-first comparison?
-- Should M1-96 be run after M1-48, or does M1-48 already settle the claim?
+- Does M1-96 close or reverse the small N-vs-M1 gap seen at 48k?
+- Is M1-96 worth the GPU cost for the final claim, or should the paper report the 48k result as a narrowed but still positive gap?
 
 ## Pending Wiki Sync
 

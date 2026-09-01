@@ -1,7 +1,7 @@
 comparison,target_n_exposure,left_run,left_valid_HR@1,left_valid_NDCG@5,left_valid_MRR,right_run,right_status,right_actual_exposure,right_valid_HR@1,right_valid_NDCG@5,right_valid_MRR,gap_HR@1,gap_NDCG@5,gap_MRR,decision_status
 N_vs_M1,12000,N12,,,,M1-12,existing_test_known,12000,,,,,,,needs_N12_validation_or_skip
-N_vs_M1,48000,N48,0.6029955947,0.8200163654,0.7595418502,M1-48,recommended_next,48000,,,,,,,run_M1-48_before_claim
-N_vs_M1,96000,N96,0.6237885463,0.8302923694,0.7732422907,M1-96,conditional,96000,,,,,,,only_if_M1-48_warrants
+N_vs_M1,48000,N48,0.6029955947,0.8200163654,0.7595418502,M1-48,complete_validation_only,48000,0.5941850220,0.8153243950,0.7533392070,0.0088105727,0.0046919704,0.0062026432,N_wins_validation_but_gap_small
+N_vs_M1,96000,N96,0.6237885463,0.8302923694,0.7732422907,M1-96,conditional_next,96000,,,,,,,run_if_claim_requires_high_exposure_alignment
 N_vs_M1,200000,N200,0.6516299559,0.8431902590,0.7904170338,M1-200,expensive_conditional,200000,,,,,,,not_first_round
 N_vs_SASRec,24000,N24,0.5774449339,0.8067686847,0.7420058737,sasrec_s47,complete,24064,0.2731277533,0.6364143897,0.5176035242,0.3043171806,0.1703542950,0.2244023495,N_wins_validation
 N_vs_SASRec,48000,N48,0.6029955947,0.8200163654,0.7595418502,sasrec_s94,complete,48128,0.2930396476,0.6480369393,0.5328986784,0.3099559471,0.1719794261,0.2266431718,N_wins_validation
