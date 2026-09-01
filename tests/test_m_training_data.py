@@ -1,5 +1,7 @@
 """STEP 7 测试：M-K0 多任务训练数据编码。"""
 
+import sys
+
 from src.train.multitask_dataset import (
     MultitaskTrainingDataset,
     count_ratio_examples,
@@ -10,6 +12,7 @@ from src.train.train_m import (
     _resolve_task_ratio,
     _select_train_sampler_dataset,
     _should_run_per_task_validation,
+    parse_args,
 )
 from src.train.train_y import load_training_config
 
@@ -266,3 +269,11 @@ def test_per_task_validation_only_runs_for_default_mixed_eval():
     assert _should_run_per_task_validation(None, "eval") is True
     assert _should_run_per_task_validation(object(), "eval") is False
     assert _should_run_per_task_validation(None, "eval_y") is False
+
+
+def test_parse_args_supports_disabling_internal_eval(monkeypatch):
+    monkeypatch.setattr(sys, "argv", ["train_m.py", "--disable-internal-eval"])
+
+    args = parse_args()
+
+    assert args.disable_internal_eval is True

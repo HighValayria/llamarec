@@ -28,7 +28,7 @@ Based on recent LLM training logs on the cloud GPU, use a conservative 5-8 secon
 | job | additional steps | rough train time | eval time note | total planning estimate |
 |---|---:|---:|---|---:|
 | M1-48 from checkpoint-3000 | 9000 | 12.5-20 h | M1 evaluates both Y and N interfaces; budget several hours | 16-24 h |
-| M1-96 from M1-48 | 12000 | 17-27 h | only if M1-48 warrants it | 22-34 h |
+| M1-96 from M1-48 | 12000 | 16.5-19 h with internal eval disabled | validation-only PopMatch after save | 18-24 h |
 | M1-200 from M1-96 | 26000 | 36-58 h | expensive final check | 42-68 h |
 | M1-200 direct from checkpoint-3000 | 47000 | 65-104 h | not recommended first | 75-115 h |
 
@@ -38,5 +38,5 @@ Use validation metrics first.
 
 - Compare N48 validation against M1-48 validation on the N interface.
 - M1 test metrics are report-only after the validation decision is fixed.
-- If M1-48 remains clearly behind N48, do not run M1-96/M1-200 by default.
-- If M1-48 narrows the gap enough to affect the claim, then run M1-96 next.
+- M1-48 only narrowly trails N48 on validation, so M1-96 is now justified if the paper needs the high-exposure M1 claim.
+- M1-96 should disable Trainer internal eval and run validation-only PopMatch after adapter save.

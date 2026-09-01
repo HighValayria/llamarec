@@ -37,5 +37,5 @@ Do not blindly continue single-seed N-K0 beyond 200k. Beyond 200k becomes repeat
 
 ## Next Minimum Work
 
-1. Decide whether the paper/claim needs M1-96. If yes, resume M1 from checkpoint-12000 to checkpoint-24000 and evaluate validation first.
+1. Run M1-96 from checkpoint-12000 with Trainer internal eval disabled, then run validation-only PopMatch.
 2. Do not run M1-200 unless M1-96 shows a possible crossover or the final argument specifically needs a 200k M1 endpoint.

@@ -55,3 +55,14 @@ Latest SASRec alignment log:
 ```bash
 cd /root/llamarec && LOG=$(ls -t logs/exposure_scaling/sasrec_alignment_minimal_*.log 2>/dev/null | head -n 1); echo "LOG=$LOG"; test -n "$LOG" && tail -n 80 -f "$LOG"
 ```
+## 6. Run M1-96 With Internal Eval Disabled
+
+This resumes from `exposure_m1_s12000/checkpoints/checkpoint-12000`, trains to step 24000, saves the adapter, then runs validation-only PopMatch.
+
+```bash
+cd /root/llamarec && git pull --ff-only
+cd /root/llamarec && bash -n .agent/exposure_scaling/alignment/commands/m1_commands.sh
+cd /root/llamarec && bash .agent/exposure_scaling/alignment/commands/m1_commands.sh launch_m1_96
+```
+
+Planning estimate after disabling internal eval: 18-24 h total.

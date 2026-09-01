@@ -53,6 +53,7 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 - Confirmed M1 existing point is M1-12: 3000 steps, 12000 Y exposure, 12000 N exposure, total 24000.
 - Completed fresh SASRec alignment runs for s23/s47/s94/s188/s391.
 - Completed M1-48 validation-only PopMatch evaluation.
+- Preparing M1-96 continuation with Trainer internal eval disabled; only validation-only PopMatch should run after adapter save.
 - Validation-first matched comparisons show N-K0 beats SASRec at 24k/48k/96k/200k.
 - Validation-first matched comparison also shows N48 beats M1-48, but the gap is small.
 
@@ -66,7 +67,7 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 ## Unresolved Questions
 
 - Does M1-96 close or reverse the small N-vs-M1 gap seen at 48k?
-- Is M1-96 worth the GPU cost for the final claim, or should the paper report the 48k result as a narrowed but still positive gap?
+- After M1-96 validation, should M1-200 be skipped or used as an expensive endpoint?
 
 ## Pending Wiki Sync
 
