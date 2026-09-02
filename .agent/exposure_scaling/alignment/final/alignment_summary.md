@@ -13,7 +13,7 @@ N-K0 has completed validation-first scaling through 200k exposure and keeps impr
 | N96 | 96000 | 0.6237885463 | 0.8302923694 | 0.7732422907 |
 | N200 | 200000 | 0.6516299559 | 0.8431902590 | 0.7904170338 |
 
-Y-K0 does not improve from 24k to 48k, so Y scaling is stopped.
+Y-K0 does not improve from 24k to 48k under the Y-as-ranker PopMatch ranking view. This is not by itself enough to prove Y-native binary convergence; binary AUC/F1/Accuracy should be summarized before deciding whether a pure Y96 run is needed.
 
 ## SASRec Matched-Exposure Result
 
@@ -30,6 +30,10 @@ M1-48 and M1-96 validation-only PopMatch evaluations are complete. At matched 48
 
 This preserves the raw validation direction `N-K0 > M1` at 48k and 96k, but the 96k result should be treated as practical parity, not a decisive N advantage.
 
+
+## Evaluation Coverage Note
+
+The current exposure-scaling evidence is strongest for PopMatch-k5 candidate ranking. That is native for N-K0, M-N, and SASRec, but it is only a bridge metric for Y-K0. For Y-native claims, report binary AUC/F1/Accuracy from Y and M-Y metrics. Use `python .agent/exposure_scaling/alignment/commands/eval_coverage_summary.py` on the cloud machine to expose available binary/ranking metrics and missing test coverage.
 ## Main Implication
 
 Do not claim N-K0 has converged. It has not converged through 200k under the validation-first criterion.

@@ -1,5 +1,7 @@
 """STEP 5 测试：Y-K0 训练数据编码。"""
 
+import sys
+
 from src.train.preference_dataset import (
     IGNORE_INDEX,
     PreferenceTrainingDataset,
@@ -10,6 +12,7 @@ from src.train.train_y import (
     _normalize_sample_limit,
     _normalize_token_ids,
     load_training_config,
+    parse_args,
 )
 
 
@@ -130,3 +133,11 @@ def test_y_reload_token_ids_accept_single_batched_return():
 def test_y_training_negative_sample_limit_means_full_dataset():
     assert _normalize_sample_limit(-1) is None
     assert _normalize_sample_limit(1000) == 1000
+
+
+def test_parse_args_supports_disabling_y_internal_eval(monkeypatch):
+    monkeypatch.setattr(sys, "argv", ["train_y.py", "--disable-internal-eval"])
+
+    args = parse_args()
+
+    assert args.disable_internal_eval is True

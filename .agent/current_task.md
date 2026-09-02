@@ -23,6 +23,7 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 - For LLM runs, effective exposure is `per_device_train_batch_size * gradient_accumulation_steps * world_size * optimizer_steps`.
 - Current formal LLM runs use `per_device_train_batch_size=1`, `gradient_accumulation_steps=8`, `world_size=1`, so effective batch is 8 examples per optimizer step.
 - M1 uses 1:1 Y/N task sampling; with the current effective batch 8, each optimizer step consumes 4 Y and 4 N examples.
+- Y-native convergence must be judged with binary AUC/F1/Accuracy; PopMatch ranking for Y is a Y-as-ranker bridge metric, not the native Y objective.
 - SASRec aligned accounting uses batch size 512, no gradient accumulation, and processed-example exposure.
 
 ## Evidence Sources
@@ -48,7 +49,7 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 
 ## Current Progress
 
-- Completed Y scaling through Y48 and stopped Y because validation does not improve meaningfully.
+- Completed Y scaling through Y48. The stop decision is currently supported for Y-as-ranker PopMatch ranking only; Y-native binary AUC/F1/Accuracy must be inspected before deciding whether to skip Y96.
 - Completed N scaling through N200. Validation keeps improving: N24 HR@1 0.5774, N48 0.6030, N96 0.6238, N200 0.6516.
 - Confirmed M1 existing point is M1-12: 3000 steps, 12000 Y exposure, 12000 N exposure, total 24000.
 - Completed fresh SASRec alignment runs for s23/s47/s94/s188/s391.
@@ -68,6 +69,7 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 
 ## Unresolved Questions
 
+- Do Y24/Y48 native binary validation metrics show enough improvement to justify a pure Y96 continuation?
 - Should M1-200 be skipped as too expensive, or run as an endpoint/crossover check?
 - Is multi-seed validation needed for the near-tie N96 vs M1-96 result?
 
@@ -76,6 +78,7 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 - Potential report update: record validation-first Y/N exposure scaling outcomes and the decision to stop blind N single-seed scaling beyond 200k.
 - Potential guide update: document cloud-local model path/offline preflight practice for LlamaRec training launchers.
 - Potential report update after approval and completion: add M1/SASRec matched-exposure alignment findings.
+- Potential report update: clarify that Y scaling was only paused by Y-as-ranker PopMatch evidence until Y-native binary metrics are summarized.
 
 ## Invalidating Conditions
 

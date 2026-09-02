@@ -66,3 +66,26 @@ cd /root/llamarec && bash .agent/exposure_scaling/alignment/commands/m1_commands
 ```
 
 Planning estimate after disabling internal eval: 18-24 h total.
+
+## 7. Summarize Evaluation Coverage Before Y96
+
+This is CPU-only and reads existing metrics JSON files. Use it before deciding whether pure Y96 is worth the GPU cost.
+
+```bash
+cd /root/llamarec && git pull --ff-only
+cd /root/llamarec && python .agent/exposure_scaling/alignment/commands/eval_coverage_summary.py
+```
+
+Decision rule: if Y24->Y48 native binary validation AUC/F1/Accuracy still rises meaningfully, run Y96; if binary is flat and Y-as-ranker ranking is flat, skip Y96.
+
+## 8. Conditional Pure Y96 Continuation
+
+This resumes pure Y-K0 from `exposure_y_s6000/checkpoints/checkpoint-6000`, disables Trainer internal eval, trains to 12000 steps, then runs validation-only PopMatch evaluation.
+
+```bash
+cd /root/llamarec && git pull --ff-only
+cd /root/llamarec && bash .agent/exposure_scaling/alignment/commands/y_commands.sh summary
+cd /root/llamarec && bash .agent/exposure_scaling/alignment/commands/y_commands.sh launch_y96
+```
+
+Planning estimate: roughly half of M1-48->M1-96 continuation because it adds 6000 optimizer steps instead of 12000, plus about 25-35 minutes for validation-only Y evaluation. On the observed 24 GB class GPU speed, budget about 9-13 hours total.
