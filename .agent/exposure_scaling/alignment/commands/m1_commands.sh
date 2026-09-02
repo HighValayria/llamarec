@@ -13,6 +13,8 @@ VALID_CAND=${VALID_CAND:-data/candidates/movielens-1m/variants/k5_popmatch_seed4
 TEST_CAND=${TEST_CAND:-data/candidates/movielens-1m/variants/k5_popmatch_seed42/test.jsonl}
 M1_12_CKPT=${M1_12_CKPT:-outputs/m/movielens-1m/diag_m1_1m_m_200k_3000/checkpoints/checkpoint-3000}
 M1_48_CKPT=${M1_48_CKPT:-outputs/m/movielens-1m/exposure_m1_s12000/checkpoints/checkpoint-12000}
+M1_48_RUN=${M1_48_RUN:-outputs/m/movielens-1m/exposure_m1_s12000}
+M1_96_RUN=${M1_96_RUN:-outputs/m/movielens-1m/exposure_m1_s24000}
 
 require_resume_state() {
   local ckpt="$1"
@@ -102,6 +104,60 @@ run_m1_96() {
   echo "M1-96 train/validation eval finished. Compare validation against N96 first; test is report-only and has not been run."
 }
 
+
+run_m1_test_only() {
+  require_gpu_approval
+  if [[ "${RUN_M1_TESTS:-0}" != "1" ]]; then
+    echo "Refusing to run report-only test eval unless RUN_M1_TESTS=1 is set."
+    echo "Use: bash $0 launch_m1_tests"
+    exit 2
+  fi
+  if [[ "${INCLUDE_M1_48_TEST:-1}" == "1" ]]; then
+    if [[ ! -d "$M1_48_RUN/adapter" ]]; then
+      echo "ERROR: missing adapter $M1_48_RUN/adapter" >&2
+      exit 2
+    fi
+    python -m src.inference.evaluate_m_adapter \
+      --config configs/m_local_model.yaml \
+      --dataset movielens-1m \
+      --adapter-dir "$M1_48_RUN/adapter" \
+      --mode real \
+      --splits test \
+      --batch-size 1 \
+      --test-candidates "$TEST_CAND" \
+      --output-dir "$M1_48_RUN/popmatch_eval"
+  fi
+
+  if [[ "${INCLUDE_M1_96_TEST:-1}" == "1" ]]; then
+    if [[ ! -d "$M1_96_RUN/adapter" ]]; then
+      echo "ERROR: missing adapter $M1_96_RUN/adapter" >&2
+      exit 2
+    fi
+    python -m src.inference.evaluate_m_adapter \
+      --config configs/m_local_model.yaml \
+      --dataset movielens-1m \
+      --adapter-dir "$M1_96_RUN/adapter" \
+      --mode real \
+      --splits test \
+      --batch-size 1 \
+      --test-candidates "$TEST_CAND" \
+      --output-dir "$M1_96_RUN/popmatch_eval"
+  fi
+
+  echo "M1 report-only test eval finished. Do not use these metrics to change training decisions."
+}
+
+launch_m1_tests() {
+  mkdir -p logs/exposure_scaling
+  local ts log
+  ts=$(date +%Y%m%d_%H%M%S)
+  log="logs/exposure_scaling/m1_report_only_tests_${ts}.log"
+  RUN_M1_COMMANDS=1 RUN_M1_TESTS=1 nohup bash "$0" m1_tests > "$log" 2>&1 &
+  echo $! > "$log.pid"
+  echo "LOG=$log PID=$(cat "$log.pid")"
+  echo "tailing log; press Ctrl-C to stop watching without stopping evaluation"
+  tail -n 80 -f "$log"
+}
 launch_m1_96() {
   mkdir -p logs/exposure_scaling
   local ts log
@@ -128,13 +184,17 @@ launch_m1_48() {
 case "${1:-usage}" in
   m1_48) run_m1_48 ;;
   m1_96) run_m1_96 ;;
+  m1_tests) run_m1_test_only ;;
   launch_m1_48) launch_m1_48 ;;
   launch_m1_96) launch_m1_96 ;;
+  launch_m1_tests) launch_m1_tests ;;
   usage|*)
     echo "Usage:"
     echo "  bash $0 launch_m1_48"
     echo "  bash $0 launch_m1_96"
+    echo "  bash $0 launch_m1_tests"
     echo "  RUN_M1_COMMANDS=1 bash $0 m1_48"
     echo "  RUN_M1_COMMANDS=1 bash $0 m1_96"
+    echo "  RUN_M1_COMMANDS=1 RUN_M1_TESTS=1 bash $0 m1_tests"
     ;;
 esac

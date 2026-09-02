@@ -300,4 +300,3 @@ def _print_decision_hints(loaded: dict[tuple[str, str], dict[str, Any] | None]) 
 
 if __name__ == "__main__":
     main()
-

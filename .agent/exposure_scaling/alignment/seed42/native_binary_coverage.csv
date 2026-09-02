@@ -1,0 +1,11 @@
+run,family,exposure,split,samples,AUC,F1,Accuracy,status,notes
+Y24,Y-K0,24000,valid,12381,0.7761274819,0.7791746032,0.7190856958,complete,Y-native binary
+Y24,Y-K0,24000,test,11544,0.7784561583,0.7793987922,0.7183818434,complete,report-only
+Y48,Y-K0,48000,valid,12381,0.7816111073,0.7848403087,0.7230433729,complete,Y-native binary
+Y48,Y-K0,48000,test,11544,0.7804671174,0.7815520945,0.7181219681,complete,report-only
+Y96,Y-K0,96000,valid,,,,,missing,conditional pure-Y continuation
+Y96,Y-K0,96000,test,,,,,missing,run only after validation decision freezes
+M1-48,M1,Y48k+N48k,valid,12381,0.7813698559,0.7496657048,0.7127049511,complete,M-Y binary
+M1-48,M1,Y48k+N48k,test,,,,,missing,test-only eval needed for final reporting
+M1-96,M1,Y96k+N96k,valid,12381,0.7868352749,0.7838427948,0.7281318149,complete,M-Y binary
+M1-96,M1,Y96k+N96k,test,,,,,missing,test-only eval needed for final reporting

@@ -89,3 +89,14 @@ cd /root/llamarec && bash .agent/exposure_scaling/alignment/commands/y_commands.
 ```
 
 Planning estimate: roughly half of M1-48->M1-96 continuation because it adds 6000 optimizer steps instead of 12000, plus about 25-35 minutes for validation-only Y evaluation. On the observed 24 GB class GPU speed, budget about 9-13 hours total.
+
+## 9. Report-Only M1 Test Evaluation
+
+Run this only after validation-based training decisions are frozen. It fills the missing M1-48 and M1-96 test metrics without retraining.
+
+```bash
+cd /root/llamarec && git pull --ff-only
+cd /root/llamarec && bash .agent/exposure_scaling/alignment/commands/m1_commands.sh launch_m1_tests
+```
+
+Planning estimate: about 30 minutes for M1-48 test plus 30 minutes for M1-96 test on the observed 24 GB class GPU, because each test split has 11544 binary prompts and 5675 ranking candidate records.

@@ -49,17 +49,20 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 
 ## Current Progress
 
-- Completed Y scaling through Y48. The stop decision is currently supported for Y-as-ranker PopMatch ranking only; Y-native binary AUC/F1/Accuracy must be inspected before deciding whether to skip Y96.
+- Completed Y scaling through Y48. Y-as-ranker PopMatch ranking is flat from Y24 to Y48, but Y-native binary validation still rises slightly, so pure Y96 is conditional rather than dismissed.
 - Completed N scaling through N200. Validation keeps improving: N24 HR@1 0.5774, N48 0.6030, N96 0.6238, N200 0.6516.
 - Confirmed M1 existing point is M1-12: 3000 steps, 12000 Y exposure, 12000 N exposure, total 24000.
 - Completed fresh SASRec alignment runs for s23/s47/s94/s188/s391.
-- Completed M1-48 and M1-96 validation-only PopMatch evaluations.
+- Completed M1-48 and M1-96 validation-only PopMatch evaluations. M1 report-only test metrics are still missing and should be run only after validation decisions are frozen.
 - Validation-first matched comparisons show N-K0 beats SASRec at 24k/48k/96k/200k.
 - Validation-first matched M1 comparisons show N48 narrowly beats M1-48, and N96 is effectively tied with M1-96 despite a tiny positive numerical gap for N.
 
 ## Verification Results
 
-- N48 validation: HR@1 0.6029955947, NDCG@5 0.8200163654, MRR 0.7595418502.
+- Y24 native binary validation: AUC 0.7761274819, F1 0.7791746032, Accuracy 0.7190856958.
+- Y48 native binary validation: AUC 0.7816111073, F1 0.7848403087, Accuracy 0.7230433729.
+- Y24->Y48 native binary validation deltas: AUC +0.0054836254, F1 +0.0056657055, Accuracy +0.0039576771.
+- M1-96 native M-Y validation: AUC 0.7868352749, F1 0.7838427948, Accuracy 0.7281318149.- N48 validation: HR@1 0.6029955947, NDCG@5 0.8200163654, MRR 0.7595418502.
 - M1-48 validation: HR@1 0.5941850220, NDCG@5 0.8153243950, MRR 0.7533392070.
 - N48 minus M1-48 validation gaps: HR@1 +0.0088105727, NDCG@5 +0.0046919704, MRR +0.0062026432.
 - N96 validation: HR@1 0.6237885463, NDCG@5 0.8302923694, MRR 0.7732422907.
@@ -69,7 +72,7 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 
 ## Unresolved Questions
 
-- Do Y24/Y48 native binary validation metrics show enough improvement to justify a pure Y96 continuation?
+- Should pure Y96 be run for fair Y-native comparison against M1-96? Current evidence supports it only conditionally: Y-native binary rises slightly, while Y-as-ranker ranking is flat.
 - Should M1-200 be skipped as too expensive, or run as an endpoint/crossover check?
 - Is multi-seed validation needed for the near-tie N96 vs M1-96 result?
 
