@@ -84,10 +84,15 @@ def main() -> None:
 
     binary_frames: dict[str, list[dict[str, Any]]] = {}
     for split in ("valid", "test"):
-        rows, status = build_binary_predictions(paths, split, ctx)
-        binary_frames[split] = rows
         name = f"binary_predictions_y96_m96_{split}.csv"
-        write_csv(out / name, rows)
+        target = out / name
+        if args.reuse_existing and csv_has_data(target):
+            rows = read_csv(target)
+            status = "OK: reused existing artifact"
+        else:
+            rows, status = build_binary_predictions(paths, split, ctx)
+            write_csv(target, rows)
+        binary_frames[split] = rows
         manifest.append(status_row(name, status, len(rows)))
 
     binary_boot = binary_bootstrap(binary_frames, args.bootstrap_replicates)
@@ -109,10 +114,15 @@ def main() -> None:
     ranking_frames: dict[tuple[str, str], list[dict[str, Any]]] = {}
     for variant in ("k5", "k20", "k50"):
         for split in ("valid", "test"):
-            rows, status = build_ranking_predictions(paths, variant, split, ctx)
-            ranking_frames[(variant, split)] = rows
             name = f"ranking_predictions_{variant}_{split}.csv"
-            write_csv(out / name, rows)
+            target = out / name
+            if args.reuse_existing and csv_has_data(target):
+                rows = read_csv(target)
+                status = "OK: reused existing artifact"
+            else:
+                rows, status = build_ranking_predictions(paths, variant, split, ctx)
+                write_csv(target, rows)
+            ranking_frames[(variant, split)] = rows
             manifest.append(status_row(name, status, len(rows)))
 
     rank_boot = ranking_bootstrap(ranking_frames, args.bootstrap_replicates)
@@ -168,6 +178,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--root", default=".")
     p.add_argument("--output-dir", default=".agent/exposure_scaling/analysis_handoff")
     p.add_argument("--bootstrap-replicates", type=int, default=DEFAULT_BOOTSTRAPS)
+    p.add_argument("--reuse-existing", action="store_true", help="reuse existing non-MISSING prediction CSVs after an interrupted run")
     return p.parse_args()
 
 
@@ -1066,6 +1077,25 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         for r in rows:
             w.writerow(r)
 
+
+
+def read_csv(path: Path) -> list[dict[str, Any]]:
+    if not path.exists() or not csv_has_data(path):
+        return []
+    with path.open("r", encoding="utf-8", newline="") as f:
+        return list(csv.DictReader(f))
+
+
+def csv_has_data(path: Path) -> bool:
+    if not path.exists() or path.stat().st_size == 0:
+        return False
+    with path.open("r", encoding="utf-8", newline="") as f:
+        reader = csv.reader(f)
+        header = next(reader, None)
+        first = next(reader, None)
+    if not header or not first:
+        return False
+    return not (header == ["status"] and first and first[0] == "MISSING")
 
 def write_text(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
