@@ -1,6 +1,6 @@
 # Alignment Summary
 
-Date: 2026-09-01
+Date: 2026-09-02
 
 ## Current Status
 
@@ -21,21 +21,22 @@ Fresh SASRec alignment runs are complete for s23/s47/s94/s188/s391. Validation-f
 
 ## M1 Matched-Exposure Result
 
-M1-48 validation-only PopMatch evaluation is complete. At matched 48k N-task exposure, N48 still beats M1-48, but only narrowly:
+M1-48 and M1-96 validation-only PopMatch evaluations are complete. At matched 48k N-task exposure, N48 still beats M1-48, but narrowly. At matched 96k N-task exposure, N96 only numerically beats M1-96 by a negligible margin:
 
 | pair | HR@1 gap | NDCG@5 gap | MRR gap |
 |---|---:|---:|---:|
 | N48 - M1-48 | +0.0088105727 | +0.0046919704 | +0.0062026432 |
+| N96 - M1-96 | +0.0003524229 | +0.0011520935 | +0.0014889868 |
 
-This preserves the validation-first direction `N-K0 > M1` at 48k, but weakens any broad claim that N is decisively better than M1 at high matched exposure. M1-96 is now the useful conditional next point if the claim needs high-exposure alignment.
+This preserves the raw validation direction `N-K0 > M1` at 48k and 96k, but the 96k result should be treated as practical parity, not a decisive N advantage.
 
 ## Main Implication
 
 Do not claim N-K0 has converged. It has not converged through 200k under the validation-first criterion.
 
-Do not blindly continue single-seed N-K0 beyond 200k. Beyond 200k becomes repeated-pool or multi-epoch exposure and should be framed as a separate question.
+Do not make a strong claim that N-K0 decisively beats M1 once matched exposure is increased. The defensible claim is that M1 closes the gap by 96k and is effectively tied with N-K0 under seed42 validation.
 
 ## Next Minimum Work
 
-1. Run M1-96 from checkpoint-12000 with Trainer internal eval disabled, then run validation-only PopMatch.
-2. Do not run M1-200 unless M1-96 shows a possible crossover or the final argument specifically needs a 200k M1 endpoint.
+1. Stop M1 scaling here unless a 200k M1 endpoint is essential for the final paper claim.
+2. If M1-200 is run, treat it as an expensive endpoint/crossover check rather than a default continuation.

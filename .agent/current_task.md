@@ -27,7 +27,7 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 
 ## Evidence Sources
 
-- Cloud user-provided logs and metric tables for Y24/Y48, N24/N48/N96/N200, SASRec s23/s47/s94/s188/s391, and M1-48.
+- Cloud user-provided logs and metric tables for Y24/Y48, N24/N48/N96/N200, SASRec s23/s47/s94/s188/s391, M1-48, and M1-96.
 - `.agent/exposure_scaling/exposure_accounting.json`.
 - `.agent/exposure_scaling/alignment/` artifacts.
 - Current code in `src/train/train_m.py`, `src/train/multitask_dataset.py`, `src/inference/evaluate_m_adapter.py`, `src/baselines/sasrec.py`, and `src/analysis/training_budget_audit.py`.
@@ -52,22 +52,24 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 - Completed N scaling through N200. Validation keeps improving: N24 HR@1 0.5774, N48 0.6030, N96 0.6238, N200 0.6516.
 - Confirmed M1 existing point is M1-12: 3000 steps, 12000 Y exposure, 12000 N exposure, total 24000.
 - Completed fresh SASRec alignment runs for s23/s47/s94/s188/s391.
-- Completed M1-48 validation-only PopMatch evaluation.
-- Preparing M1-96 continuation with Trainer internal eval disabled; only validation-only PopMatch should run after adapter save.
+- Completed M1-48 and M1-96 validation-only PopMatch evaluations.
 - Validation-first matched comparisons show N-K0 beats SASRec at 24k/48k/96k/200k.
-- Validation-first matched comparison also shows N48 beats M1-48, but the gap is small.
+- Validation-first matched M1 comparisons show N48 narrowly beats M1-48, and N96 is effectively tied with M1-96 despite a tiny positive numerical gap for N.
 
 ## Verification Results
 
 - N48 validation: HR@1 0.6029955947, NDCG@5 0.8200163654, MRR 0.7595418502.
 - M1-48 validation: HR@1 0.5941850220, NDCG@5 0.8153243950, MRR 0.7533392070.
 - N48 minus M1-48 validation gaps: HR@1 +0.0088105727, NDCG@5 +0.0046919704, MRR +0.0062026432.
+- N96 validation: HR@1 0.6237885463, NDCG@5 0.8302923694, MRR 0.7732422907.
+- M1-96 validation: HR@1 0.6234361233, NDCG@5 0.8291402759, MRR 0.7717533040.
+- N96 minus M1-96 validation gaps: HR@1 +0.0003524229, NDCG@5 +0.0011520935, MRR +0.0014889868.
 - SASRec matched validation gaps remain positive for N-K0 at 24k/48k/96k/200k.
 
 ## Unresolved Questions
 
-- Does M1-96 close or reverse the small N-vs-M1 gap seen at 48k?
-- After M1-96 validation, should M1-200 be skipped or used as an expensive endpoint?
+- Should M1-200 be skipped as too expensive, or run as an endpoint/crossover check?
+- Is multi-seed validation needed for the near-tie N96 vs M1-96 result?
 
 ## Pending Wiki Sync
 
