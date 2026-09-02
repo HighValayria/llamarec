@@ -100,3 +100,29 @@ cd /root/llamarec && bash .agent/exposure_scaling/alignment/commands/m1_commands
 ```
 
 Planning estimate: about 30 minutes for M1-48 test plus 30 minutes for M1-96 test on the observed 24 GB class GPU, because each test split has 11544 binary prompts and 5675 ranking candidate records.
+
+## 10. Phase2A k20/k50 Current96 Robustness
+
+This reuses the old Phase2A candidate-size hard-negative protocol: `k20_seed42`, `k50_seed42`, and optionally `k20_perm_seed43`. Do not run it while Y96 training is occupying the only GPU.
+
+Validation-first N96 vs M1-96 robustness:
+
+```bash
+cd /root/llamarec && git pull --ff-only
+cd /root/llamarec && bash -n .agent/exposure_scaling/alignment/commands/phase2a_hardnegative_commands.sh
+cd /root/llamarec && bash .agent/exposure_scaling/alignment/commands/phase2a_hardnegative_commands.sh launch_validation
+```
+
+Optional order-perturbation variant:
+
+```bash
+cd /root/llamarec && VARIANTS='k20_seed42 k50_seed42 k20_perm_seed43' bash .agent/exposure_scaling/alignment/commands/phase2a_hardnegative_commands.sh launch_validation
+```
+
+Report-only test, only after validation decisions are frozen:
+
+```bash
+cd /root/llamarec && bash .agent/exposure_scaling/alignment/commands/phase2a_hardnegative_commands.sh launch_test
+```
+
+Planning estimate: candidate generation is CPU-light; each N/M variant evaluation is roughly one normal validation pass for N plus one M dual-interface pass. For `k20+k50`, budget around 1.5-3 GPU hours total on the observed 24 GB class GPU.

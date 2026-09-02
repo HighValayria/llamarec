@@ -7,7 +7,7 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 ## Scope
 
 - Stage-local artifacts under `.agent/exposure_scaling/`.
-- Training/evaluation launchers for cloud execution.
+- Training/evaluation launchers for cloud execution, including Phase2A k20/k50 current96 robustness checks.
 - Configs and code paths needed for Y-K0, N-K0, M1, and SASRec exposure accounting.
 - Validation-first comparison protocol using fixed PopMatch-k5 seed42 candidates.
 
@@ -56,13 +56,15 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 - Completed M1-48 and M1-96 validation-only PopMatch evaluations. M1 report-only test metrics are still missing and should be run only after validation decisions are frozen.
 - Validation-first matched comparisons show N-K0 beats SASRec at 24k/48k/96k/200k.
 - Validation-first matched M1 comparisons show N48 narrowly beats M1-48, and N96 is effectively tied with M1-96 despite a tiny positive numerical gap for N.
+- Prepared Phase2A k20/k50 current96 robustness commands for N96 vs M1-96; run after Y96 finishes or on a separate GPU.
 
 ## Verification Results
 
 - Y24 native binary validation: AUC 0.7761274819, F1 0.7791746032, Accuracy 0.7190856958.
 - Y48 native binary validation: AUC 0.7816111073, F1 0.7848403087, Accuracy 0.7230433729.
 - Y24->Y48 native binary validation deltas: AUC +0.0054836254, F1 +0.0056657055, Accuracy +0.0039576771.
-- M1-96 native M-Y validation: AUC 0.7868352749, F1 0.7838427948, Accuracy 0.7281318149.- N48 validation: HR@1 0.6029955947, NDCG@5 0.8200163654, MRR 0.7595418502.
+- M1-96 native M-Y validation: AUC 0.7868352749, F1 0.7838427948, Accuracy 0.7281318149.
+- N48 validation: HR@1 0.6029955947, NDCG@5 0.8200163654, MRR 0.7595418502.
 - M1-48 validation: HR@1 0.5941850220, NDCG@5 0.8153243950, MRR 0.7533392070.
 - N48 minus M1-48 validation gaps: HR@1 +0.0088105727, NDCG@5 +0.0046919704, MRR +0.0062026432.
 - N96 validation: HR@1 0.6237885463, NDCG@5 0.8302923694, MRR 0.7732422907.
@@ -87,4 +89,4 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 
 - Cloud runs used a different model path, task ratio, batch size, gradient accumulation, candidate set, or random seed than recorded here.
 - M1 resume checkpoint lacks optimizer/scheduler/RNG state and the continuation is not a true resume.
-- Candidate files differ from fixed `k5_popmatch_seed42` validation/test paths.
+- Candidate files differ from the explicitly named protocol for the claim: `k5_popmatch_seed42` for PopMatch claims, or `k20_seed42`/`k50_seed42`/`k20_perm_seed43` for Phase2A robustness claims.
