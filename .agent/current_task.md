@@ -57,6 +57,7 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 - Validation-first matched comparisons show N-K0 beats SASRec at 24k/48k/96k/200k.
 - Validation-first matched M1 comparisons show N48 narrowly beats M1-48, and N96 is effectively tied with M1-96 despite a tiny positive numerical gap for N.
 - Completed Phase2A k20/k50 current96 validation/test robustness checks for N96 vs M1-96. PopMatch-k5 near parity does not fully generalize to larger candidate sets; N96 remains stronger under k20/k50, especially k20.
+- Added a no-training Seed42 deep-analysis handoff script for prediction-level bootstrap, calibration, error overlap, ranking win/loss/tie, candidate protocol audit, slice analysis, exposure coverage, training curve export, claim evidence matrix, and multiseed recommendation. The script only reads existing artifacts and writes missing statuses when cloud prediction files are absent.
 
 ## Verification Results
 
@@ -82,11 +83,13 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 - Current96 k20/k50 validation robustness: N96 beats M1-96 on k20 by HR@1 +0.1124229075, NDCG@5 +0.1269794216, MRR +0.1062560801; on k50 by HR@1 +0.0170925110, NDCG@5 +0.0289555766, MRR +0.0258293602.
 - Current96 k20/k50 report-only test robustness: N96 beats M1-96 on k20 by HR@1 +0.1147136564, NDCG@5 +0.1259325434, MRR +0.1058693094; on k50 by HR@1 +0.0139207048, NDCG@5 +0.0277780808, MRR +0.0234179986.
 - Final coverage summary reports no expected metrics gaps.
+- Local verification for the no-training handoff script: `python -m py_compile .agent/exposure_scaling/alignment/commands/seed42_deep_analysis.py` passed; dry run with `--bootstrap-replicates 5` completed against local partial artifacts and produced explicit MISSING statuses for cloud-only prediction files.
 
 ## Unresolved Questions
 
 - Should M1-200 be skipped as too expensive, or run as an endpoint/crossover check? Current recommendation: skip unless essential for the final paper claim.
 - Is multi-seed validation needed for the near-tie N96 vs M1-96 result?
+- Cloud-side deep analysis must still be run after `git pull --ff-only` because local workspace lacks the full prediction artifacts.
 
 ## Pending Wiki Sync
 
