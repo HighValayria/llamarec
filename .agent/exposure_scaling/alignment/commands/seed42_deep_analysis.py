@@ -54,6 +54,50 @@ REQUIRED_ARTIFACTS = [
 ]
 
 
+def _accuracy_local(predictions: list[int], labels: list[int]) -> float:
+    return sum(1 for p, y in zip(predictions, labels) if p == y) / len(labels) if labels else 0.0
+
+
+def _f1_score_local(predictions: list[int], labels: list[int]) -> float:
+    tp = sum(1 for p, y in zip(predictions, labels) if p == y == 1)
+    fp = sum(1 for p, y in zip(predictions, labels) if p == 1 and y == 0)
+    fn = sum(1 for p, y in zip(predictions, labels) if p == 0 and y == 1)
+    denom = 2 * tp + fp + fn
+    return 0.0 if denom == 0 else 2 * tp / denom
+
+
+def _auc_local(scores: list[float], labels: list[int]) -> float | None:
+    if len(scores) != len(labels) or not scores:
+        return None
+    pos = sum(1 for y in labels if y == 1)
+    neg = sum(1 for y in labels if y == 0)
+    if pos == 0 or neg == 0:
+        return None
+    ranked = sorted(zip(scores, labels), key=lambda item: item[0])
+    rank_sum = 0.0
+    rank = 1
+    i = 0
+    while i < len(ranked):
+        j = i
+        while j < len(ranked) and ranked[j][0] == ranked[i][0]:
+            j += 1
+        avg_rank = (rank + rank + (j - i) - 1) / 2
+        for k in range(i, j):
+            if ranked[k][1] == 1:
+                rank_sum += avg_rank
+        rank += j - i
+        i = j
+    return (rank_sum - pos * (pos + 1) / 2) / (pos * neg)
+
+
+if accuracy is None:
+    accuracy = _accuracy_local
+if f1_score is None:
+    f1_score = _f1_score_local
+if auc is None:
+    auc = _auc_local
+
+
 @dataclass(frozen=True)
 class Paths:
     root: Path
@@ -216,14 +260,41 @@ def sample_map(path: Path) -> dict[tuple[str, str], dict[str, Any]]:
     out = {}
     for r in list_jsonl(path):
         uid = str(r.get("user_id", ""))
-        tid = str(r.get("target_movie_id", r.get("ground_truth_movie_id", r.get("movie_id", ""))))
-        hist = get_history(r)
+        tid = target_item_id(r) or ""
+        hist = history_item_ids(r)
         out[(uid, tid)] = {
             "history_length": len(hist),
-            "rating": r.get("rating", r.get("target_rating")),
+            "rating": target_rating(r),
             "target_movie_id": tid,
         }
     return out
+
+
+def item_id(value: Any) -> str | None:
+    if isinstance(value, dict):
+        value = value.get("movie_id", value.get("item_id", value.get("target_movie_id", value.get("ground_truth_movie_id"))))
+    if value is None or value == "":
+        return None
+    return str(value)
+
+
+def target_item_id(r: dict[str, Any]) -> str | None:
+    for key in ("target_movie_id", "ground_truth_movie_id", "movie_id"):
+        v = item_id(r.get(key))
+        if v is not None:
+            return v
+    return item_id(r.get("target"))
+
+
+def target_rating(r: dict[str, Any]) -> Any:
+    if "rating" in r:
+        return r.get("rating")
+    if "target_rating" in r:
+        return r.get("target_rating")
+    target = r.get("target")
+    if isinstance(target, dict):
+        return target.get("rating")
+    return None
 
 
 def get_history(r: dict[str, Any]) -> list[Any]:
@@ -234,21 +305,33 @@ def get_history(r: dict[str, Any]) -> list[Any]:
     return []
 
 
+def history_item_ids(r: dict[str, Any]) -> list[str]:
+    ids = []
+    for item in get_history(r):
+        v = item_id(item)
+        if v is not None:
+            ids.append(v)
+    return ids
+
+
 def item_popularity(path: Path) -> Counter[str]:
     c: Counter[str] = Counter()
     for r in list_jsonl(path):
-        for item in get_history(r):
-            c[str(item)] += 1
-        tid = r.get("target_movie_id", r.get("ground_truth_movie_id"))
+        for item in history_item_ids(r):
+            c[item] += 1
+        tid = target_item_id(r)
         if tid is not None:
-            c[str(tid)] += 1
+            c[tid] += 1
     return c
 
 
 def ratings_items(root: Path) -> set[str]:
-    path = root / "data/raw/movielens-1m/ratings.dat"
-    if not path.exists():
-        path = root / "data/ml-1m/ratings.dat"
+    path = first_existing([
+        root / "data/raw/movielens-1m/ratings.dat",
+        root / "data/raw/ml-1m/ratings.dat",
+        root / "data/ml-1m/ratings.dat",
+        root / "data/movielens-1m/ratings.dat",
+    ]) or root / "data/raw/movielens-1m/ratings.dat"
     items: set[str] = set()
     if path.exists():
         with path.open("r", encoding="latin-1") as f:
@@ -265,9 +348,12 @@ def ratings_items(root: Path) -> set[str]:
 
 
 def metadata_items(root: Path) -> set[str]:
-    path = root / "data/raw/movielens-1m/movies.dat"
-    if not path.exists():
-        path = root / "data/ml-1m/movies.dat"
+    path = first_existing([
+        root / "data/raw/movielens-1m/movies.dat",
+        root / "data/raw/ml-1m/movies.dat",
+        root / "data/ml-1m/movies.dat",
+        root / "data/movielens-1m/movies.dat",
+    ]) or root / "data/raw/movielens-1m/movies.dat"
     items: set[str] = set()
     if path.exists():
         with path.open("r", encoding="latin-1") as f:
@@ -279,9 +365,12 @@ def metadata_items(root: Path) -> set[str]:
 
 
 def ratings_item_popularity(root: Path) -> Counter[str]:
-    path = root / "data/raw/movielens-1m/ratings.dat"
-    if not path.exists():
-        path = root / "data/ml-1m/ratings.dat"
+    path = first_existing([
+        root / "data/raw/movielens-1m/ratings.dat",
+        root / "data/raw/ml-1m/ratings.dat",
+        root / "data/ml-1m/ratings.dat",
+        root / "data/movielens-1m/ratings.dat",
+    ]) or root / "data/raw/movielens-1m/ratings.dat"
     c: Counter[str] = Counter()
     if path.exists():
         with path.open("r", encoding="latin-1") as f:
@@ -930,10 +1019,10 @@ def exposure_coverage(paths: Paths, ctx: dict[str, Any]) -> list[dict[str, Any]]
     metadata = ctx["metadata_items"]
     for run, family, exposure, pool, note in specs:
         subset = pool[:min(exposure, len(pool))]
-        targets = {str(r.get("target_movie_id", r.get("ground_truth_movie_id", ""))) for r in subset if r.get("target_movie_id", r.get("ground_truth_movie_id", "")) != ""}
+        targets = {tid for tid in (target_item_id(r) for r in subset) if tid is not None}
         hist_targets = set(targets)
         for r in subset:
-            hist_targets.update(str(x) for x in get_history(r))
+            hist_targets.update(history_item_ids(r))
         sample_keys = [json.dumps(r, sort_keys=True, ensure_ascii=False) for r in subset]
         dup = len(sample_keys) - len(set(sample_keys))
         rows.append({
