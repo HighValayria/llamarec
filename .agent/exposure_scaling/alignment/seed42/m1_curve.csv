@@ -1,5 +1,7 @@
 run,status,optimizer_steps,effective_batch,total_exposure,y_exposure,n_exposure,split,binary_AUC,binary_F1,binary_Accuracy,binary_samples,n_HR@1,n_HR@5,n_NDCG@5,n_MRR,n_samples,notes
 m_s3000,existing_current,3000,8,24000,12000,12000,test,0.7664368902,0.7281077294,,12381,0.5238766520,,0.7781912330,0.7042525698,5675,existing M1 point; not matched to N24/N48/N96/N200 except N12
-m_s12000,complete_validation_only,12000,8,96000,48000,48000,validation,0.7813698559,0.7496657048,0.7127049511,12381,0.5941850220,1.0,0.8153243950,0.7533392070,5675,N48 still wins validation but gap is small
-m_s24000,complete_validation_only,24000,8,192000,96000,96000,validation,0.7868352749,0.7838427948,0.7281318149,12381,0.6234361233,1.0,0.8291402759,0.7717533040,5675,N96 numerically wins validation but gap is negligible
+m_s12000,complete_validation_primary,12000,8,96000,48000,48000,validation,0.7813698559,0.7496657048,0.7127049511,12381,0.5941850220,1.0,0.8153243950,0.7533392070,5675,N48 still wins validation but gap is small
+m_s12000,report_only_test_complete,12000,8,96000,48000,48000,test,0.7757951608,0.7472278796,0.7097193347,11544,0.5776211454,1.0,0.8060951596,0.7411953010,5675,report-only test; validation decision unchanged
+m_s24000,complete_validation_primary,24000,8,192000,96000,96000,validation,0.7868352749,0.7838427948,0.7281318149,12381,0.6234361233,1.0,0.8291402759,0.7717533040,5675,N96 numerically wins validation but gap is negligible
+m_s24000,report_only_test_complete,24000,8,192000,96000,96000,test,0.7864837284,0.7835646558,0.7271309771,11544,0.5973568282,1.0,0.8162307888,0.7546490455,5675,report-only test; validation decision unchanged
 m_s50000,expensive_conditional,50000,8,400000,200000,200000,missing,,,,,,,,,one full 200k+200k interleaved pass; only run if 200k endpoint is essential

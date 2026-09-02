@@ -285,6 +285,7 @@ def _print_decision_hints(loaded: dict[tuple[str, str], dict[str, Any] | None]) 
     print("== 决策提示 ==")
     y24 = loaded.get(("Y24", "valid"))
     y48 = loaded.get(("Y48", "valid"))
+    y96 = loaded.get(("Y96", "valid"))
     if y24 and y48 and "binary" in y24 and "binary" in y48:
         print("Y24->Y48 原生 binary validation delta:")
         for key in ("AUC", "F1", "Accuracy"):
@@ -292,9 +293,19 @@ def _print_decision_hints(loaded: dict[tuple[str, str], dict[str, Any] | None]) 
             right = y48["binary"].get(key)
             if isinstance(left, (int, float)) and isinstance(right, (int, float)):
                 print(f"  {key}: {right - left:+.10f}")
-        print("如果这些 delta 仍明显为正，再训练 Y96 才有充分理由；否则 Y96 优先级低。")
     else:
         print("先补/读取 Y24 与 Y48 的 binary validation；目前不能只用 Y-as-ranker NDCG 判断 Y 原生收敛。")
+
+    if y48 and y96 and "binary" in y48 and "binary" in y96:
+        print("Y48->Y96 原生 binary validation delta:")
+        for key in ("AUC", "F1", "Accuracy"):
+            left = y48["binary"].get(key)
+            right = y96["binary"].get(key)
+            if isinstance(left, (int, float)) and isinstance(right, (int, float)):
+                print(f"  {key}: {right - left:+.10f}")
+        print("Y96 已完成：Y 原生 binary 只呈弱且不稳定增益，Y-as-ranker 仍只是桥接指标。")
+    else:
+        print("Y96 validation 尚未完整；不要把 Y-as-ranker 排序当作 Y 原生收敛证据。")
     print("validation 用于选择是否继续训练；test 只在决策冻结后补跑并报告。")
 
 

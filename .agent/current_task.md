@@ -28,7 +28,7 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 
 ## Evidence Sources
 
-- Cloud user-provided logs and metric tables for Y24/Y48, N24/N48/N96/N200, SASRec s23/s47/s94/s188/s391, M1-48, and M1-96.
+- Cloud user-provided logs and metric tables for Y24/Y48/Y96, N24/N48/N96/N200, SASRec s23/s47/s94/s188/s391, M1-48, M1-96, and current96 k20/k50 robustness.
 - `.agent/exposure_scaling/exposure_accounting.json`.
 - `.agent/exposure_scaling/alignment/` artifacts.
 - Current code in `src/train/train_m.py`, `src/train/multitask_dataset.py`, `src/inference/evaluate_m_adapter.py`, `src/baselines/sasrec.py`, and `src/analysis/training_budget_audit.py`.
@@ -53,10 +53,10 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 - Completed N scaling through N200. Validation keeps improving: N24 HR@1 0.5774, N48 0.6030, N96 0.6238, N200 0.6516.
 - Confirmed M1 existing point is M1-12: 3000 steps, 12000 Y exposure, 12000 N exposure, total 24000.
 - Completed fresh SASRec alignment runs for s23/s47/s94/s188/s391.
-- Completed M1-48 and M1-96 validation-only PopMatch evaluations. M1 report-only test metrics are still missing and should be run only after validation decisions are frozen.
+- Completed M1-48 and M1-96 validation/test PopMatch evaluations. Test metrics are report-only and do not change validation-first decisions.
 - Validation-first matched comparisons show N-K0 beats SASRec at 24k/48k/96k/200k.
 - Validation-first matched M1 comparisons show N48 narrowly beats M1-48, and N96 is effectively tied with M1-96 despite a tiny positive numerical gap for N.
-- Completed Phase2A k20/k50 current96 validation robustness checks for N96 vs M1-96. PopMatch-k5 near parity does not fully generalize to larger candidate sets; N96 remains stronger under k20/k50, especially k20.
+- Completed Phase2A k20/k50 current96 validation/test robustness checks for N96 vs M1-96. PopMatch-k5 near parity does not fully generalize to larger candidate sets; N96 remains stronger under k20/k50, especially k20.
 
 ## Verification Results
 
@@ -66,7 +66,10 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 - Y96 native binary validation: AUC 0.7843504067, F1 0.7783174665, Accuracy 0.7235279864.
 - Y48->Y96 native binary validation deltas: AUC +0.0027392994, F1 -0.0065228422, Accuracy +0.0004846135.
 - Y96 Y-as-ranker validation: HR@1 0.2211453744, NDCG@5 0.6030699894, MRR 0.4741791483.
+- Y96 native binary test: AUC 0.7853511126, F1 0.7780238029, Accuracy 0.7221067221.
+- Y96 Y-as-ranker test: HR@1 0.2065198238, NDCG@5 0.5921565513, MRR 0.4600528634.
 - M1-96 minus Y96 native binary validation gaps: AUC +0.0024848682, F1 +0.0055253283, Accuracy +0.0046038285.
+- M1-96 minus Y96 native binary report-only test gaps: AUC +0.0011326158, F1 +0.0055408528, Accuracy +0.0050242550.
 - M1-96 native M-Y validation: AUC 0.7868352749, F1 0.7838427948, Accuracy 0.7281318149.
 - N48 validation: HR@1 0.6029955947, NDCG@5 0.8200163654, MRR 0.7595418502.
 - M1-48 validation: HR@1 0.5941850220, NDCG@5 0.8153243950, MRR 0.7533392070.
@@ -74,13 +77,15 @@ Validate LlamaRec exposure scaling and convergence behavior for MovieLens-1M, th
 - N96 validation: HR@1 0.6237885463, NDCG@5 0.8302923694, MRR 0.7732422907.
 - M1-96 validation: HR@1 0.6234361233, NDCG@5 0.8291402759, MRR 0.7717533040.
 - N96 minus M1-96 validation gaps: HR@1 +0.0003524229, NDCG@5 +0.0011520935, MRR +0.0014889868.
+- N96 minus M1-96 report-only test gaps: HR@1 +0.0126872247, NDCG@5 +0.0056658345, MRR +0.0075535977.
 - SASRec matched validation gaps remain positive for N-K0 at 24k/48k/96k/200k.
 - Current96 k20/k50 validation robustness: N96 beats M1-96 on k20 by HR@1 +0.1124229075, NDCG@5 +0.1269794216, MRR +0.1062560801; on k50 by HR@1 +0.0170925110, NDCG@5 +0.0289555766, MRR +0.0258293602.
+- Current96 k20/k50 report-only test robustness: N96 beats M1-96 on k20 by HR@1 +0.1147136564, NDCG@5 +0.1259325434, MRR +0.1058693094; on k50 by HR@1 +0.0139207048, NDCG@5 +0.0277780808, MRR +0.0234179986.
+- Final coverage summary reports no expected metrics gaps.
 
 ## Unresolved Questions
 
-- Should Y96 report-only test be run after validation decisions freeze?
-- Should M1-200 be skipped as too expensive, or run as an endpoint/crossover check?
+- Should M1-200 be skipped as too expensive, or run as an endpoint/crossover check? Current recommendation: skip unless essential for the final paper claim.
 - Is multi-seed validation needed for the near-tie N96 vs M1-96 result?
 
 ## Pending Wiki Sync

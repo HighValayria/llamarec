@@ -24,8 +24,11 @@ Y-K0 remains weak under the Y-as-ranker PopMatch ranking view through 96k. Y-nat
 | Y96 | valid | 0.7843504067 | 0.7783174665 | 0.7235279864 |
 | M1-48 | valid | 0.7813698559 | 0.7496657048 | 0.7127049511 |
 | M1-96 | valid | 0.7868352749 | 0.7838427948 | 0.7281318149 |
+| Y96 | test | 0.7853511126 | 0.7780238029 | 0.7221067221 |
+| M1-48 | test | 0.7757951608 | 0.7472278796 | 0.7097193347 |
+| M1-96 | test | 0.7864837284 | 0.7835646558 | 0.7271309771 |
 
-M1-96 exceeds Y96 on all three Y-native binary validation metrics: AUC +0.0024848682, F1 +0.0055253283, Accuracy +0.0046038285. This supports the claim that multitask M1 preserves or improves the Y-native binary interface at matched 96k Y exposure while also matching N96 on PopMatch-k5 ranking.
+M1-96 exceeds Y96 on all three Y-native binary validation metrics: AUC +0.0024848682, F1 +0.0055253283, Accuracy +0.0046038285. Report-only test preserves the same broad direction: AUC +0.0011326158, F1 +0.0055408528, Accuracy +0.0050242550.
 
 ## SASRec Matched-Exposure Result
 
@@ -33,36 +36,42 @@ Fresh SASRec alignment runs are complete for s23/s47/s94/s188/s391. Validation-f
 
 ## M1 Matched-Exposure Result
 
-M1-48 and M1-96 validation-only PopMatch evaluations are complete. At matched 48k N-task exposure, N48 still beats M1-48, but narrowly. At matched 96k N-task exposure, N96 only numerically beats M1-96 by a negligible margin:
+M1-48 and M1-96 validation PopMatch evaluations are complete. At matched 48k N-task exposure, N48 still beats M1-48, but narrowly. At matched 96k N-task exposure, N96 only numerically beats M1-96 by a negligible margin:
 
-| pair | HR@1 gap | NDCG@5 gap | MRR gap |
-|---|---:|---:|---:|
-| N48 - M1-48 | +0.0088105727 | +0.0046919704 | +0.0062026432 |
-| N96 - M1-96 | +0.0003524229 | +0.0011520935 | +0.0014889868 |
+| pair | split | HR@1 gap | NDCG@5 gap | MRR gap |
+|---|---|---:|---:|---:|
+| N48 - M1-48 | valid | +0.0088105727 | +0.0046919704 | +0.0062026432 |
+| N96 - M1-96 | valid | +0.0003524229 | +0.0011520935 | +0.0014889868 |
+| N48 - M1-48 | test | +0.0093392070 | +0.0045854131 | +0.0060734215 |
+| N96 - M1-96 | test | +0.0126872247 | +0.0056658345 | +0.0075535977 |
 
-This preserves the raw validation direction `N-K0 > M1` at 48k and 96k, but the 96k result should be treated as practical parity, not a decisive N advantage.
-
+Validation preserves the raw direction `N-K0 > M1` at 48k and 96k, but the 96k validation result should be treated as practical parity, not a decisive N advantage. Test is report-only and shows a small but clearer N96 advantage.
 
 ## Current96 k20/k50 Robustness
 
-Phase2A candidate-size validation checks show that PopMatch-k5 near parity does not fully generalize to larger candidate sets. N96 remains stronger than M1-96, especially under k20:
+Phase2A candidate-size checks show that PopMatch-k5 near parity does not fully generalize to larger candidate sets. N96 remains stronger than M1-96, especially under k20:
 
-| variant | HR@1 gap N96 - M1-96 | NDCG@5 gap N96 - M1-96 | MRR gap N96 - M1-96 |
-|---|---:|---:|---:|
-| k20_seed42 | +0.1124229075 | +0.1269794216 | +0.1062560801 |
-| k50_seed42 | +0.0170925110 | +0.0289555766 | +0.0258293602 |
+| variant | split | HR@1 gap N96 - M1-96 | NDCG@5 gap N96 - M1-96 | MRR gap N96 - M1-96 |
+|---|---|---:|---:|---:|
+| k20_seed42 | valid | +0.1124229075 | +0.1269794216 | +0.1062560801 |
+| k50_seed42 | valid | +0.0170925110 | +0.0289555766 | +0.0258293602 |
+| k20_seed42 | test | +0.1147136564 | +0.1259325434 | +0.1058693094 |
+| k50_seed42 | test | +0.0139207048 | +0.0277780808 | +0.0234179986 |
 
-These are validation metrics. Test should remain report-only after validation decisions are frozen.
+The test rows are report-only and should not be used to change training decisions.
+
 ## Evaluation Coverage Note
 
-The current exposure-scaling evidence is strongest for PopMatch-k5 candidate ranking. That is native for N-K0, M-N, and SASRec, but it is only a bridge metric for Y-K0. For Y-native claims, report binary AUC/F1/Accuracy from Y and M-Y metrics. Use `python .agent/exposure_scaling/alignment/commands/eval_coverage_summary.py` on the cloud machine to expose available binary/ranking metrics and missing test coverage.
+The current exposure-scaling evidence is strongest for PopMatch-k5 candidate ranking. That is native for N-K0, M-N, and SASRec, but it is only a bridge metric for Y-K0. For Y-native claims, report binary AUC/F1/Accuracy from Y and M-Y metrics. The current coverage table has no expected metrics gaps.
+
 ## Main Implication
 
 Do not claim N-K0 has converged. It has not converged through 200k under the validation-first criterion.
 
-Do not make a strong claim that N-K0 decisively beats M1 once matched exposure is increased under PopMatch-k5. The defensible claim is that M1 closes the gap by 96k and is effectively tied with N-K0 under seed42 validation, while M1-96 also beats pure Y96 on Y-native binary validation.
+Do not make a strong claim that N-K0 decisively beats M1 once matched exposure is increased under PopMatch-k5 validation. The defensible claim is that M1 closes the gap by 96k and is effectively tied with N-K0 on seed42 validation, while M1-96 also beats pure Y96 on Y-native binary validation. Larger-candidate k20/k50 robustness still favors N96 over M1-96.
 
 ## Next Minimum Work
 
-1. Stop M1 scaling here unless a 200k M1 endpoint is essential for the final paper claim.
-2. If M1-200 is run, treat it as an expensive endpoint/crossover check rather than a default continuation.
+1. Treat current validation/test coverage as complete for the seed42 stage.
+2. Stop blind M1 scaling here unless a 200k M1 endpoint is essential for the final paper claim.
+3. If additional certainty is required, prioritize multi-seed replication over another single-seed scaling run.

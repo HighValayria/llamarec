@@ -4,8 +4,8 @@ Y24,Y-K0,24000,test,11544,0.7784561583,0.7793987922,0.7183818434,complete,report
 Y48,Y-K0,48000,valid,12381,0.7816111073,0.7848403087,0.7230433729,complete,Y-native binary
 Y48,Y-K0,48000,test,11544,0.7804671174,0.7815520945,0.7181219681,complete,report-only
 Y96,Y-K0,96000,valid,12381,0.7843504067,0.7783174665,0.7235279864,complete,Y-native binary; run after conditional pure-Y continuation
-Y96,Y-K0,96000,test,,,,,missing,run only after validation decision freezes
+Y96,Y-K0,96000,test,11544,0.7853511126,0.7780238029,0.7221067221,complete,report-only
 M1-48,M1,Y48k+N48k,valid,12381,0.7813698559,0.7496657048,0.7127049511,complete,M-Y binary
-M1-48,M1,Y48k+N48k,test,,,,,missing,test-only eval needed for final reporting
+M1-48,M1,Y48k+N48k,test,11544,0.7757951608,0.7472278796,0.7097193347,complete,report-only
 M1-96,M1,Y96k+N96k,valid,12381,0.7868352749,0.7838427948,0.7281318149,complete,M-Y binary
-M1-96,M1,Y96k+N96k,test,,,,,missing,test-only eval needed for final reporting
+M1-96,M1,Y96k+N96k,test,11544,0.7864837284,0.7835646558,0.7271309771,complete,report-only
