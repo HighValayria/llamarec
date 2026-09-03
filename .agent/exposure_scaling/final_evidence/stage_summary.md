@@ -1,0 +1,3 @@
+# Stage Summary
+
+The LLM Exposure Scaling & Convergence Validation stage has moved from training to no-training evidence consolidation. Seed42 now has complete Y24/Y48/Y96, N24/N48/N96/N200, M1-48/M1-96, k20/k50 robustness, and SASRec exposure-aligned evidence. The evidence supports a paper-ready descriptive account: Y-native gains weaken by 96k, N-native ranking keeps improving through 200k, M1-96 preserves Y-side capability while approaching N96 on k5 validation, and harder candidate protocols still favor N96. SASRec is now traceable through alignment artifacts and supports an exposure-aware baseline comparison.
