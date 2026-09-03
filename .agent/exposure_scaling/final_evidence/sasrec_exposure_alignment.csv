@@ -1,0 +1,6 @@
+run_name,target_exposure,actual_exposure,checkpoint,seed,candidate_protocol,valid_hr1,valid_ndcg,valid_mrr,test_hr1,test_ndcg,test_mrr,source_path,verification_status
+sasrec_s23,12000,11776,23,42,k5_popmatch_seed42,0.2523348018,0.6229138773,0.4999765051,0.2743612335,0.6367905572,0.5181938326,outputs/baselines/movielens-1m/alignment_sasrec_s23/valid_metrics.json,VERIFIED
+sasrec_s47,24000,24064,47,42,k5_popmatch_seed42,0.2731277533,0.6364143897,0.5176035242,0.2903964758,0.6457596182,0.5299647577,outputs/baselines/movielens-1m/alignment_sasrec_s47/valid_metrics.json,VERIFIED
+sasrec_s94,48000,48128,94,42,k5_popmatch_seed42,0.2930396476,0.6480369393,0.5328986784,0.3022026432,0.6543566640,0.5411395007,outputs/baselines/movielens-1m/alignment_sasrec_s94/valid_metrics.json,VERIFIED
+sasrec_s188,96000,96256,188,42,k5_popmatch_seed42,0.3281057269,0.6716306227,0.5636093979,0.3309251101,0.6719289950,0.5641527166,outputs/baselines/movielens-1m/alignment_sasrec_s188/valid_metrics.json,VERIFIED
+sasrec_s391,200000,200000,391,42,k5_popmatch_seed42,0.4748898678,0.7561054438,0.6746901615,0.4511013216,0.7422500032,0.6564963289,outputs/baselines/movielens-1m/alignment_sasrec_s391/valid_metrics.json,VERIFIED

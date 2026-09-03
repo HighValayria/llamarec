@@ -1,0 +1,13 @@
+wiki_update_proposal:
+  authorized: false
+  note: Do not modify durable wiki until user grants one-time write authorization.
+  proposed_updates:
+    - file: wiki/current_state.md
+      operation: update
+      reason: Record exposure scaling training pause and evidence freeze state.
+    - file: wiki/reports/exposure_scaling_seed42.md
+      operation: create
+      reason: Preserve final seed42 exposure-aware findings, claim boundaries, and table/figure index.
+    - file: wiki/history/2026-09.md
+      operation: update
+      reason: Record semantic shift from training sweep to evidence consolidation.

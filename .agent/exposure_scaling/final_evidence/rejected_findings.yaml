@@ -1,0 +1,9 @@
+rejected_or_revised:
+  - old: N specialist consistently outperforms M1.
+    new: At higher matched exposure, the k5 validation gap nearly vanishes, while harder candidate protocols still favor N.
+  - old: M1 suffers task interference on both Y and N.
+    new: No detectable Y-side degradation is observed at M1-96; remaining specialization cost is primarily visible on N-side robustness.
+  - old: Candidate-size expansion reveals N advantage.
+    new: Harder candidate protocols reveal N advantage, but candidate size and composition are confounded.
+  - old: High-exposure SASRec is stronger than LLM.
+    new: Under approximately matched training-sample exposure, N-K0 remains stronger at evaluated points.

@@ -1,0 +1,6 @@
+model,native_task,native_metrics,bridge_or_ranking_metrics,interpretation
+Base Llama,untuned base model,MISSING in final exposure package,MISSING in final exposure package,Base metrics are not part of the frozen exposure-aware claims.
+Y-K0,binary preference,AUC/F1/Accuracy,Y-as-ranker HR@1/NDCG@5/MRR,Preference prediction does not become a strong next-item ranker under PopMatch-k5.
+N-K0,next-item ranking,HR@1/NDCG@5/MRR,same as native,Ranking capability scales strongly with exposure.
+M1,Y+N multitask,M-Y binary and M-N ranking,k5/k20/k50 protocols,"Y-side is preserved, while N-side robustness remains weaker than N specialist under harder protocols."
+SASRec,sequential recommendation,HR@1/NDCG@5/MRR,k5_popmatch_seed42,"Exposure-aware baseline, not FLOP-matched baseline."

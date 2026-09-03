@@ -1,0 +1,29 @@
+model,run,task,exposure,split,primary_metric,primary_value,secondary_metrics,seed,protocol
+Y-K0,Y24,Y-native binary,24000,validation,AUC,0.7761274819,"{""F1"": 0.7791746032, ""Accuracy"": 0.7190856958}",42,binary preference
+Y-K0,Y24,Y-native binary,24000,test,AUC,0.7784561583,"{""F1"": 0.7793987922, ""Accuracy"": 0.7183818434}",42,binary preference
+Y-K0,Y48,Y-native binary,48000,validation,AUC,0.7816111073,"{""F1"": 0.7848403087, ""Accuracy"": 0.7230433729}",42,binary preference
+Y-K0,Y48,Y-native binary,48000,test,AUC,0.7804671174,"{""F1"": 0.7815520945, ""Accuracy"": 0.7181219681}",42,binary preference
+Y-K0,Y96,Y-native binary,96000,validation,AUC,0.7843504067,"{""F1"": 0.7783174665, ""Accuracy"": 0.7235279864}",42,binary preference
+Y-K0,Y96,Y-native binary,96000,test,AUC,0.7853511126,"{""F1"": 0.7780238029, ""Accuracy"": 0.7221067221}",42,binary preference
+Y-K0,Y24,Y-as-ranker bridge,24000,validation,NDCG@5,0.6002715889,"{""HR@1"": 0.2156828194, ""MRR"": 0.4704082232}",42,k5_popmatch_seed42
+Y-K0,Y24,Y-as-ranker bridge,24000,test,NDCG@5,0.5936288326,"{""HR@1"": 0.2045814978, ""MRR"": 0.4617444934}",42,k5_popmatch_seed42
+Y-K0,Y48,Y-as-ranker bridge,48000,validation,NDCG@5,0.5994649797,"{""HR@1"": 0.2165638767, ""MRR"": 0.4694772394}",42,k5_popmatch_seed42
+Y-K0,Y48,Y-as-ranker bridge,48000,test,NDCG@5,0.5899793848,"{""HR@1"": 0.2, ""MRR"": 0.4570337739}",42,k5_popmatch_seed42
+Y-K0,Y96,Y-as-ranker bridge,96000,validation,NDCG@5,0.6030699894,"{""HR@1"": 0.2211453744, ""MRR"": 0.4741791483}",42,k5_popmatch_seed42
+Y-K0,Y96,Y-as-ranker bridge,96000,test,NDCG@5,0.5921565513,"{""HR@1"": 0.2065198238, ""MRR"": 0.4600528634}",42,k5_popmatch_seed42
+N-K0,N24,N-native ranking,24000,validation,HR@1,0.5774449339,"{""NDCG@5"": 0.8067686847, ""MRR"": 0.7420058737}",42,k5_popmatch_seed42
+N-K0,N24,N-native ranking,24000,test,HR@1,0.5612334802,"{""NDCG@5"": 0.7968087155, ""MRR"": 0.7289720999}",42,k5_popmatch_seed42
+N-K0,N48,N-native ranking,48000,validation,HR@1,0.6029955947,"{""NDCG@5"": 0.8200163654, ""MRR"": 0.7595418502}",42,k5_popmatch_seed42
+N-K0,N48,N-native ranking,48000,test,HR@1,0.5869603524,"{""NDCG@5"": 0.8106805727, ""MRR"": 0.7472687225}",42,k5_popmatch_seed42
+N-K0,N96,N-native ranking,96000,validation,HR@1,0.6237885463,"{""NDCG@5"": 0.8302923694, ""MRR"": 0.7732422907}",42,k5_popmatch_seed42
+N-K0,N96,N-native ranking,96000,test,HR@1,0.6100440529,"{""NDCG@5"": 0.8218966233, ""MRR"": 0.7622026432}",42,k5_popmatch_seed42
+N-K0,N200,N-native ranking,200000,validation,HR@1,0.6516299559,"{""NDCG@5"": 0.843190259, ""MRR"": 0.7904170338}",42,k5_popmatch_seed42
+N-K0,N200,N-native ranking,200000,test,HR@1,0.6281938326,"{""NDCG@5"": 0.8318910144, ""MRR"": 0.7753803231}",42,k5_popmatch_seed42
+M1,M1-48,M-Y binary,Y48k+N48k,validation,AUC,0.7813698559,"{""F1"": 0.7496657048, ""Accuracy"": 0.7127049511}",42,binary preference
+M1,M1-48,M-Y binary,Y48k+N48k,test,AUC,0.7757951608,"{""F1"": 0.7472278796, ""Accuracy"": 0.7097193347}",42,binary preference
+M1,M1-96,M-Y binary,Y96k+N96k,validation,AUC,0.7868352749,"{""F1"": 0.7838427948, ""Accuracy"": 0.7281318149}",42,binary preference
+M1,M1-96,M-Y binary,Y96k+N96k,test,AUC,0.7864837284,"{""F1"": 0.7835646558, ""Accuracy"": 0.7271309771}",42,binary preference
+M1,M1-48,M-N ranking,Y48k+N48k,validation,HR@1,0.594185022,"{""NDCG@5"": 0.815324395, ""MRR"": 0.753339207}",42,k5_popmatch_seed42
+M1,M1-48,M-N ranking,Y48k+N48k,test,HR@1,0.5776211454,"{""NDCG@5"": 0.8060951596, ""MRR"": 0.741195301}",42,k5_popmatch_seed42
+M1,M1-96,M-N ranking,Y96k+N96k,validation,HR@1,0.6234361233,"{""NDCG@5"": 0.8291402759, ""MRR"": 0.771753304}",42,k5_popmatch_seed42
+M1,M1-96,M-N ranking,Y96k+N96k,test,HR@1,0.5973568282,"{""NDCG@5"": 0.8162307888, ""MRR"": 0.7546490455}",42,k5_popmatch_seed42

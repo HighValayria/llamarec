@@ -1,0 +1,22 @@
+validated_findings:
+  - id: C1
+    finding: Y and N supervision learn different recommendation semantics.
+    strength: CORE
+  - id: C2
+    finding: Y-native gains weaken by 96k within the tested exposure range.
+    strength: SUPPORTED
+  - id: C3
+    finding: N-native ranking remains exposure-sensitive through the 200k near-full-pool point.
+    strength: CORE
+  - id: C4
+    finding: M1-96 shows no detectable Y-side degradation.
+    strength: SUPPORTED
+  - id: C5
+    finding: M1-96 reaches near-parity with N96 on k5 validation.
+    strength: SUPPORTED
+  - id: C6
+    finding: N96 is more robust than M1-96 under k20/k50 hard-candidate protocols.
+    strength: SUPPORTED
+  - id: C7
+    finding: N-K0 outperforms SASRec under matched training-sample exposure at evaluated points.
+    strength: CORE

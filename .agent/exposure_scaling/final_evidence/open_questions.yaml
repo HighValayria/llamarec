@@ -1,0 +1,9 @@
+open_questions:
+  - question: Are seed42 M1/Y and M1/N relationships stable across seeds?
+    blocker: false
+  - question: How much of the k20/k50 robustness gap is candidate composition rather than candidate count?
+    blocker: false
+  - question: Does M1-200 change the high-exposure specialist/multitask relationship?
+    blocker: false
+  - question: Should Amazon receive exposure scaling or remain directional validation?
+    blocker: false
