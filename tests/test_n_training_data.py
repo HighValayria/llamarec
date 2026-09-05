@@ -1,7 +1,10 @@
 """STEP 6 测试：N-K0 训练数据编码。"""
 
+import sys
+
 from src.train.next_item_dataset import NextItemTrainingDataset, encode_next_item_record
 from src.train.preference_dataset import IGNORE_INDEX, summarize_encoded_examples
+from src.train.train_n import parse_args
 from src.train.train_y import load_training_config
 
 
@@ -115,3 +118,11 @@ def test_n_config_inherits_experiment_contract():
     assert config["tasks"]["n"]["task"] == "full_sequence_next_item_prediction"
     assert config["model"]["base_model"]["name_or_path"]
     assert config["_repo_root"].name == "llamarec"
+
+
+def test_parse_args_supports_disabling_n_internal_eval(monkeypatch):
+    monkeypatch.setattr(sys, "argv", ["train_n.py", "--disable-internal-eval"])
+
+    args = parse_args()
+
+    assert args.disable_internal_eval is True

@@ -107,7 +107,13 @@ def run_n_training(args: argparse.Namespace) -> dict[str, Any]:
     trainer.save_model(str(output_dir / "adapter"))
     tokenizer.save_pretrained(str(output_dir / "adapter"))
 
-    validation_metrics = trainer.evaluate()
+    if getattr(args, "disable_internal_eval", False):
+        validation_metrics = {
+            "skipped": True,
+            "reason": "disabled_by_cli",
+        }
+    else:
+        validation_metrics = trainer.evaluate()
     metrics = {
         "model": "n_k0",
         "dataset": dataset_key,
@@ -289,6 +295,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--logging-steps", type=int, default=10)
     parser.add_argument("--eval-steps", type=int, default=50)
     parser.add_argument("--save-steps", type=int, default=50)
+    parser.add_argument(
+        "--disable-internal-eval",
+        action="store_true",
+        help="关闭 Trainer 内部 step/final eval；训练后仍保存 adapter，PopMatch 评测请单独运行。",
+    )
     parser.add_argument("--bf16", action="store_true", help="启用 bf16 训练")
     parser.add_argument("--fp16", action="store_true", help="启用 fp16 训练")
     parser.add_argument("--resume-from-checkpoint", default=None)
