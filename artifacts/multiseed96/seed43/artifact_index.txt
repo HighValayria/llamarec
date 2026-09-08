@@ -20,6 +20,7 @@ outputs/m/movielens-1m/exposure_m1_s24000_seed43/checkpoints/checkpoint-23500/RE
 outputs/m/movielens-1m/exposure_m1_s24000_seed43/checkpoints/checkpoint-24000/README.md
 outputs/m/movielens-1m/exposure_m1_s24000_seed43/metrics.json
 outputs/m/movielens-1m/exposure_m1_s24000_seed43/popmatch_eval/evaluation_summary.json
+outputs/m/movielens-1m/exposure_m1_s24000_seed43/popmatch_eval/test_metrics.json
 outputs/m/movielens-1m/exposure_m1_s24000_seed43/popmatch_eval/valid_metrics.json
 outputs/n/movielens-1m/exposure_n_s12000_seed43/adapter/README.md
 outputs/n/movielens-1m/exposure_n_s12000_seed43/checkpoints/checkpoint-11000/README.md
@@ -27,6 +28,7 @@ outputs/n/movielens-1m/exposure_n_s12000_seed43/checkpoints/checkpoint-11500/REA
 outputs/n/movielens-1m/exposure_n_s12000_seed43/checkpoints/checkpoint-12000/README.md
 outputs/n/movielens-1m/exposure_n_s12000_seed43/metrics.json
 outputs/n/movielens-1m/exposure_n_s12000_seed43/popmatch_eval/evaluation_summary.json
+outputs/n/movielens-1m/exposure_n_s12000_seed43/popmatch_eval/test_metrics.json
 outputs/n/movielens-1m/exposure_n_s12000_seed43/popmatch_eval/valid_metrics.json
 outputs/n/movielens-1m/pool200k_1m_n_1500_seed43/adapter/README.md
 outputs/n/movielens-1m/pool200k_1m_n_1500_seed43/checkpoints/checkpoint-1000/README.md
@@ -37,12 +39,16 @@ outputs/n/movielens-1m/pool200k_1m_n_1500_seed43_popmatch_eval/evaluation_summar
 outputs/n/movielens-1m/pool200k_1m_n_1500_seed43_popmatch_eval/test_metrics.json
 outputs/n/movielens-1m/pool200k_1m_n_1500_seed43_popmatch_eval/valid_metrics.json
 outputs/phase2a/multiseed96_ranking_robustness/seed43/m1_k20_seed42/evaluation_summary.json
+outputs/phase2a/multiseed96_ranking_robustness/seed43/m1_k20_seed42/test_metrics.json
 outputs/phase2a/multiseed96_ranking_robustness/seed43/m1_k20_seed42/valid_metrics.json
 outputs/phase2a/multiseed96_ranking_robustness/seed43/m1_k50_seed42/evaluation_summary.json
+outputs/phase2a/multiseed96_ranking_robustness/seed43/m1_k50_seed42/test_metrics.json
 outputs/phase2a/multiseed96_ranking_robustness/seed43/m1_k50_seed42/valid_metrics.json
 outputs/phase2a/multiseed96_ranking_robustness/seed43/n_k0_k20_seed42/evaluation_summary.json
+outputs/phase2a/multiseed96_ranking_robustness/seed43/n_k0_k20_seed42/test_metrics.json
 outputs/phase2a/multiseed96_ranking_robustness/seed43/n_k0_k20_seed42/valid_metrics.json
 outputs/phase2a/multiseed96_ranking_robustness/seed43/n_k0_k50_seed42/evaluation_summary.json
+outputs/phase2a/multiseed96_ranking_robustness/seed43/n_k0_k50_seed42/test_metrics.json
 outputs/phase2a/multiseed96_ranking_robustness/seed43/n_k0_k50_seed42/valid_metrics.json
 outputs/phase2a/ranking_robustness/base_k20_perm_seed43/test_metrics.json
 outputs/phase2a/ranking_robustness/base_k20_perm_seed43/valid_metrics.json
@@ -66,6 +72,7 @@ outputs/y/movielens-1m/exposure_y_s12000_seed43/checkpoints/checkpoint-11500/REA
 outputs/y/movielens-1m/exposure_y_s12000_seed43/checkpoints/checkpoint-12000/README.md
 outputs/y/movielens-1m/exposure_y_s12000_seed43/metrics.json
 outputs/y/movielens-1m/exposure_y_s12000_seed43/popmatch_eval/evaluation_summary.json
+outputs/y/movielens-1m/exposure_y_s12000_seed43/popmatch_eval/test_metrics.json
 outputs/y/movielens-1m/exposure_y_s12000_seed43/popmatch_eval/valid_metrics.json
 outputs/y/movielens-1m/pool200k_1m_y_1500_seed43/adapter/README.md
 outputs/y/movielens-1m/pool200k_1m_y_1500_seed43/checkpoints/checkpoint-1000/README.md
