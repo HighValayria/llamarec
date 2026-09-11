@@ -128,6 +128,8 @@ file_sha() { sha256sum "$1" | awk '{print $1}'; }
 } > "$REPORT"
 
 git clone --quiet --filter=blob:none --no-checkout "$REMOTE" "$PUBLISH_ROOT/repo"
+git -C "$PUBLISH_ROOT/repo" config user.name "LlamaRec Artifact Reporter"
+git -C "$PUBLISH_ROOT/repo" config user.email "artifact-reporter@llamarec.local"
 if git -C "$PUBLISH_ROOT/repo" ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
   git -C "$PUBLISH_ROOT/repo" fetch --quiet origin "$BRANCH"
   git -C "$PUBLISH_ROOT/repo" switch --quiet -c "$BRANCH" --track "origin/$BRANCH"
