@@ -141,7 +141,7 @@ fi
 DEST="$PUBLISH_ROOT/repo/paper/metadata/missing_prediction_report_machine_${MACHINE}.md"
 mkdir -p "$(dirname "$DEST")"
 cp "$REPORT" "$DEST"
-git -C "$PUBLISH_ROOT/repo" add "paper/metadata/missing_prediction_report_machine_${MACHINE}.md"
+git -C "$PUBLISH_ROOT/repo" add -f "paper/metadata/missing_prediction_report_machine_${MACHINE}.md"
 if git -C "$PUBLISH_ROOT/repo" diff --cached --quiet; then
   echo "REPORT_UNCHANGED branch=$BRANCH"
   exit 0
