@@ -33,6 +33,31 @@ from src.train.train_y import (
 )
 
 
+def _transformers_dtype_kwarg_compat():
+    """Temporarily adapt Transformers 4.45 from_pretrained kwargs for replay."""
+    import inspect
+    from contextlib import contextmanager
+
+    @contextmanager
+    def _patch():
+        from transformers import AutoModelForCausalLM
+
+        original_attr = inspect.getattr_static(AutoModelForCausalLM, "from_pretrained")
+        original_call = AutoModelForCausalLM.from_pretrained
+
+        def compat_from_pretrained(*args, **kwargs):
+            if "dtype" in kwargs and "torch_dtype" not in kwargs:
+                kwargs["torch_dtype"] = kwargs.pop("dtype")
+            return original_call(*args, **kwargs)
+
+        AutoModelForCausalLM.from_pretrained = staticmethod(compat_from_pretrained)
+        try:
+            yield
+        finally:
+            AutoModelForCausalLM.from_pretrained = original_attr
+
+    return _patch()
+
 def run_stage(config_path: Path, stage_name: str, launch_command: str) -> dict[str, Any]:
     replay = _read_yaml(config_path)
     stage = _resolve_stage(replay, stage_name)
@@ -64,7 +89,8 @@ def run_stage(config_path: Path, stage_name: str, launch_command: str) -> dict[s
     _write_inputs(output_dir, replay, training_config, stage, train_records, valid_records, launch_command)
 
     movie_lookup = load_movies(dataset_key, training_config)
-    tokenizer, model = _load_tokenizer_and_model(training_config)
+    with _transformers_dtype_kwarg_compat():
+        tokenizer, model = _load_tokenizer_and_model(training_config)
     train_dataset = NextItemTrainingDataset(
         records=train_records,
         tokenizer=tokenizer,
