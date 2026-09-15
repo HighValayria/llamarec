@@ -5,8 +5,8 @@ status: current
 authority: descriptive
 source: mixed
 created: 2026-07-28
-updated: 2026-08-22
-last_verified: 2026-08-22
+updated: 2026-09-12
+last_verified: 2026-09-12
 related_code:
   - task.md
   - README.md
@@ -64,6 +64,17 @@ related_code:
   - wiki/reports/multiseed-stability.md
   - wiki/reports/paper-result-consolidation.md
   - wiki/reports/cross-dataset-validation.md
+  - wiki/reports/exposure_scaling_seed42.md
+  - wiki/reports/paper_post_exposure_revision.md
+  - paper/human_alter/sync.py
+  - paper/human_alter/sync_manifest.json
+  - paper/human_alter/README.md
+  - wiki/guides/docx_sync_workflow.md
+  - .agent/exposure_scaling/final_evidence/README.md
+  - .agent/exposure_scaling/final_evidence/exposure_main_table.csv
+  - .agent/exposure_scaling/final_evidence/sasrec_exposure_alignment.csv
+  - .agent/exposure_scaling/final_evidence/claim_evidence_matrix.md
+  - .agent/exposure_scaling/final_evidence/rejected_or_revised_claims.md
 ---
 
 # Current Project State
@@ -108,6 +119,8 @@ Core reports are:
 - [Multi-seed Stability](reports/multiseed-stability.md)
 - [Paper Result Consolidation](reports/paper-result-consolidation.md)
 - [Cross-dataset Validation](reports/cross-dataset-validation.md)
+- [Exposure Scaling Seed42](reports/exposure_scaling_seed42.md)
+- [Paper Post Exposure Revision](reports/paper_post_exposure_revision.md)
 
 The current best dedicated binary model is Y-K0. Among LLM runs, the current
 best dedicated ranking model is N-K0 and the current best multi-task diagnostic
@@ -464,27 +477,43 @@ above M1 and far above sample-exposure-matched SASRec under PopMatch-k5, but
 the Amazon N-K0 over M1 margin is narrow. Random-k5 is supplemental because
 N-K0 and M1 are nearly tied there.
 
+## LLM Exposure Scaling Status
+
+The LLM Exposure Scaling & Convergence Validation stage is closed for the seed42 evidence-freeze scope. The durable report is [Exposure Scaling Seed42](reports/exposure_scaling_seed42.md), and the frozen source package is `.agent/exposure_scaling/final_evidence/`.
+
+The stage completed Y24/Y48/Y96, N24/N48/N96/N200, M1-48/M1-96, current96 k20/k50 robustness, and SASRec exposure-aligned checks. Validation metrics remain the only basis for training and exposure decisions; test metrics are report-only after the validation decision is fixed.
+
+Y-native preference capability shows weakening gains by 96k rather than strict convergence. Validation AUC moves from `0.7761` at Y24 to `0.7816` at Y48 and `0.7844` at Y96, while validation F1 peaks at Y48 and drops at Y96. Y-as-ranker PopMatch ranking remains a bridge metric and should not be treated as the native Y objective.
+
+N-native PopMatch-k5 ranking remains exposure-sensitive through the N200 near-full-pool anchor. Validation HR@1 rises from N24 `0.5774` to N48 `0.6030`, N96 `0.6238`, and N200 `0.6516`. N200 is not a converged endpoint.
+
+M1-96 preserves Y-side capability without detectable degradation and approaches N96 on PopMatch-k5 validation. The N96 minus M1-96 validation gaps are tiny and statistically compatible with parity: HR@1 `+0.00035`, NDCG@5 `+0.00115`, and MRR `+0.00149`. Harder candidate protocols still favor the N specialist: k20 validation HR@1 gap is `+0.11242`, and k50 validation HR@1 gap is `+0.01709`. Because k5/k20/k50 protocols are almost non-nested, these results should be described as hard-candidate protocol robustness, not a pure candidate-size effect.
+
+SASRec positioning is now exposure-aware. At approximately matched task-sample exposure, N-K0 is above SASRec at 24k, 48k, 96k, and 200k validation points. The 200k gap narrows, but the comparison is not FLOP-, wall-clock-, GPU-cost-, or parameter-update matched.
+
+## Paper Post-Exposure Status
+
+Paper writing should resume from the frozen exposure evidence instead of the older Results narrative. The durable transition report is [Paper Post Exposure Revision](reports/paper_post_exposure_revision.md).
+
+The next paper-writing task should create `.agent/paper_writing/post_exposure/` and generate a claim audit, revised Results draft, Discussion draft, table/figure mapping, Introduction/Related Work revision plans, and a paper claim matrix. It should not overwrite the current manuscript directly.
+
+## DOCX Synchronization Status
+
+The paper Word workflow now uses `paper/human_alter/work/ICECAI_2026_English_MASTER.docx` as the single English source of truth and `paper/human_alter/work/ICECAI_2026_Bilingual_REVIEW.docx` as the derived bilingual review document. English changes are detected from visible-text hashes and synchronized by stable invisible OOXML bookmarks; Chinese updates are limited to changed blocks through explicit review queues.
+
+The initialized manifest reuses 78 existing manuscript paragraph IDs and manages 101 English blocks, 99 EN/ZH pairs, two blocks without Chinese, nine tables, two figures, and 25 references. Baseline English, table, reference, number, and citation checks pass; structural drift and pending Chinese updates are zero. Seven isolated fixtures verify ordinary edits and ensure paragraph deletion or splitting is not silently synchronized.
+
+This synchronization status does not mean the Word manuscript fully conforms to the official submission template. The managed documents inherit the existing Word formatting. Current rendering is stable at 10 English pages and 14 bilingual pages, but exact template-style and section-structure adaptation remains a separate formatting task.
+
+The durable operating procedure is [English Master and Bilingual Review DOCX Sync](guides/docx_sync_workflow.md).
+
 ## Current Interpretation
 
-M1 is the best current multi-task tradeoff. It nearly matches Y-K0 on calibrated
-binary metrics and is the strongest M variant on ranking, but it does not exceed
-N-K0 among LLM ranking runs. Phase 2A strengthens this interpretation: as
-candidate sets become larger, the dedicated next-item LLM model N-K0 is more
-robust than M1. Phase 2B packages this into the LLM-centered paper-ready result
-interpretation. Phase 2C further preserves the same boundary under
-popularity-matched hard candidates: M1 is a useful compromise, not a
-single-task replacement. Traditional baselines now add two controls: canonical
-random candidate results are heavily affected by popularity, and a specialized
-sequence model can outperform the LLM next-item rows under the current
-same-candidate popmatch, optimizer-step-aligned diagnostic. The fair-budget
-baseline positioning stage narrows that interpretation: the SASRec advantage
-is sensitive to budget definition and does not hold in the single rough
-N-sample-exposure-matched diagnostic or in the completed closest-exposure
-sample-efficiency curve. The cold/tail diagnostic further shows that
-high-exposure SASRec's popmatch advantage is concentrated outside the coldest
-target-popularity bucket. The multi-seed stability stage confirms that these
-main directions are stable across seeds 42/43/44 under the fixed popmatch
-candidate protocol.
+The current paper-ready interpretation is exposure-aware. Preference supervision and next-interaction supervision encode different recommendation semantics, and their gains respond differently to additional exposure. Y-native preference learning shows weakening gains by 96k, while N-native next-item ranking continues improving through the N200 near-full-pool anchor.
+
+M1 is no longer best described as fixed multi-task interference. M1-96 keeps Y-side capability and reaches k5 validation near-parity with N96, while larger hard-candidate protocols still expose an N-side robustness advantage for the dedicated next-item model.
+
+SASRec remains a strong specialized sequence baseline, but the comparison must name its budget regime. High-exposure SASRec can be strong; under the completed approximately matched task-sample exposure checks, N-K0 is stronger at all evaluated matched points. This does not settle strict compute or capacity matching.
 
 ## Current Boundaries
 
@@ -494,13 +523,11 @@ stage.
 
 Reasonable next work:
 
-- run compact cross-dataset validation on Amazon Books to test whether the
-  MovieLens-1M task-interface and budget-regime findings have external
-  validity;
-- if cross-dataset validation supports the main directions, move toward full
-  paper writing and submission preparation;
-- if cross-dataset validation is dataset-dependent, keep the stable
-  task-interface contribution and narrow model-positioning claims accordingly.
+- resume Paper Writing / Submission Package from the frozen exposure evidence;
+- rewrite Results around RQ1-RQ5 with validation-first and report-only-test
+  boundaries;
+- run additional training only if the paper requires stronger generalization
+  wording, such as multiseed exposure checks or an M1-200 endpoint.
 
 ## Data Split Contract
 

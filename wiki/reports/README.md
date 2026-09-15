@@ -21,3 +21,5 @@ of current architecture. Make scope and date explicit.
 - `fair-budget-baseline-positioning.md`: budget, grouped, candidate-size, and rough sample-exposure diagnostics for SASRec-vs-LLM positioning.
 - `sample-efficiency-training-efficiency.md`: N-K0 and SASRec sample-efficiency curve under fixed popmatch candidates.
 - `cold-tail-item-slice-diagnostic.md`: target-popularity bucket slices showing where N-K0/M1/SASRec differences concentrate.
+- `exposure_scaling_seed42.md`: seed42 exposure scaling, M1 alignment, hard-candidate robustness, and SASRec exposure-aware claim boundaries.
+- `paper_post_exposure_revision.md`: paper-writing migration plan after exposure evidence freeze.

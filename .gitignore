@@ -68,3 +68,7 @@ true_paper/*.docx
 !true_paper/paper.docx
 paper/templates/**/*.pdf
 paper/templates/**/*.docx
+
+# Local paper-writing scratch not pushed.
+.agent/paper_writing/
+.agent/m1_*.json
