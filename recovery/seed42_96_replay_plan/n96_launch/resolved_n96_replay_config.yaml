@@ -1,0 +1,116 @@
+schema: n96_canonical_launch_config_v1
+label: CANONICAL RECOVERY / REPLAY RUN
+training_started: false
+run_id: N96_seed42_canonical_replay
+dataset: movielens-1m
+base_training_config: configs/n_local_model.yaml
+output_root: recovery_runs/seed42_96/n/canonical_replay_seed42
+independent_backup_destination: INDEPENDENT_BACKUP_DESTINATION_REQUIRED
+
+base_model:
+  source: meta-llama/Llama-3.2-3B-Instruct
+  local_path: models/Llama-3.2-3B-Instruct
+  manifest: recovery/seed42_96_replay_plan/n96_launch/BASE_MODEL_MANIFEST.json
+  sha256sums: recovery/seed42_96_replay_plan/n96_launch/BASE_MODEL_SHA256SUMS.txt
+  download_in_this_task: false
+  must_be_frozen_before_training: true
+
+environment:
+  requirements: recovery/seed42_96_replay_plan/requirements_replay.txt
+  expected_cuda: "12.1-compatible"
+  expected_gpu_memory_gb: 24
+  world_size: 1
+  env:
+    PYTHONHASHSEED: "42"
+    HF_HUB_DISABLE_TELEMETRY: "1"
+    TOKENIZERS_PARALLELISM: "false"
+    CUBLAS_WORKSPACE_CONFIG: ":4096:8"
+    CUDA_DEVICE_ORDER: PCI_BUS_ID
+    HF_HUB_OFFLINE: "1"
+    TRANSFORMERS_OFFLINE: "1"
+
+runtime_policy:
+  torch_use_deterministic_algorithms: false
+  torch_backends_cuda_matmul_allow_tf32: false
+  torch_backends_cudnn_allow_tf32: false
+  torch_backends_cudnn_benchmark: false
+
+training_arguments:
+  optim: adamw_torch
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_epsilon: 0.00000001
+  weight_decay: 0.0
+  max_grad_norm: 1.0
+  lr_scheduler_type: linear
+  warmup_steps: 0
+  warmup_ratio: 0.0
+  learning_rate: 0.0002
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  gradient_accumulation_steps: 8
+  save_strategy: steps
+  save_steps: 3000
+  save_total_limit: 3
+  eval_strategy: "no"
+  eval_steps: 1000000
+  logging_steps: 10
+  bf16: true
+  fp16: false
+  tf32: false
+  dataloader_num_workers: 0
+  seed: 42
+  data_seed: 42
+  remove_unused_columns: false
+  report_to: none
+  gradient_checkpointing: true
+
+data:
+  max_train_samples: 200000
+  max_valid_samples: 200000
+  expected_hash_manifest: recovery/seed42_96_replay_plan/manifests/expected_data_hashes.json
+  train_path: data/processed/movielens-1m/next_item_train.jsonl
+  valid_path: data/processed/movielens-1m/next_item_valid.jsonl
+  candidate_valid_path: data/candidates/movielens-1m/variants/k5_popmatch_seed42/valid.jsonl
+  candidate_test_path: data/candidates/movielens-1m/variants/k5_popmatch_seed42/test.jsonl
+
+chain:
+  name: CANONICAL_N_REPLAY_CHAIN
+  target_global_step: 12000
+  target_n_exposure: 96000
+  effective_batch_size: 8
+  stages:
+    - name: n_s3000
+      run_name: canonical_replay_n_s3000_seed42
+      max_steps: 3000
+      resume_from_checkpoint: null
+      expected_checkpoint: recovery_runs/seed42_96/n/canonical_replay_seed42/canonical_replay_n_s3000_seed42/checkpoints/checkpoint-3000
+    - name: n_s6000
+      run_name: canonical_replay_n_s6000_seed42
+      max_steps: 6000
+      resume_from_checkpoint: recovery_runs/seed42_96/n/canonical_replay_seed42/canonical_replay_n_s3000_seed42/checkpoints/checkpoint-3000
+      expected_checkpoint: recovery_runs/seed42_96/n/canonical_replay_seed42/canonical_replay_n_s6000_seed42/checkpoints/checkpoint-6000
+    - name: n_s12000
+      run_name: canonical_replay_n_s12000_seed42
+      max_steps: 12000
+      resume_from_checkpoint: recovery_runs/seed42_96/n/canonical_replay_seed42/canonical_replay_n_s6000_seed42/checkpoints/checkpoint-6000
+      expected_checkpoint: recovery_runs/seed42_96/n/canonical_replay_seed42/canonical_replay_n_s12000_seed42/checkpoints/checkpoint-12000
+
+historical_reference:
+  metrics_manifest: recovery/seed42_96_replay_plan/manifests/expected_historical_metrics.json
+  n96:
+    validation:
+      HR@1: 0.6237885463
+      NDCG@5: 0.8302923694
+      MRR: 0.7732422907
+    test:
+      HR@1: 0.6100440529
+      NDCG@5: 0.8218966233
+      MRR: 0.7622026432
+
+launch_guards:
+  require_preflight_ok: true
+  require_base_model_manifest: true
+  require_backup_destination: true
+  require_empty_output_dirs: true
+  require_human_training_env_var: RUN_N96_REPLAY_TRAINING=1

@@ -1,0 +1,79 @@
+schema: seed42_96_replay_config_v1
+run_id: M1_96_seed42_canonical_replay
+label: CANONICAL RECOVERY / REPLAY RUN
+historical_status: not_bitwise_reproduction
+task: m_k0
+entrypoint: python -m src.train.train_m
+base_config: configs/m_local_model.yaml
+dataset: movielens-1m
+output_root: recovery_runs/seed42_96/m1/canonical_replay_seed42
+seed:
+  python_random: 42
+  numpy: 42
+  torch_cpu: 42
+  torch_cuda: 42
+  transformers: 42
+  training_arguments_seed: 42
+  training_arguments_data_seed: 42
+training:
+  max_y_train_samples: 200000
+  max_n_train_samples: 200000
+  max_y_valid_samples: 200000
+  max_n_valid_samples: 200000
+  task_ratio_y: 1
+  task_ratio_n: 1
+  sampler: SequentialSampler
+  encoded_order: Y,N,Y,N
+  target_global_step: 24000
+  target_y_exposure: 96000
+  target_n_exposure: 96000
+  total_exposure: 192000
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 8
+  effective_batch_size: 8
+  expected_per_step_y_examples: 4
+  expected_per_step_n_examples: 4
+  learning_rate: 0.0002
+  bf16: true
+  fp16: false
+  tf32: false
+  save_strategy: steps
+  save_steps: 3000
+  save_total_limit: 3
+  eval_strategy: "no"
+  eval_steps: 1000000
+  logging_steps: 10
+  dataloader_num_workers: 0
+  dataloader_persistent_workers: false
+  optimizer: adamw_torch
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_epsilon: 0.00000001
+  weight_decay: 0.0
+  max_grad_norm: 1.0
+  lr_scheduler_type: linear
+  warmup_steps: 0
+  warmup_ratio: 0.0
+evidence_class:
+  learning_rate: HISTORICALLY_CONFIRMED
+  bf16: NEW_CANONICAL_CHOICE
+  target_global_step: HISTORICALLY_CONFIRMED
+  task_ratio: HISTORICALLY_CONFIRMED
+  sampler: HISTORICALLY_INFERRED
+  optimizer: NEW_CANONICAL_CHOICE
+  scheduler: NEW_CANONICAL_CHOICE
+  warmup: NEW_CANONICAL_CHOICE
+chain:
+  name: CANONICAL_M1_REPLAY_CHAIN
+  milestones:
+    - step: 3000
+      run_name: canonical_replay_m1_s3000_seed42
+      resume_from: null
+    - step: 12000
+      run_name: canonical_replay_m1_s12000_seed42
+      resume_from: recovery_runs/seed42_96/m1/canonical_replay_seed42/canonical_replay_m1_s3000_seed42/checkpoints/checkpoint-3000
+    - step: 24000
+      run_name: canonical_replay_m1_s24000_seed42
+      resume_from: recovery_runs/seed42_96/m1/canonical_replay_seed42/canonical_replay_m1_s12000_seed42/checkpoints/checkpoint-12000
+preflight_required: true
+base_model_hash_freeze_required: true

@@ -1,0 +1,71 @@
+schema: seed42_96_replay_config_v1
+run_id: Y96_seed42_canonical_replay
+label: CANONICAL RECOVERY / REPLAY RUN
+historical_status: not_bitwise_reproduction
+task: y_k0
+entrypoint: python -m src.train.train_y
+base_config: configs/y_local_model.yaml
+dataset: movielens-1m
+output_root: recovery_runs/seed42_96/y/canonical_replay_seed42
+seed:
+  python_random: 42
+  numpy: 42
+  torch_cpu: 42
+  torch_cuda: 42
+  transformers: 42
+  training_arguments_seed: 42
+  training_arguments_data_seed: 42
+training:
+  max_train_samples: 200000
+  max_valid_samples: 200000
+  target_global_step: 12000
+  target_y_exposure: 96000
+  target_n_exposure: 0
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 8
+  effective_batch_size: 8
+  learning_rate: 0.0002
+  bf16: true
+  fp16: false
+  tf32: false
+  save_strategy: steps
+  save_steps: 3000
+  save_total_limit: 3
+  eval_strategy: "no"
+  eval_steps: 1000000
+  logging_steps: 10
+  dataloader_num_workers: 0
+  dataloader_persistent_workers: false
+  optimizer: adamw_torch
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_epsilon: 0.00000001
+  weight_decay: 0.0
+  max_grad_norm: 1.0
+  lr_scheduler_type: linear
+  warmup_steps: 0
+  warmup_ratio: 0.0
+evidence_class:
+  learning_rate: HISTORICALLY_CONFIRMED
+  bf16: NEW_CANONICAL_CHOICE
+  target_global_step: HISTORICALLY_CONFIRMED
+  optimizer: NEW_CANONICAL_CHOICE
+  scheduler: NEW_CANONICAL_CHOICE
+  warmup: NEW_CANONICAL_CHOICE
+chain:
+  name: CANONICAL_Y_REPLAY_CHAIN
+  milestones:
+    - step: 1500
+      run_name: canonical_replay_y_s1500_seed42
+      resume_from: null
+    - step: 3000
+      run_name: canonical_replay_y_s3000_seed42
+      resume_from: recovery_runs/seed42_96/y/canonical_replay_seed42/canonical_replay_y_s1500_seed42/checkpoints/checkpoint-1500
+    - step: 6000
+      run_name: canonical_replay_y_s6000_seed42
+      resume_from: recovery_runs/seed42_96/y/canonical_replay_seed42/canonical_replay_y_s3000_seed42/checkpoints/checkpoint-3000
+    - step: 12000
+      run_name: canonical_replay_y_s12000_seed42
+      resume_from: recovery_runs/seed42_96/y/canonical_replay_seed42/canonical_replay_y_s6000_seed42/checkpoints/checkpoint-6000
+preflight_required: true
+base_model_hash_freeze_required: true

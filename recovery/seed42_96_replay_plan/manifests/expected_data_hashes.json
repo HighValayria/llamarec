@@ -1,0 +1,66 @@
+{
+  "schema": "seed42_96_replay_expected_data_hashes_v1",
+  "source": "current local/GitHub-synced preserved files",
+  "files": [
+    {
+      "path": "data/processed/movielens-1m/preference_train.jsonl",
+      "records": 976284,
+      "sha256": "2160f92d7755cb5bd0c9f46592c611ea69559a5283230d9a297541e89ac03ae3"
+    },
+    {
+      "path": "data/processed/movielens-1m/preference_valid.jsonl",
+      "records": 12381,
+      "sha256": "3c50e4a5ade73228d36e02c81cad0e873ac7b0fd9d17137d1e7a1fe5180b23dd"
+    },
+    {
+      "path": "data/processed/movielens-1m/preference_test.jsonl",
+      "records": 11544,
+      "sha256": "d5f1252e2efef1add1976e3edf8b74e6a573983f72a672c4a89c446bef74bf8e"
+    },
+    {
+      "path": "data/processed/movielens-1m/next_item_train.jsonl",
+      "records": 212725,
+      "sha256": "b0382a1a5d02e69edb7ddc466fec542a4f44595d03466a445e98a2e42aefab42"
+    },
+    {
+      "path": "data/processed/movielens-1m/next_item_valid.jsonl",
+      "records": 5675,
+      "sha256": "78bb80789e0f8a4a5ed1bd6e03c47c772278b8cbb9401118ae0284e496162955"
+    },
+    {
+      "path": "data/processed/movielens-1m/next_item_test.jsonl",
+      "records": 5675,
+      "sha256": "9eb1e1f424b04f5184f2f1df2f899a4866774cca1bc9d8cb88977d9321581e23"
+    },
+    {
+      "path": "data/processed/movielens-1m/split.json",
+      "records": null,
+      "sha256": "1b6cfbf71e25063dffa12502bc685f476222810f2f09edbda03605cd785acdb0"
+    },
+    {
+      "path": "data/processed/movielens-1m/stats.json",
+      "records": null,
+      "sha256": "79cf1311caf9fbdbba90a46e9dc37d8c90dc49975d06f4c192076f956daa2ade"
+    },
+    {
+      "path": "data/candidates/movielens-1m/variants/k5_popmatch_seed42/valid.jsonl",
+      "records": 5675,
+      "sha256": "ec3006ba1d28e665165a165e9f5f19b7b97e12fad7fda27672d5b57148ae8324"
+    },
+    {
+      "path": "data/candidates/movielens-1m/variants/k5_popmatch_seed42/test.jsonl",
+      "records": 5675,
+      "sha256": "19205f08ce8a16fdc5e17be9219062e75779a8c1db7053be9460bf2921e4272f"
+    }
+  ],
+  "optional_later_candidate_assets": [
+    {
+      "name": "k20_seed42",
+      "status": "VERIFY_BEFORE_USE"
+    },
+    {
+      "name": "k50_seed42",
+      "status": "VERIFY_BEFORE_USE"
+    }
+  ]
+}
