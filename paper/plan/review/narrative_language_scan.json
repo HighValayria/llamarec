@@ -1,0 +1,645 @@
+{
+  "date": "2026-09-06",
+  "scope": "EN/ZH body only; captions reviewed separately",
+  "before": [
+    {
+      "path": "paper/modules/03_problem_formulation.md",
+      "line": 27,
+      "pid": "problem.p02",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "tions organize an empirical study of supervision and evaluation, rather than an architectural proposal or an identification of latent learning mechanisms.",
+      "classification": "REMOVE",
+      "reason": "直接保留实证研究定位；删除架构/潜在机制的反衬。"
+    },
+    {
+      "path": "paper/modules/06_results.md",
+      "line": 14,
+      "pid": "results.p01",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "risons, and test values are retained as report-only observations rather than used to redefine the selected operating points. An external Amazon analysis then examines which ranking direction",
+      "classification": "REWRITE",
+      "reason": "改成验证用于决策、测试参与最终解释，见 results.p01。"
+    },
+    {
+      "path": "paper/modules_parts/methods/baseline_setup.md",
+      "line": 15,
+      "pid": "methods.baseline.p01",
+      "lang": "EN",
+      "term": "rather than",
+      "context": " refers to this implementation and its recorded training regime, rather than every possible SASRec objective or tuning configuration. The exposure-aligned runs use a batch size of 512 with a",
+      "classification": "REWRITE",
+      "reason": "以本地实现与训练条件正面界定 SASRec，见 methods.baseline.p01。"
+    },
+    {
+      "path": "paper/modules_parts/methods/baseline_setup.md",
+      "line": 19,
+      "pid": "methods.baseline.p01",
+      "lang": "ZH",
+      "term": "并不代表",
+      "context": "评估的实现以全物品交叉熵训练下一目标分类器，再利用序列表示为相同的固定评估候选打分。因此，报告的基线指这一实现及其记录的训练设置，并不代表所有可能的 SASRec 目标函数或调参配置。曝光对齐运行采用 batch size 512，并记录末尾 batch 的实际消耗量。对齐处理后的 N 样本只匹配了一种监督量，目标函数、预训练、模型容量和计算上的差异仍然存在。",
+      "classification": "REWRITE",
+      "reason": "同一实现范围改为直接陈述，不枚举所有可能变体。"
+    },
+    {
+      "path": "paper/modules_parts/methods/baseline_setup.md",
+      "line": 26,
+      "pid": "methods.baseline.p02",
+      "lang": "EN",
+      "term": "does not",
+      "context": "nterpreted as compute-matched measurements. The present evidence does not systematically evaluate serving latency, training throughput, or end-to-end engineering cost. Baseline conclusions a",
+      "classification": "MOVE_TO_LIMITATIONS",
+      "reason": "服务延迟、吞吐和成本范围集中至 limitations.compute.p01。"
+    },
+    {
+      "path": "paper/modules_parts/methods/bootstrap_and_statistics.md",
+      "line": 26,
+      "pid": "methods.statistics.p02",
+      "lang": "EN",
+      "term": "does not",
+      "context": "ing zero is compatible with small differences of either sign; it does not establish statistical equivalence or non-inferiority without a specified margin and an appropriate test. We interpre",
+      "classification": "REWRITE",
+      "reason": "等价性解释压为 methods.statistics.p02 一句；详细范围集中至 limitations.evaluation.p01。"
+    },
+    {
+      "path": "paper/modules_parts/methods/bootstrap_and_statistics.md",
+      "line": 26,
+      "pid": "methods.statistics.p02",
+      "lang": "EN",
+      "term": "do not",
+      "context": " conventional corrected p-value, and individual metric intervals do not establish family-wise error control across all comparisons. This interpretation keeps the strength of each statement a",
+      "classification": "MOVE_TO_LIMITATIONS",
+      "reason": "多重性推断范围集中至 limitations.evaluation.p01。"
+    },
+    {
+      "path": "paper/modules_parts/methods/bootstrap_and_statistics.md",
+      "line": 30,
+      "pid": "methods.statistics.p02",
+      "lang": "ZH",
+      "term": "不意味着",
+      "context": "议，对 near parity 作描述性解释。报告中的 bootstrap 正差值频率不被视为常规的校正后 p 值，单项指标区间也不意味着所有比较都受到整体错误率控制。这样的解释使陈述强度与实际测量的不确定性保持一致。",
+      "classification": "MOVE_TO_LIMITATIONS",
+      "reason": "中文多重性边界同样集中至 limitations.evaluation.p01。"
+    },
+    {
+      "path": "paper/modules_parts/methods/bootstrap_and_statistics.md",
+      "line": 38,
+      "pid": "methods.statistics.p03",
+      "lang": "EN",
+      "term": "not establish",
+      "context": "ferent candidate sample. Additional 96k replications alone would not establish cross-seed stability of every point through N200.",
+      "classification": "MOVE_TO_LIMITATIONS",
+      "reason": "96k 与整曲线覆盖区分集中至 limitations.training.p01。"
+    },
+    {
+      "path": "paper/modules_parts/methods/datasets.md",
+      "line": 19,
+      "pid": "methods.datasets.p01",
+      "lang": "ZH",
+      "term": "并非",
+      "context": "元数据包含 3,883 个物品，这两项统计对应不同的物品全集。Y 与 N 的样本数差异来自各自的目标和时间桶规则，因此两种原生任务并非对同一组标注样本进行评估。[TABLE: datasets] 列出任务级规模。",
+      "classification": "REWRITE",
+      "reason": "直接说明不同任务规则产生不同样本群体。"
+    },
+    {
+      "path": "paper/modules_parts/methods/datasets.md",
+      "line": 26,
+      "pid": "methods.datasets.p02",
+      "lang": "EN",
+      "term": "do not",
+      "context": "om-k5 and PopMatch-k5. They concern earlier operating points and do not replicate the MovieLens 96k comparison, exposure trajectory, or hard-candidate protocols. The recorded Amazon binary o",
+      "classification": "MOVE_TO_LIMITATIONS",
+      "reason": "Amazon 未覆盖的曲线、hard 与偏好复现集中至 limitations.cross_dataset.p01。"
+    },
+    {
+      "path": "paper/modules_parts/methods/evaluation_protocol.md",
+      "line": 25,
+      "pid": "methods.evaluation.p02",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "uences, so PopMatch is a retrospective offline candidate control rather than a train-only estimate of item availability or popularity. Candidate lists and their ordering are fixed within eac",
+      "classification": "REWRITE",
+      "reason": "回顾性定义保留，改为与在线检索区别的一句 methods.evaluation.p02。"
+    },
+    {
+      "path": "paper/modules_parts/methods/evaluation_protocol.md",
+      "line": 25,
+      "pid": "methods.evaluation.p02",
+      "lang": "EN",
+      "term": "without establishing",
+      "context": "mparison. These controls reduce one measured popularity mismatch without establishing that popularity-related effects have been eliminated.",
+      "classification": "MOVE_TO_LIMITATIONS",
+      "reason": "残余流行度影响集中至 limitations.evaluation.p01。"
+    },
+    {
+      "path": "paper/modules_parts/methods/evaluation_protocol.md",
+      "line": 29,
+      "pid": "methods.evaluation.p02",
+      "lang": "ZH",
+      "term": "并非",
+      "context": "至多为所需负候选数十倍的近邻流行度池，再从中采样。流行度来自处理后的完整交互序列，因此 PopMatch 是回顾性的离线候选控制，并非只根据训练期估计的物品可用性或流行度。每组模型比较使用固定候选列表及其顺序。这些控制缩小了一项可测量的流行度失配，但不意味着所有流行度相关影响均已消除。",
+      "classification": "REWRITE",
+      "reason": "明确全语料流行度与离线用途，保留科学必要的信息范围。"
+    },
+    {
+      "path": "paper/modules_parts/methods/evaluation_protocol.md",
+      "line": 29,
+      "pid": "methods.evaluation.p02",
+      "lang": "ZH",
+      "term": "不意味着",
+      "context": "候选控制，并非只根据训练期估计的物品可用性或流行度。每组模型比较使用固定候选列表及其顺序。这些控制缩小了一项可测量的流行度失配，但不意味着所有流行度相关影响均已消除。",
+      "classification": "MOVE_TO_LIMITATIONS",
+      "reason": "中文残余流行度影响集中至 limitations.evaluation.p01。"
+    },
+    {
+      "path": "paper/modules_parts/methods/evaluation_protocol.md",
+      "line": 36,
+      "pid": "methods.evaluation.p03",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "he reach of the k5 observation under other candidate conditions, rather than to identify an isolated causal effect of candidate-set size.",
+      "classification": "MOVE_TO_LIMITATIONS",
+      "reason": "单因素候选规模边界集中至 limitations.evaluation.p01。"
+    },
+    {
+      "path": "paper/modules_parts/methods/evaluation_protocol.md",
+      "line": 40,
+      "pid": "methods.evaluation.p03",
+      "lang": "ZH",
+      "term": "并非",
+      "context": "20 与 hard-k50 指 N96/M1-96 比较中保留的 20 候选和 50 候选协议。它们作为独立构造的候选集进行评估，并非 PopMatch-k5 的嵌套扩展。因此，不同协议间模型差距的变化，可能同时涉及候选组成和候选数量。本文保留其冻结协议身份，不仅凭目录名称将它们重新标为 PopMatch。其作用是检验 k5 观察在其他候选条件下的适用范围，而非识别候选规模的独",
+      "classification": "REWRITE",
+      "reason": "直接说明候选集独立、非嵌套；Methods 保留构造事实。"
+    },
+    {
+      "path": "paper/modules_parts/methods/exposure_definition.md",
+      "line": 14,
+      "pid": "methods.exposure.p01",
+      "lang": "EN",
+      "term": "does not",
+      "context": "onsumption increases exposure without adding new events. It also does not equate token counts, parameter updates, FLOPs, or wall-clock computation across models. We use exposure as a supervi",
+      "classification": "MOVE_TO_DISCUSSION",
+      "reason": "曝光与资源效率的区别在 discussion.baseline.p02 解释，测量边界进入 Limitations。"
+    },
+    {
+      "path": "paper/modules_parts/methods/exposure_definition.md",
+      "line": 18,
+      "pid": "methods.exposure.p01",
+      "lang": "ZH",
+      "term": "不意味着",
+      "context": ") 1[task(x)=q]。该量不等于唯一原始交互数：任务构造可能产生相互重叠的历史，而重复消耗会增加曝光，却不会新增事件。它也不意味着不同模型具有相同的 token 数、参数更新次数、FLOPs 或实际计算时间。本文将曝光作为监督量的统计变量，并在跨模型比较中保留这些区别。",
+      "classification": "MOVE_TO_DISCUSSION",
+      "reason": "中文同步迁移到 discussion.baseline.p02 与计算范围段。"
+    },
+    {
+      "path": "paper/modules_parts/methods/exposure_definition.md",
+      "line": 25,
+      "pid": "methods.exposure.p02",
+      "lang": "EN",
+      "term": "do not",
+      "context": "hat resumed training honored data skipping; the retained records do not contain a per-example sampler trace. [TABLE: training_exposure] separates optimizer steps, total exposure, and expecte",
+      "classification": "MOVE_TO_LIMITATIONS",
+      "reason": "逐样本 trace 缺失集中至 limitations.training.p01；Methods 保留 resume 前提。"
+    },
+    {
+      "path": "paper/modules_parts/methods/exposure_definition.md",
+      "line": 36,
+      "pid": "methods.exposure.p03",
+      "lang": "EN",
+      "term": "not a",
+      "context": "he anchor describes coverage within the evaluated training pool, not a converged endpoint. SASRec alignment uses actual consumed-example counts rather than multiplying every update by a nomi",
+      "classification": "MOVE_TO_LIMITATIONS",
+      "reason": "有限曝光窗口与收敛边界集中至 limitations.training.p01。"
+    },
+    {
+      "path": "paper/modules_parts/methods/exposure_definition.md",
+      "line": 36,
+      "pid": "methods.exposure.p03",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "d endpoint. SASRec alignment uses actual consumed-example counts rather than multiplying every update by a nominal full batch. Its S47, S94, S188, and S391 points consume 24,064, 48,128, 96,",
+      "classification": "REWRITE",
+      "reason": "直接写 actual consumed-example counts including short final batch。"
+    },
+    {
+      "path": "paper/modules_parts/methods/task_definition.md",
+      "line": 14,
+      "pid": "methods.task.p01",
+      "lang": "EN",
+      "term": "does not",
+      "context": "ore to several candidate items provides a bridge to ranking, but does not change the target on which Y was trained.",
+      "classification": "REWRITE",
+      "reason": "改为 native 任务与 bridge 评估的正面定义。"
+    },
+    {
+      "path": "paper/modules_parts/methods/task_definition.md",
+      "line": 25,
+      "pid": "methods.task.p02",
+      "lang": "EN",
+      "term": "does not",
+      "context": "-rated items; the next interaction can therefore be an item that does not satisfy the Y definition of Like. A distractor is an item other than the observed target for that example, not a con",
+      "classification": "REWRITE",
+      "reason": "改为覆盖全部评分等级的完整序列样本构造。"
+    },
+    {
+      "path": "paper/modules_parts/methods/task_definition.md",
+      "line": 25,
+      "pid": "methods.task.p02",
+      "lang": "EN",
+      "term": "not a",
+      "context": "ctor is an item other than the observed target for that example, not a confirmed dislike. This distinction also permits previously encountered items to appear as distractors when the candida",
+      "classification": "KEEP",
+      "reason": "干扰候选不等于确定负偏好，直接影响 N 任务标签解释。"
+    },
+    {
+      "path": "paper/modules_parts/methods/task_definition.md",
+      "line": 29,
+      "pid": "methods.task.p02",
+      "lang": "ZH",
+      "term": "不是",
+      "context": "候选标签。N 使用完整交互序列，而不只保留正评分物品，因此下一次交互的物品可能并不满足 Y 对 Like 的定义。干扰候选仅表示它不是该样本的观测目标，并不表示用户确定不喜欢它。候选协议允许时，用户曾经接触过的物品也可以作为干扰候选。",
+      "classification": "REWRITE",
+      "reason": "中文改成“不是已确认的负偏好”，保持关键语义而非重复目标定义。"
+    },
+    {
+      "path": "paper/modules_parts/methods/task_definition.md",
+      "line": 36,
+      "pid": "methods.task.p03",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "s of examples, this comparison matches task-specific supervision rather than total training samples. It asks whether one adapted model can preserve both observed capabilities under explicitl",
+      "classification": "REWRITE",
+      "reason": "直接写 M1 总曝光为两个任务之和；每任务匹配照常定义。"
+    },
+    {
+      "path": "paper/modules_parts/methods/task_definition.md",
+      "line": 40,
+      "pid": "methods.task.p03",
+      "lang": "ZH",
+      "term": "并非",
+      "context": "和 N 样本，同时保留各自的任务提示与答案空间。本文将其偏好评分路径称为 M-Y，将候选选择路径称为 M-N；这些名称指评估接口，并非新增的独立预测头。每任务曝光对齐的比较，将 M-Y 与获得相应 Y 曝光的专家对比，将 M-N 与获得相应 N 曝光的专家对比。由于 M1 同时接收两类样本，这种比较对齐的是特定任务的监督，而非训练样本总量。它考察的是在明确的曝光条件下，一个适配",
+      "classification": "REMOVE",
+      "reason": "M-Y/M-N 已定义为接口，删除新增预测头反衬。"
+    },
+    {
+      "path": "paper/modules_parts/methods/temporal_split.md",
+      "line": 25,
+      "pid": "methods.temporal.p02",
+      "lang": "EN",
+      "term": "does not",
+      "context": "preceding history, and a later bucket with multiple interactions does not identify a unique next item, so these buckets do not supply N targets. The ambiguous sample is skipped without disca",
+      "classification": "REWRITE",
+      "reason": "以合法 N 目标的正面条件说明唯一下一物品。"
+    },
+    {
+      "path": "paper/modules_parts/methods/temporal_split.md",
+      "line": 25,
+      "pid": "methods.temporal.p02",
+      "lang": "EN",
+      "term": "do not",
+      "context": "eractions does not identify a unique next item, so these buckets do not supply N targets. The ambiguous sample is skipped without discarding the entire user; later legal targets can still us",
+      "classification": "REWRITE",
+      "reason": "说明多交互桶跳过目标但保留历史事件。"
+    },
+    {
+      "path": "paper/modules_parts/methods/temporal_split.md",
+      "line": 29,
+      "pid": "methods.temporal.p02",
+      "lang": "ZH",
+      "term": "无法",
+      "context": "N 样本要求下一交互目标能够唯一确定。首个时间桶没有先前历史，而后续包含多次交互的时间桶无法确定唯一的 next item，因此这些时间桶不提供 N 目标。处理时跳过的是有歧义的样本，并不因此丢弃整个用户；更晚的合法目标仍可使用之前的交互历史。末尾两个合法 N 样本分别留作验证和测试，其前面的合法样本进入训练。提示中最多保留配置规定的十",
+      "classification": "REWRITE",
+      "reason": "中文同步改为合法桶定义，时间规则完整保留。"
+    },
+    {
+      "path": "paper/modules_parts/methods/training_setup.md",
+      "line": 15,
+      "pid": "methods.training.p01",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "down_proj. This is the all-linear projection coverage used here, rather than a claim that embeddings or the language-model output head receive additional adapters. Gradient checkpointing is ",
+      "classification": "REMOVE",
+      "reason": "保留七类投影列表，删除嵌入/输出头反衬句。"
+    },
+    {
+      "path": "paper/modules_parts/methods/training_setup.md",
+      "line": 26,
+      "pid": "methods.training.p02",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "the supervised loss, so adaptation optimizes the response tokens rather than reconstruction of the full input. Y examples supervise Yes or No, whereas N examples supervise the label of the o",
+      "classification": "REWRITE",
+      "reason": "直接说明 prompt/padding 被 mask 与 response-only loss。"
+    },
+    {
+      "path": "paper/modules_parts/methods/training_setup.md",
+      "line": 37,
+      "pid": "methods.training.p03",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "Inference compares the likelihoods of the allowed answers rather than relying on unconstrained generated text. For Y, the Yes and No likelihoods are normalized over the two-answer set",
+      "classification": "REWRITE",
+      "reason": "直接说明 allowed-answer likelihood 评分。"
+    },
+    {
+      "path": "paper/modules_parts/methods/training_setup.md",
+      "line": 37,
+      "pid": "methods.training.p03",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "han one token, scoring uses its complete sequence log-likelihood rather than only the first token. M-Y and M-N reuse these scoring routes with the shared multitask adapter.",
+      "classification": "REWRITE",
+      "reason": "直接说明完整多 token 答案 log-likelihood。"
+    },
+    {
+      "path": "paper/modules_parts/methods/training_setup.md",
+      "line": 49,
+      "pid": "methods.training.p04",
+      "lang": "EN",
+      "term": "rather than",
+      "context": " are identified by cumulative optimizer steps and task exposure, rather than by the historical Y-K0 or N-K0 family name alone. Internal evaluation and checkpoint-saving schedules are trainin",
+      "classification": "REMOVE",
+      "reason": "删除历史别名对照；累计步数与曝光足以标识检查点。"
+    },
+    {
+      "path": "paper/modules_parts/methods/training_setup.md",
+      "line": 49,
+      "pid": "methods.training.p04",
+      "lang": "EN",
+      "term": "do not",
+      "context": "ion and checkpoint-saving schedules are training bookkeeping and do not replace the fixed-candidate validation comparisons used for the reported findings. This distinction is necessary for r",
+      "classification": "REWRITE",
+      "reason": "直接说明固定候选比较和验证/测试决策顺序。"
+    },
+    {
+      "path": "paper/modules_parts/results/cross_dataset_validation.md",
+      "line": 25,
+      "pid": "results.amazon.p02",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "se the retained margin is small and concerns earlier checkpoints rather than N96/M1-96. Amazon has no corresponding exposure trajectory or hard-k20/k50 evaluation in this evidence set, and i",
+      "classification": "MOVE_TO_LIMITATIONS",
+      "reason": "Amazon 的运行点及未复现高曝光范围集中说明。"
+    },
+    {
+      "path": "paper/modules_parts/results/cross_dataset_validation.md",
+      "line": 29,
+      "pid": "results.amazon.p02",
+      "lang": "ZH",
+      "term": "并非",
+      "context": "互选择之间的区别，也支持低曝光 N-SASRec 比较的方向。它对专家与多任务差异的支持较弱，因为保留差距较小，且对应较早检查点，并非 N96/M1-96。这组证据没有 Amazon 对应的曝光轨迹或 hard-k20/k50 评估，其二分类输出也不用于复现 MovieLens 偏好发现。因此，第二数据集扩展了排序侧证据，但详细的曝光与统一能力主张仍限定在 MovieLens ",
+      "classification": "MOVE_TO_LIMITATIONS",
+      "reason": "中文同步集中；Results 先保留重现的排序方向。"
+    },
+    {
+      "path": "paper/modules_parts/results/rq1_supervision_semantics.md",
+      "line": 14,
+      "pid": "results.rq1.p01",
+      "lang": "EN",
+      "term": "does not",
+      "context": " useful discrimination on its native target, but that capability does not translate directly into next-interaction selection. At Y96, MovieLens validation AUC, F1, and accuracy are 0.7844, 0",
+      "classification": "REWRITE",
+      "reason": "以能力结构差异为中心句，先给 native 与 ranking 结果。"
+    },
+    {
+      "path": "paper/modules_parts/results/rq1_supervision_semantics.md",
+      "line": 25,
+      "pid": "results.rq1.p02",
+      "lang": "EN",
+      "term": "should not",
+      "context": "next event among candidates, so its lower next-interaction score should not be interpreted as failure on its native preference task. At the same time, Y and N differ in target construction, ",
+      "classification": "MOVE_TO_DISCUSSION",
+      "reason": "native 效用与下一事件选择的区别在 discussion.semantics.p01 正面解释。"
+    },
+    {
+      "path": "paper/modules_parts/results/rq1_supervision_semantics.md",
+      "line": 29,
+      "pid": "results.rq1.p02",
+      "lang": "ZH",
+      "term": "不应解释为",
+      "context": "欢一个物品”和“下一次与它交互”的区别一致。Y-as-ranker 没有接受从候选中识别下一事件的训练，因此，其较低的下一交互分数不应解释为原生偏好任务失败。同时，Y 与 N 不仅有标签语义差异，也在目标构造、任务数据集和评分输入上不同。因此，该比较记录的是与这些监督接口相关的能力，并不将全部数值差距归因于某个单一因果机制。RQ1 得到的是任务定义与可观测行为层面的支持。",
+      "classification": "MOVE_TO_DISCUSSION",
+      "reason": "中文同步解释任务适用性，去掉假想失败质疑。"
+    },
+    {
+      "path": "paper/modules_parts/results/rq2_exposure_response.md",
+      "line": 14,
+      "pid": "results.rq2.p01",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "d points, while F1 changes from 0.7792 to 0.7848 and then 0.7783 rather than increasing monotonically. Y-as-ranker validation NDCG@5 remains within 0.5995-0.6031 across the same range. These",
+      "classification": "REWRITE",
+      "reason": "直接列出 F1 的实际变化，不再用反衬句。"
+    },
+    {
+      "path": "paper/modules_parts/results/rq2_exposure_response.md",
+      "line": 14,
+      "pid": "results.rq2.p01",
+      "lang": "EN",
+      "term": "without establishing",
+      "context": "te limited additional gains on the measured Y interfaces by 96k, without establishing a converged preference model. The task's native metrics and bridge ranking consequently provide compleme",
+      "classification": "MOVE_TO_LIMITATIONS",
+      "reason": "Y 后续行为与收敛未定集中至训练范围。"
+    },
+    {
+      "path": "paper/modules_parts/results/rq2_exposure_response.md",
+      "line": 25,
+      "pid": "results.rq2.p02",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "show the full observed trajectory, which remains a seed42 result rather than a replicated scaling law.",
+      "classification": "MOVE_TO_LIMITATIONS",
+      "reason": "单 seed 曲线范围集中至 limitations.training.p01；Results 开头保留 seed42。"
+    },
+    {
+      "path": "paper/modules_parts/results/rq2_exposure_response.md",
+      "line": 29,
+      "pid": "results.rq2.p02",
+      "lang": "ZH",
+      "term": "并非",
+      "context": "re_scaling] 与 [FIGURE: n_native_exposure] 展示完整观测轨迹；它仍是 seed42 结果，并非经过复现的 scaling law。",
+      "classification": "MOVE_TO_LIMITATIONS",
+      "reason": "中文曲线复现边界同步集中。"
+    },
+    {
+      "path": "paper/modules_parts/results/rq2_exposure_response.md",
+      "line": 36,
+      "pid": "results.rq2.p03",
+      "lang": "EN",
+      "term": "not a",
+      "context": "s comparison concerns the trajectories of task-specific metrics, not a direct comparison between the numerical scales of AUC and HR@1. Y is evaluated through 96k, whereas N extends to the 20",
+      "classification": "KEEP",
+      "reason": "跨指标只比响应形态的说明直接影响解读，压缩保留。"
+    },
+    {
+      "path": "paper/modules_parts/results/rq2_exposure_response.md",
+      "line": 36,
+      "pid": "results.rq2.p03",
+      "lang": "EN",
+      "term": "do not",
+      "context": "reas N extends to the 200k near-full-pool anchor, so the results do not identify the later behavior of Y or the eventual endpoint of N. Exposure may interact with sample coverage, ordering, ",
+      "classification": "MOVE_TO_LIMITATIONS",
+      "reason": "有限测量区间及覆盖/优化共同变化集中至训练范围。"
+    },
+    {
+      "path": "paper/modules_parts/results/rq3_multitask_unification.md",
+      "line": 16,
+      "pid": "results.rq3.p01",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "rts the bounded description of no detectable Y-side degradation, rather than a general positive-transfer claim or a demonstrated non-inferiority result.",
+      "classification": "MOVE_TO_LIMITATIONS",
+      "reason": "等价/非劣效边界由统计方法与评估局限统一承担；结果写实际效应。"
+    },
+    {
+      "path": "paper/modules_parts/results/rq3_multitask_unification.md",
+      "line": 28,
+      "pid": "results.rq3.p02",
+      "lang": "EN",
+      "term": "do not",
+      "context": "ns tied to the seed43/44 replications, and the current intervals do not establish equivalence within a predefined tolerance. [TABLE: exposure_scaling] [TABLE: specialist_multitask]",
+      "classification": "REMOVE",
+      "reason": "重复等价性提醒由 methods.statistics.p02 统一承担。"
+    },
+    {
+      "path": "paper/modules_parts/results/rq3_multitask_unification.md",
+      "line": 40,
+      "pid": "results.rq3.p03",
+      "lang": "EN",
+      "term": "does not",
+      "context": "aces and, for ranking near parity, to standard k5 validation; it does not establish parity across splits or protocols. [TABLE: hard_candidate] [TABLE: binary_exposure]",
+      "classification": "REWRITE",
+      "reason": "直接写很小 validation gap 与正向 test gap，保留分 split 含义。"
+    },
+    {
+      "path": "paper/modules_parts/results/rq4_hard_candidate_robustness.md",
+      "line": 15,
+      "pid": "results.rq4.p01",
+      "lang": "EN",
+      "term": "does not",
+      "context": "The k5 validation relationship does not extend to the current hard-k20 protocol. N96 achieves 0.3891 HR@1, compared with 0.2767 for M1-96, yielding an N-M d",
+      "classification": "REWRITE",
+      "reason": "以 hard-k20 的专家优势为中心句，后接数据。"
+    },
+    {
+      "path": "paper/modules_parts/results/rq4_hard_candidate_robustness.md",
+      "line": 38,
+      "pid": "results.rq4.p03",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "protocol comparison establishes a boundary on the k5 observation rather than a monotonic relationship between candidate count and the specialist gap. In particular, the hard-k20 gap exceeds ",
+      "classification": "REWRITE",
+      "reason": "改为协议关系及非嵌套共同变化；k20/k50 大小对照保留在 p02。"
+    },
+    {
+      "path": "paper/modules_parts/results/rq4_hard_candidate_robustness.md",
+      "line": 38,
+      "pid": "results.rq4.p03",
+      "lang": "EN",
+      "term": "does not",
+      "context": "a difference in robustness across these candidate protocols, but does not identify why that difference occurs or isolate a candidate-size effect. This distinction preserves the observed rank",
+      "classification": "MOVE_TO_LIMITATIONS",
+      "reason": "单因素因果边界集中至 limitations.evaluation.p01。"
+    },
+    {
+      "path": "paper/modules_parts/results/rq5_sasrec_exposure.md",
+      "line": 25,
+      "pid": "results.rq5.p02",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "tation, so it supports an exposure-conditioned ranking statement rather than general model-family superiority.",
+      "classification": "MOVE_TO_DISCUSSION",
+      "reason": "资源和模型系列比较在 discussion.baseline.p02 解释；Results 留一句监督非计算匹配。"
+    }
+  ],
+  "after": [
+    {
+      "path": "paper/modules_parts/methods/task_definition.md",
+      "line": 25,
+      "pid": "methods.task.p02",
+      "lang": "EN",
+      "term": "not a",
+      "context": " A distractor denotes an alternative to the observed next event, not a confirmed dislike. Previously encountered items remain eligible as distractors under the candidate protocol.",
+      "classification": "KEEP",
+      "reason": "干扰候选不等于已确认负偏好，属于任务定义的必要区别。"
+    },
+    {
+      "path": "paper/modules_parts/methods/task_definition.md",
+      "line": 29,
+      "pid": "methods.task.p02",
+      "lang": "ZH",
+      "term": "不是",
+      "context": "覆盖全部评分等级的完整交互序列中构造，模型输入采用与 Y 相同的最近 10 条历史限制。干扰候选表示相对于观测下一事件的其他选项，不是已确认的负偏好。候选协议允许用户曾经接触过的物品作为干扰候选。",
+      "classification": "KEEP",
+      "reason": "干扰候选不等于已确认负偏好，属于任务定义的必要区别。"
+    },
+    {
+      "path": "paper/modules_parts/methods/evaluation_protocol.md",
+      "line": 25,
+      "pid": "methods.evaluation.p02",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "pularity mismatch as a retrospective offline evaluation control, rather than a simulation of online retrieval.",
+      "classification": "KEEP",
+      "reason": "回顾性离线控制与在线检索用途不同，直接影响外推。"
+    },
+    {
+      "path": "paper/modules_parts/methods/bootstrap_and_statistics.md",
+      "line": 27,
+      "pid": "methods.statistics.p02",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "sing intervals provide a descriptive assessment of the model gap rather than a formal equivalence test. Cross-seed replication addresses the separate uncertainty introduced by training. The ",
+      "classification": "KEEP",
+      "reason": "跨零 CI 不承担等价性检验功能，保留一处核心统计解释。"
+    },
+    {
+      "path": "paper/modules_parts/results/rq2_exposure_response.md",
+      "line": 40,
+      "pid": "results.rq2.p03",
+      "lang": "ZH",
+      "term": "不是",
+      "context": "因此，Y 与 N 呈现不同的曝光响应形态：Y 到 96k 的被测增益逐渐减小，N 则一直改善到 200k。这里比较的是响应形态，不是 AUC 与 HR@1 的数值大小。上述轨迹表明，解释模型差距时需要考虑曝光，因为不同运行点可能对应不同程度的适配。由此，接下来的比较在每项任务所获曝光对齐后，考察专家与 M1 的关系。",
+      "classification": "KEEP",
+      "reason": "防止跨 AUC/HR 数值尺度比较，正文仅此一处。"
+    },
+    {
+      "path": "paper/modules_parts/results/rq5_sasrec_exposure.md",
+      "line": 25,
+      "pid": "results.rq5.p02",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "g with more supervision. This comparison aligns task supervision rather than compute. Amazon then tests whether the main ranking directions extend beyond MovieLens.",
+      "classification": "KEEP",
+      "reason": "说明样本监督匹配这一比较轴，详细计算范围已集中。"
+    },
+    {
+      "path": "paper/modules/08_limitations.md",
+      "line": 18,
+      "pid": "limitations.training.p01",
+      "lang": "ZH",
+      "term": "不是",
+      "context": "seed42，需要完整的 seed43/44 N96/M1-96 复现结果来评估 96k 时的训练变异。这些复现覆盖的是该运行点，不是直到 N200 的整条轨迹，Y96 的跨种子证据也尚未确认。Y 与 N 的已测范围分别止于 96k 和 200k，后续行为及收敛情况仍未确定。曝光同时改变样本覆盖与优化历程。M1 的每任务计数是基于调度的预期值，以续训正确跳过已读数据为条件，现有",
+      "classification": "KEEP",
+      "reason": "96k 复现与整曲线复现不同，决定训练不确定性范围。"
+    },
+    {
+      "path": "paper/modules/08_limitations.md",
+      "line": 25,
+      "pid": "limitations.evaluation.p01",
+      "lang": "EN",
+      "term": "rather than",
+      "context": "ed, so their differences combine candidate composition and count rather than isolate a candidate-size effect. PopMatch uses full-corpus popularity and is therefore retrospective; it reduces ",
+      "classification": "KEEP",
+      "reason": "非嵌套协议不足以单独识别候选规模，保留于专门局限性段。"
+    }
+  ],
+  "classification_counts": {
+    "REMOVE": 5,
+    "REWRITE": 25,
+    "MOVE_TO_LIMITATIONS": 18,
+    "MOVE_TO_DISCUSSION": 5,
+    "KEEP": 2
+  }
+}

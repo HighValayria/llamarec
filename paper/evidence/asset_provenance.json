@@ -1,0 +1,121 @@
+{
+  "operation": "frozen-evidence display export; no training or inference",
+  "sources_sha256": {
+    ".agent/exposure_scaling/final_evidence/exposure_main_table.csv": "d8dca542149319799b55a07a7f0c09677544fd8bf2b5a17ddef1f980e0415752",
+    ".agent/exposure_scaling/final_evidence/tables/table_specialist_multitask.csv": "348ffc1aa823d091c3d78f5ad26408dbd8033ae5775191e67c71d90b92ac5d53",
+    ".agent/exposure_scaling/final_evidence/tables/table_hard_candidate.csv": "f86abf7185bc3ec3a47ae0ada74c3d3de20e7e502916b8303ca9191af7071770",
+    ".agent/exposure_scaling/final_evidence/sasrec_exposure_alignment.csv": "499bd23959a56a04e5b4b3020698a155849eef0d883eb5031ce0845b9137b1eb",
+    ".agent/cross_dataset_validation/seed42_result_summary.json": "4174661156f1cb8a60c2e9bc2f45752487e76bc06e53fe3f7e709c205cebeec4",
+    ".agent/exposure_scaling/final_evidence/figures/fig_n_native_exposure.png": "663937fafe01f68b0e9f100d40a1b42128e7233cf233fbffa9780838595d944a",
+    ".agent/exposure_scaling/final_evidence/figures/fig_n_native_exposure.svg": "46762155754c2fb75c1ec5b7e89ba6bd6f27e74a5dfe16b3dea253466dcfb526",
+    ".agent/exposure_scaling/final_evidence/figures/data/fig_n_native_exposure.csv": "cf76291d188ab6f9e9129a84dd7771d71056e4e720d95c5e6c27304e66c06b18",
+    ".agent/exposure_scaling/final_evidence/figures/fig_n_vs_sasrec_exposure.png": "9fdf32839798b8243f92641fc0b3c0ec21558a304e4fa38de41735f9cf8566f7",
+    ".agent/exposure_scaling/final_evidence/figures/fig_n_vs_sasrec_exposure.svg": "9ab420a6fdf395824219749afabcb104fbc09fe2b6bd35e0976dd470ff160abe",
+    ".agent/exposure_scaling/final_evidence/figures/data/fig_n_vs_sasrec_exposure.csv": "2ad01f8ab2058e8726fbcae2f64d16cad1b2a1946ce6fa89c838c325368ccb82",
+    ".agent/paper_writing_submission/refs/bib_candidates.bib": "00eb64a49ca2d76182da4320d87ee8d7acc035cb019734922d1970e111e63bb7"
+  },
+  "products": {
+    "paper/tables/binary_exposure.csv": {
+      "rows": 10,
+      "sha256": "b0dcf78012a4c3a70e598ae344dcc98954d3c3c0a1689074df48ae9e846c92ab",
+      "sources": [
+        ".agent/exposure_scaling/final_evidence/exposure_main_table.csv"
+      ]
+    },
+    "paper/tables/exposure_scaling.csv": {
+      "rows": 12,
+      "sha256": "81ba50ab9731b39e63777df71d884ea50d3f7b43ca34c8ce06b00e9143d0a3af",
+      "sources": [
+        ".agent/exposure_scaling/final_evidence/exposure_main_table.csv"
+      ]
+    },
+    "paper/tables/semantics_bridge.csv": {
+      "rows": 8,
+      "sha256": "7d86eef1fa8136e219714a3d7c7e70ac9170dd9a94028d7247cb71e52afce140",
+      "sources": [
+        ".agent/exposure_scaling/final_evidence/exposure_main_table.csv"
+      ]
+    },
+    "paper/tables/specialist_multitask.csv": {
+      "sha256": "348ffc1aa823d091c3d78f5ad26408dbd8033ae5775191e67c71d90b92ac5d53",
+      "sources": [
+        ".agent/exposure_scaling/final_evidence/tables/table_specialist_multitask.csv"
+      ],
+      "transformation": "byte-identical copy"
+    },
+    "paper/tables/hard_candidate.csv": {
+      "sha256": "f86abf7185bc3ec3a47ae0ada74c3d3de20e7e502916b8303ca9191af7071770",
+      "sources": [
+        ".agent/exposure_scaling/final_evidence/tables/table_hard_candidate.csv"
+      ],
+      "transformation": "byte-identical copy"
+    },
+    "paper/tables/n_vs_sasrec_exposure.csv": {
+      "rows": 8,
+      "sha256": "e6b27bc4671e6ebf581fc9e98b72b54baa1ee1a7c55d1ed022d0aa6fdd7e4459",
+      "sources": [
+        ".agent/exposure_scaling/final_evidence/exposure_main_table.csv",
+        ".agent/exposure_scaling/final_evidence/sasrec_exposure_alignment.csv"
+      ]
+    },
+    "paper/tables/cross_dataset.csv": {
+      "rows": 5,
+      "sha256": "fb4ae0152a44a8d70edccfbe5a42156f204c06b3a84a8384ccb1d3dc692d024d",
+      "sources": [
+        ".agent/cross_dataset_validation/seed42_result_summary.json"
+      ]
+    },
+    "paper/figures/fig_n_native_exposure.png": {
+      "sha256": "663937fafe01f68b0e9f100d40a1b42128e7233cf233fbffa9780838595d944a",
+      "sources": [
+        ".agent/exposure_scaling/final_evidence/figures/fig_n_native_exposure.png"
+      ],
+      "transformation": "byte-identical copy"
+    },
+    "paper/figures/fig_n_native_exposure.svg": {
+      "sha256": "46762155754c2fb75c1ec5b7e89ba6bd6f27e74a5dfe16b3dea253466dcfb526",
+      "sources": [
+        ".agent/exposure_scaling/final_evidence/figures/fig_n_native_exposure.svg"
+      ],
+      "transformation": "byte-identical copy"
+    },
+    "paper/figures/data/fig_n_native_exposure.csv": {
+      "sha256": "cf76291d188ab6f9e9129a84dd7771d71056e4e720d95c5e6c27304e66c06b18",
+      "sources": [
+        ".agent/exposure_scaling/final_evidence/figures/data/fig_n_native_exposure.csv"
+      ],
+      "transformation": "byte-identical copy"
+    },
+    "paper/figures/fig_n_vs_sasrec_exposure.png": {
+      "sha256": "9fdf32839798b8243f92641fc0b3c0ec21558a304e4fa38de41735f9cf8566f7",
+      "sources": [
+        ".agent/exposure_scaling/final_evidence/figures/fig_n_vs_sasrec_exposure.png"
+      ],
+      "transformation": "byte-identical copy"
+    },
+    "paper/figures/fig_n_vs_sasrec_exposure.svg": {
+      "sha256": "9ab420a6fdf395824219749afabcb104fbc09fe2b6bd35e0976dd470ff160abe",
+      "sources": [
+        ".agent/exposure_scaling/final_evidence/figures/fig_n_vs_sasrec_exposure.svg"
+      ],
+      "transformation": "byte-identical copy"
+    },
+    "paper/figures/data/fig_n_vs_sasrec_exposure.csv": {
+      "sha256": "2ad01f8ab2058e8726fbcae2f64d16cad1b2a1946ce6fa89c838c325368ccb82",
+      "sources": [
+        ".agent/exposure_scaling/final_evidence/figures/data/fig_n_vs_sasrec_exposure.csv"
+      ],
+      "transformation": "byte-identical copy"
+    },
+    "paper/references/library.bib": {
+      "sha256": "90eccb674d8968054f2bbba0e404713a38c84b73a7e035fc83e276a02f700e4f",
+      "sources": [
+        ".agent/paper_writing_submission/refs/bib_candidates.bib",
+        "paper/references/citation_registry.json",
+        "paper/references/primary_source_notes.md",
+        "paper/references/primary_source_adjudication.md"
+      ],
+      "transformation": "旧书目经2026-09-07定向文献核验，2026-09-08授权整合时加入Penha RecSys2024及P5 arXiv v7附录版本说明；共25条。所有实验来源和表图产品保持原样。"
+    }
+  }
+}

@@ -1,0 +1,118 @@
+version: 1
+framing: Conditional Recommendation Conclusions
+evidence_ids: [C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, S01, S02, S03, S04, S05, S06, S07, S08, S09, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19, S20, S21, S22, S23, S24, S25]
+modules:
+  - {id: contributions, source: paper/modules/00_contributions.md}
+  - {id: introduction, source: paper/modules/01_introduction.md}
+  - {id: related_work, source: paper/modules/02_related_work.md}
+  - {id: problem_formulation, source: paper/modules/03_problem_formulation.md}
+  - {id: methodology, source: paper/modules/04_methodology.md}
+  - {id: experimental_setup, source: paper/modules/05_experimental_setup.md}
+  - {id: results, source: paper/modules/06_results.md}
+  - {id: discussion, source: paper/modules/07_discussion.md}
+  - {id: limitations, source: paper/modules/08_limitations.md}
+  - {id: conclusion, source: paper/modules/09_conclusion.md}
+  - {id: abstract, source: paper/modules/10_abstract.md}
+tables:
+  datasets:
+    source: tables/datasets.csv
+    caption: {en: Task-specific dataset splits., zh: 按任务分别统计的数据划分。}
+    columns:
+      - {key: dataset, title: {en: Dataset, zh: 数据集}}
+      - {key: task, title: {en: Task, zh: 任务}}
+      - {key: users, title: {en: Users, zh: 用户数}}
+      - {key: train, title: {en: Train, zh: 训练}}
+      - {key: validation, title: {en: Validation, zh: 验证}}
+      - {key: test, title: {en: Test, zh: 测试}}
+  training_exposure_compact:
+    source: tables/compression_2026-09-10/training_exposure_compact.csv
+    caption: {en: "LLM optimizer steps and task-sample exposure (effective batch 8). For a specialist, total exposure equals its task exposure. M1 total exposure is twice its expected per-task exposure, conditional on correct resume data skipping.", zh: "LLM 优化器步数与任务样本曝光（有效 batch 为 8）。专家模型的总曝光等于对应任务曝光；M1 总曝光为预期每任务曝光的两倍，该统计以续训正确跳过已读数据为条件。"}
+    columns:
+      - {key: run, title: {en: Run, zh: 运行}}
+      - {key: optimizer_steps, title: {en: Steps, zh: 步数}}
+      - {key: total_exposure, title: {en: Total, zh: 总曝光}}
+      - {key: Y_exposure, title: {en: Y exposure, zh: Y曝光}}
+      - {key: N_exposure, title: {en: N exposure, zh: N曝光}}
+  supervision_semantics_compact:
+    source: tables/compression_2026-09-10/supervision_semantics_compact.csv
+    caption: {en: "MovieLens seed42 supervision profiles. Panel A reports Y-native preference metrics across validation exposure and the held-out Y96 endpoint. Panel B reports PopMatch-k5 Y-as-ranker validation exposure, the Y96/N96 validation contrast, and frozen-test endpoints. AUC/F1/accuracy and HR@1/NDCG@5/MRR belong to different interfaces and are not compared numerically across panels.", zh: "MovieLens seed42 监督能力结构。Panel A报告Y原生偏好指标的验证曝光轨迹及Y96留出测试端点；Panel B报告PopMatch-k5下Y-as-ranker验证曝光轨迹、Y96/N96验证对照及冻结测试端点。AUC/F1/Accuracy与HR@1/NDCG@5/MRR属于不同接口，不跨panel作数值比较。"}
+    columns:
+      - {key: panel, title: {en: Panel, zh: Panel}}
+      - {key: run, title: {en: Run, zh: 运行}}
+      - {key: exposure, title: {en: Exposure, zh: 曝光}}
+      - {key: split, title: {en: Split, zh: 划分}}
+      - {key: interface, title: {en: Interface, zh: 接口}}
+      - {key: metric_1, title: {en: Metric 1, zh: 指标1}}
+      - {key: value_1, title: {en: Value 1, zh: 数值1}}
+      - {key: metric_2, title: {en: Metric 2, zh: 指标2}}
+      - {key: value_2, title: {en: Value 2, zh: 数值2}}
+      - {key: metric_3, title: {en: Metric 3, zh: 指标3}}
+      - {key: value_3, title: {en: Value 3, zh: 数值3}}
+  exposure_scaling:
+    source: tables/scientific_repair_2026-09-11/m1_common_safe_exposure.csv
+    caption: {en: "Seed42 common cross-task-safe PopMatch-k5 comparison. Delta is N minus M1; change is delta96 minus delta48 within each split and metric.", zh: "seed42共同cross-task-safe PopMatch-k5比较。差值为N减M1；变化为同一划分和指标下delta96减delta48。"}
+    columns:
+      - {key: split, title: {en: Split, zh: 划分}}
+      - {key: exposure_k, title: {en: Exp. (k), zh: 曝光(k)}}
+      - {key: retained_n, title: {en: n, zh: n}}
+      - {key: metric, title: {en: Metric, zh: 指标}}
+      - {key: N, title: {en: N, zh: N}}
+      - {key: M1, title: {en: M1-N, zh: M1-N}}
+      - {key: delta_N_minus_M1, title: {en: Delta, zh: 差值}}
+      - {key: delta_change_96_minus_48, title: {en: Delta change, zh: 差值变化}}
+  specialist_multitask:
+    source: tables/scientific_repair_2026-09-11/y_side_binary_bootstrap.csv
+    caption: {en: "MovieLens seed42 validation paired binary differences and user-bootstrap 95% intervals for Y96 and M1-Y96. Delta is M1-Y96 minus Y96. This table supports only the Y-side preference comparison.", zh: "MovieLens seed42验证集上Y96与M1-Y96的配对二分类差值及用户级bootstrap 95%区间。差值为M1-Y96减Y96。本表只支撑Y侧偏好比较。"}
+    columns:
+      - {key: comparison, title: {en: Comparison, zh: 比较}}
+      - {key: metric, title: {en: Metric, zh: 指标}}
+      - {key: point_estimate, title: {en: Delta, zh: 差值}}
+      - {key: ci95_low, title: {en: CI low, zh: 区间下界}}
+      - {key: ci95_high, title: {en: CI high, zh: 区间上界}}
+  ms96_delta_summary_compact:
+    source: tables/scientific_repair_2026-09-11/m1_clean_multiseed_96.csv
+    caption: {en: "Cross-task-safe 96k N96-M1-N ranking deltas for training seeds 42/43/44. Mean and sample SD use n=3 and ddof=1; signs follow seed order. These are descriptive summaries. Protocols are separate and non-nested.", zh: "训练seed 42/43/44的cross-task-safe 96k N96-M1-N排序差值。均值与样本标准差采用n=3、ddof=1，方向按seed顺序排列；这些量仅为描述性汇总。各协议分别构造且非嵌套。"}
+    columns:
+      - {key: split, title: {en: Split, zh: 划分}}
+      - {key: protocol, title: {en: Protocol, zh: 协议}}
+      - {key: metric, title: {en: Metric, zh: 指标}}
+      - {key: delta_definition, title: {en: Delta, zh: 差值定义}}
+      - {key: mean_delta, title: {en: Mean, zh: 均值}}
+      - {key: sample_sd, title: {en: SD, zh: 标准差}}
+      - {key: signs_42_43_44, title: {en: Signs 42/43/44, zh: 方向42/43/44}}
+  hard_candidate_compact:
+    source: tables/scientific_repair_2026-09-11/m1_cross_task_safe_coverage.csv
+    caption: {en: "Cross-task-safe subset coverage for M1-N comparisons on MovieLens. The restriction is applied to evaluation, and N and M1-N use the same retained examples within each row.", zh: "MovieLens上M1-N比较的cross-task-safe子集覆盖率。该限制作用于评估侧，每行中的N与M1-N使用相同保留样本。"}
+    columns:
+      - {key: M1_point, title: {en: M1 point, zh: M1运行点}}
+      - {key: split, title: {en: Split, zh: 划分}}
+      - {key: retained, title: {en: Retained, zh: 保留}}
+      - {key: full_holdout, title: {en: Full holdout, zh: 完整留出}}
+      - {key: coverage_percent, title: {en: Coverage (%), zh: 覆盖率(%)}}
+  n_vs_sasrec_exposure:
+    source: tables/n_vs_sasrec_exposure.csv
+    caption: {en: "MovieLens seed42 N/SASRec ranking on validation and test sets at approximately matched task-sample exposure (HR@1).", zh: "MovieLens seed42 验证集与测试集上，任务样本曝光近似对齐时的 N/SASRec 排序（HR@1）。"}
+    columns:
+      - {key: N_run, title: {en: N run, zh: N运行}}
+      - {key: N_exposure, title: {en: N exposure, zh: N曝光}}
+      - {key: SASRec_exposure, title: {en: SASRec exposure, zh: SASRec曝光}}
+      - {key: split, title: {en: Split, zh: 划分}}
+      - {key: N_HR@1, title: {en: N HR@1, zh: N HR@1}}
+      - {key: SASRec_HR@1, title: {en: SASRec HR@1, zh: SASRec HR@1}}
+      - {key: delta_HR@1, title: {en: Delta HR@1, zh: HR@1差值}}
+  cross_dataset:
+    source: tables/scientific_repair_2026-09-11/amazon_certified_models.csv
+    caption: {en: "Amazon Musical Instruments seed42 full-test PopMatch-k5 ranking for the task-specific or cross-task-safe models at the evaluated earlier operating points.", zh: "Amazon Musical Instruments seed42在已评估较早运行点上，任务特定或满足跨任务安全条件模型的完整测试集PopMatch-k5排序。"}
+    columns:
+      - {key: run, title: {en: Run, zh: 运行}}
+      - {key: samples, title: {en: Samples, zh: 样本数}}
+      - {key: HR@1, title: {en: HR@1, zh: HR@1}}
+      - {key: NDCG@5, title: {en: NDCG@5, zh: NDCG@5}}
+      - {key: MRR, title: {en: MRR, zh: MRR}}
+figures:
+  n_native_exposure:
+    source: figures/fig_n_native_exposure.png
+    caption: {en: "MovieLens seed42 PopMatch-k5 N ranking performance across the evaluated task-exposure points.", zh: "MovieLens seed42 PopMatch-k5 下 N 排序表现随已测任务曝光点的变化。"}
+  n_vs_sasrec_exposure:
+    source: figures/fig_n_vs_sasrec_exposure.png
+    caption: {en: "MovieLens seed42 PopMatch-k5 validation HR@1 at approximately matched task-sample exposure. The N-K0 legend denotes the N24/N48/N96/N200 series.", zh: "MovieLens seed42 PopMatch-k5 验证 HR@1，按任务样本曝光近似对齐。图例 N-K0 指 N24/N48/N96/N200 系列。"}

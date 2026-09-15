@@ -1,0 +1,348 @@
+{
+  "date": "2026-09-08",
+  "protected": [
+    {
+      "path": "paper/references/citation_claim_map.md",
+      "sha256": "F6ACEA241C7BA2FF7727B22BD7505410F63D7022B23268DD17AA8DB0B50495DD"
+    },
+    {
+      "path": "paper/references/citation_inventory.md",
+      "sha256": "ED58DF5785D9E5B8476731BA08BFFB3DD25737430EBD0405A8CD3F3F239A90E4"
+    },
+    {
+      "path": "paper/references/citation_registry.json",
+      "sha256": "AA13055EBE92058A0F6D33ABAABD98CB083CF56760C97DD220A623AFCBDEAE07"
+    },
+    {
+      "path": "paper/references/claude_novelty_positioning_evidence_package.md",
+      "sha256": "AFE81BC6C7B1451B33AF1925BDB9D58193B04E188A29692D16CB9599C44032CA"
+    },
+    {
+      "path": "paper/references/cross_agent_reconciliation.md",
+      "sha256": "38D41D2480F507AE59D3C56DD49ABA6BBEF80A17B8F0F61BA764779C7E02EB4B"
+    },
+    {
+      "path": "paper/references/evaluation_sampling_evidence.md",
+      "sha256": "D75A0577FEB8A7E47B40261C716A9B66949CE3DF6BC47D4919421435D328B4F7"
+    },
+    {
+      "path": "paper/references/exposure_budget_landscape.md",
+      "sha256": "E3F3D4794A41A3DB23AF6F5F49C1DE5E9258FAEA3D104DBB972C28FEFA6710BA"
+    },
+    {
+      "path": "paper/references/joint_conditioning_landscape.md",
+      "sha256": "CFCFBAABC67A1C9E2CC7BAE0009228F7DEAB99826CA91BAD8885F653ACA3535E"
+    },
+    {
+      "path": "paper/references/library.bib",
+      "sha256": "90ECCB674D8968054F2BBBA0E404713A38C84B73A7E035FC83E276A02F700E4F"
+    },
+    {
+      "path": "paper/references/literature_gap_registry.json",
+      "sha256": "17CDDC7EB2C80C1E56AD18D9E3A01FE3D176269D733A5F6A736409F135C0A339"
+    },
+    {
+      "path": "paper/references/literature_gaps.md",
+      "sha256": "EDDE0B111B5669D6139E38F315C495A6EE08E54ED6FE58BD96851FDFA042434B"
+    },
+    {
+      "path": "paper/references/LITERATURE_VERIFICATION_AND_NOVELTY_REPORT.md",
+      "sha256": "2CAD14E200B552944C74001C39B67E7EACE74C5AB5849C517C8CB045DF674F64"
+    },
+    {
+      "path": "paper/references/primary_source_adjudication.md",
+      "sha256": "879FEE0CB2F74E6C3959F3CB29EC8B4EA55D3CA4327F00A3F6347E8C79F24ED5"
+    },
+    {
+      "path": "paper/references/primary_source_notes.md",
+      "sha256": "403D3C88447198D7174DCA9F61001658096CECAD74ACCE91507EB338D599FC32"
+    },
+    {
+      "path": "paper/references/targeted_search_log.md",
+      "sha256": "7C1BB16136794CB1E0E553B93B474FF4E9D0CA32AD1ACD865C9790D9D8121235"
+    },
+    {
+      "path": "paper/references/UNAPPLIED_MANUSCRIPT_EDIT_SNAPSHOT.md",
+      "sha256": "D426F7BEDA9E430AB4D104F9588B69042A5BD2D778709EB03F82396126A63C04"
+    },
+    {
+      "path": "paper/references/unified_multitask_landscape.md",
+      "sha256": "B3DBCAF46D65B2A12CEB589852DA8056528986465526E5C9537DAD08E0FE1E2D"
+    },
+    {
+      "path": "paper/figures/data-manifest.md",
+      "sha256": "9A06D91880A9356AEE70298690ACD0297C8AB4E1BF46619D5D9428F2EA20440C"
+    },
+    {
+      "path": "paper/figures/fig_n_native_exposure.png",
+      "sha256": "663937FAFE01F68B0E9F100D40A1B42128E7233CF233FBFFA9780838595D944A"
+    },
+    {
+      "path": "paper/figures/fig_n_native_exposure.svg",
+      "sha256": "46762155754C2FB75C1EC5B7E89BA6BD6F27E74A5DFE16B3DEA253466DCFB526"
+    },
+    {
+      "path": "paper/figures/fig_n_vs_sasrec_exposure.png",
+      "sha256": "9FDF32839798B8243F92641FC0B3C0EC21558A304E4FA38DE41735F9CF8566F7"
+    },
+    {
+      "path": "paper/figures/fig_n_vs_sasrec_exposure.svg",
+      "sha256": "9AB420A6FDF395824219749AFABCB104FBC09FE2B6BD35E0976DD470FF160ABE"
+    },
+    {
+      "path": "paper/figures/data/fig_n_native_exposure.csv",
+      "sha256": "CF76291D188AB6F9E9129A84DD7771D71056E4E720D95C5E6C27304E66C06B18"
+    },
+    {
+      "path": "paper/figures/data/fig_n_vs_sasrec_exposure.csv",
+      "sha256": "2AD01F8AB2058E8726FBCAE2F64D16CAD1B2A1946CE6FA89C838C325368CCB82"
+    },
+    {
+      "path": "paper/tables/binary_exposure.csv",
+      "sha256": "B0DCF78012A4C3A70E598AE344DCC98954D3C3C0A1689074DF48AE9E846C92AB"
+    },
+    {
+      "path": "paper/tables/cross_dataset.csv",
+      "sha256": "FB4AE0152A44A8D70EDCCFBE5A42156F204C06B3A84A8384CCB1D3DC692D024D"
+    },
+    {
+      "path": "paper/tables/datasets.csv",
+      "sha256": "E024B08F34DE57C6D56AEEE87A2769FE05B6696C2B8C8FF4777A503DDF72D8B9"
+    },
+    {
+      "path": "paper/tables/exposure_scaling.csv",
+      "sha256": "81BA50AB9731B39E63777DF71D884EA50D3F7B43CA34C8CE06B00E9143D0A3AF"
+    },
+    {
+      "path": "paper/tables/hard_candidate.csv",
+      "sha256": "F86ABF7185BC3EC3A47AE0ADA74C3D3DE20E7E502916B8303CA9191AF7071770"
+    },
+    {
+      "path": "paper/tables/n_vs_sasrec_exposure.csv",
+      "sha256": "E6B27BC4671E6EBF581FC9E98B72B54BAA1EE1A7C55D1ED022D0AA6FDD7E4459"
+    },
+    {
+      "path": "paper/tables/semantics_bridge.csv",
+      "sha256": "7D86EEF1FA8136E219714A3D7C7E70AC9170DD9A94028D7247CB71E52AFCE140"
+    },
+    {
+      "path": "paper/tables/specialist_multitask.csv",
+      "sha256": "348FFC1AA823D091C3D78F5AD26408DBD8033AE5775191E67C71D90B92AC5D53"
+    },
+    {
+      "path": "paper/tables/training_exposure.csv",
+      "sha256": "6D4EBDF08F8F8181D509964D2EE83FED4C085BEAFA88CABCF39A13ACD7E9BEEC"
+    },
+    {
+      "path": "paper/modules/02_related_work.md",
+      "sha256": "DDA8A5527CEE53F635023824CEFAE2225DA80534969CE39067C94B1D7F7EA2A3"
+    },
+    {
+      "path": "paper/modules/03_problem_formulation.md",
+      "sha256": "0EE3F537860B8CDDE6568FA05FFBEE0AFFF6E1625944DAA2925A58AD4B390C1A"
+    },
+    {
+      "path": "paper/modules/04_methodology.md",
+      "sha256": "DBB7398086CF12169C5CE12FC2C4E0C917264AC75F79271A51705FF1B62A4285"
+    },
+    {
+      "path": "paper/modules/05_experimental_setup.md",
+      "sha256": "07F000534C2F8014AF7FF5BA3A9C46F503C3EBC61FF4DDA39326C9026A4EA3D2"
+    },
+    {
+      "path": "paper/modules/09_conclusion.md",
+      "sha256": "091E230B70355FE9685F965B931D7FBDF6CAA837AD8E30D5C26B613A7E5CA45D"
+    },
+    {
+      "path": "paper/modules/10_abstract.md",
+      "sha256": "80B5674038C935D2723A0E0A5B070568C5BD7D7EFDD99B038FB0DD0572774A3E"
+    },
+    {
+      "path": "paper/modules_parts/related_work/.gitkeep",
+      "sha256": "01BA4719C80B6FE911B091A7C05124B64EEECE964E09C058EF8F9805DACA546B"
+    },
+    {
+      "path": "paper/modules_parts/related_work/evaluation_baselines.md",
+      "sha256": "D789B7A9E87102E765F5352F70C2748321848584221E454A684B37D94BD97E81"
+    },
+    {
+      "path": "paper/modules_parts/related_work/llm_recommendation.md",
+      "sha256": "DA01FC0358B8C3A6D26CF0148DB8B77EAFDE4BD0A5F10735B7A9D52EF5372A09"
+    },
+    {
+      "path": "paper/modules_parts/related_work/multitask_unification.md",
+      "sha256": "52689E98AE0CB39BBD6E5B9CF4ED1E3403735B078B5D31C044C04EC85681912A"
+    },
+    {
+      "path": "paper/modules_parts/related_work/supervision_formulation.md",
+      "sha256": "18AB43BC31BAC3A9CDF474176E0080FCE36A4EF076644570F926D5AECC0A3057"
+    },
+    {
+      "path": "paper/modules_parts/methods/baseline_setup.md",
+      "sha256": "469D8FE204FDA925B9767F453002C72A6D6013C80FB8ABB0EE5FFEAFAACCFC24"
+    },
+    {
+      "path": "paper/modules_parts/methods/datasets.md",
+      "sha256": "1EF7ED909593B0BDDBA21DFD13B8BD21CBEE73DE44417F5DAD3641DDFF92C335"
+    },
+    {
+      "path": "paper/modules_parts/methods/evaluation_protocol.md",
+      "sha256": "BC03B2D66A595CA4704AF12E8E949924C73910340D38D0A3211CE115054B8DFA"
+    },
+    {
+      "path": "paper/modules_parts/methods/exposure_definition.md",
+      "sha256": "160522CA7DCA8CF53410EF0CE2F355678989135352319C3579AB26D7EB5A630B"
+    },
+    {
+      "path": "paper/modules_parts/methods/task_definition.md",
+      "sha256": "C269AC53E990E559050DE1D631A0AA78459A8B032253C3E46CF43619C16648E1"
+    },
+    {
+      "path": "paper/modules_parts/methods/temporal_split.md",
+      "sha256": "7C8D4D891B53F5360ED9A3C07C8A8055E160B0E5ABBC71A8A2E0C1710600FF7A"
+    },
+    {
+      "path": "paper/modules_parts/methods/training_setup.md",
+      "sha256": "39AC3867822F2B926D659DC3ECBC677E4DA252E50996CDC9315D2101B308D313"
+    },
+    {
+      "path": "paper/modules_parts/results/rq1_supervision_semantics.md",
+      "sha256": "3849F3FF98C0D6B92B34E0D6ECA69A3E4435C27AD9CAF5A12310C4F24B822618"
+    },
+    {
+      "path": "paper/modules_parts/results/rq2_exposure_response.md",
+      "sha256": "0BB1600F2811767AFB35BF7E3B991AC1E291C7B4CC28535D057139653EDE53F3"
+    },
+    {
+      "path": "paper/modules_parts/results/cross_dataset_validation.md",
+      "sha256": "4BA6AA60D5DB128FC9EAEFC28A731E033CB604ABBE011C874738871E328C55CF"
+    },
+    {
+      "path": "paper/modules_parts/discussion/supervision_interface.md",
+      "sha256": "976AD23174E3B1E4F65E723147DA800865273A26584C46C38D3B8DB7DBF6778F"
+    },
+    {
+      "path": "paper/modules_parts/discussion/external_validity.md",
+      "sha256": "D6356EB70F5EFCED8D7881EC2071EF97CAE39F38F962C85DA3CF8ED1DC5A25DC"
+    },
+    {
+      "path": "paper/evidence/final_novelty_claim_map.md",
+      "sha256": "4B6FF00540BDB880E4B0D71E3878BD9E489F933A49E88116C46624747D16926E"
+    }
+  ],
+  "freeze_prefix": "# 论文中心与新颖性边界冻结\n\n冻结：2026-09-07；00-02应用完成：2026-09-08。决定：**MINOR_REVISE**。依据[跨Agent裁决](../references/cross_agent_reconciliation.md)、[原文裁决](../references/primary_source_adjudication.md)及原有[冻结事实链](source_of_truth.md)。本文件是写作控制，不是新的实验结论。\n\n## Core Thesis\n\nWithin the evaluated recommendation-tuning setting, conclusions about recommendation capability and relative model performance are conditional on supervision formulation, cumulative task-sample exposure, and candidate evaluation protocol.\n\n在本研究已评估的推荐调优设置中，关于推荐能力及模型相对表现的结论，取决于监督形式、累计任务样本曝光和候选评估协议。\n\n保留用户建议中心，只收窄适用范围并明确曝光计量。不是三个变量全组合实验，也不是对全领域的因果定律。\n\n## Primary Contribution：C2\n\n**目标任务累计监督对齐下，专家与共享模型的关系随适配曝光改变。**\n\n最强证据是现有MovieLens seed42比较：较高的每任务曝光显著缩小标准k5验证差距，冻结测试仍有N的小幅优势；同一共享adapter的Y侧也有既有配对证据。低曝光关系不能直接当成固定的专家优势。\n\n新颖性候选是“每任务累计曝光对齐 × 专家/共享模型关系 × 已测轨迹”，不是这些组件分别首创。P5已有专家对照与衍生样本量分析；Penha已有新增任务数据上限曲线；ITDR与OpenOneRec已有任务/数据分配部分联合。本文应直接讲对应目标任务累计监督下的关系变化，不靠贬低这些近邻制造差异。\n\n边界：M曝光是混合调度下的预期每任务计数，依赖正确resume data skipping；累计包含重复样本。单seed曲线，现有用户bootstrap只反映评估抽样，不代表训练随机性。MS96保持待处理，不能写跨seed稳定。\n\n## Secondary Contribution：C4\n\n**用四个近似匹配的下游任务曝光点刻画N与SASRec的比较轨迹。**\n\n现有24k、48k、96k、200k运行点显示N排序更强，同时SASRec随监督增加明显改善。贡献在于把相对表现与明确的累计监督运行点联系起来，而非单一少样本胜负。\n\nTALLRec已有K-shot选样预算对齐、SASRec对照和K=1-256曲线。本文累计消费与它的选出样本数不是同一量纲，不能把200k/256当作跨论文曝光倍数，也不能由此声称总成本或预训练公平。这里的“范围扩展”仅指从few-shot选样问题转向本研究明确24k-200k累计下游轨迹，不宣称跨论文优越性。\n\n未观测SASRec反超、外推交叉点或N收敛；不攻击TALLRec的loss，不把本仓库SASRec实现等同原论文配置。\n\n## Supporting Analytical Contribution：C3\n\n**C2得到的关系本身受候选协议限定。**\n\n标准k5验证差距很小，可以与较难候选条件下更大的N优势并存。一般采样敏感性已有Krichene、Cañamares、Dallmann等支持，InstructRec已有LLM困难检索候选评价。本文价值是将这一问题具体作用于较高曝光下的N/M关系解释。\n\n边界：不同hard-k5/k20/k50非嵌套，大小、组成、难度不能分离；不写纯candidate-size因果、随k单调增大的差距规律或新的gap增长框架。PopMatch只是减少目标与干扰项流行度差异的回顾性离线控制，其全序列流行度范围仍按既有方法限制处理。\n\n## Framing Contribution：C1\n\n**监督形式定义预测问题与可观测能力画像。**\n\n评分偏好判断、下一交互选择与桥接排序回答不同问题。P5已含>=4二值化及下一物品接口，ITDR已列不同推荐任务。这是问题界定与本文观察的经验组织，不是首次区分偏好和下一事件。\n\n本研究比较的是完整目标、任务数据、prompt和scoring形式；不能隔离为语义本身造成差异的机制。Y增益减弱与N继续改善分别依各自指标和被测区间描述，不直接比较AUC与HR数值大小。\n\n## Final Research Gap\n\nExisting studies address partially overlapping questions about task formulation, training-data allocation, and candidate evaluation. Building on these connections, we examine how specialist-multitask and LLM-sequential-baseline relationships change with cumulative per-task supervision, and which relationships persist under alternative candidate conditions.\n\n已有研究围绕任务形式、训练数据分配和候选评估考察了部分重合的问题。在这些关联的基础上，本文研究专家与多任务模型、LLM与序列基线的关系如何随累计每任务监督变化，以及哪些关系能在不同候选条件下保持。\n\n这是有具体文献依据的正向问题定义，不再依赖“全领域缺少联合研究”的存在性否定。JOINT_CONDITIONING_COVERAGE的正文状态为REWRITTEN_AND_RESOLVED；领域穷尽性仍未证明。\n\n## Nearest Neighbors\n\n| 工作 | 已有重合 | 本文不同问题 | 核验范围 |\n| --- | --- | --- | --- |\n| P5 | 统一语言推荐、多任务、>=4/next-item接口、single/multitask及衍生训练实例量 | 目标任务累计曝光对齐下的关系轨迹及候选条件 | Tier1 §3/5.6、arXiv v7 Appendix C/Table16 |\n| TALLRec | 推荐适配、few-shot选样曲线、同K SASRec对照 | 四个24k-200k累计下游监督点的next-interaction排序轨迹 | Tier1 §3 Table3/Fig3 |\n| ITDR | LoRA、多任务构成消融、数据子集敏感性 | 配对的目标任务累计曝光与专门/共享轨迹；并非否认它多轴部分联合 | Tier1 §4.3 |\n| OpenOneRec | 多任务Yes/No与生成、显式SFT权重、低数据单/多域对照 | 不同曝光运行点的对应任务专家关系及协议条件 | Tier1 §3.2.2/6.3.2/B.5 |\n| InstructRec | 共享指令适配、多接口、困难检索候选评价 | 较高曝光N/M差距在具体不同候选条件下的表现 | Tier2 §2/3.3 |\n| Penha et al. | Flan-T5搜索/推荐专门与共享、多个新增任务每物品上限 | 目标任务累计消费对齐，而非辅助任务上限与流行度联合变化 | Tier1 §5/7 Fig4 |\n| OneReason | 域RL专家与统一学生 | Y/N任务监督adapter而非域RL蒸馏 | Tier2 §6 |\n\n## Explicit Non-Claims\n\n- not first unified recommendation model\n- not first multitask LLM recommender\n- not first specialist/shared comparison\n- not first hard-candidate evaluation\n- not first data scaling study\n- not first budget-aware LLM-vs-SASRec comparison\n- not a new architecture\n- 不是PopMatch新方法或首次流行度匹配评价；没有专门prior-art依据。\n- 不是语义机制隔离、普遍正迁移、跨seed等价性或LLM全面优于SASRec。\n- 不是预训练、tokens、FLOPs、优化步数、wall-clock或总信息预算公平。\n- 不是“前人从未联合三个轴”或“有限检索证明首创”。\n\n## Evidence Limits And Freeze Scope\n\nMovieLens支撑详细单seed轨迹；Amazon仅提供旧运行点排序方向，不能替代完整Y/N、共享曝光、hard或N/SASRec曲线。新的MS96、运行元信息和统计溯源缺口继续保留，不在本轮处理。\n\n本轮仅整合贡献/引言/相关工作及文献资产。方法、结果、讨论、限制、表图和旧稿冻结。没有发现足以要求MAJOR_REVISE的HIGH完整设计冲突；这不是新颖性证书。检索到此停止。\n",
+  "editable": [
+    {
+      "path": ".agent/current_task.md",
+      "sha256": "B468FB2F4B9CFCCC944613CFFE6C42F4F487477C1016E6955C95CD1050ED0417"
+    },
+    {
+      "path": ".agent/stage_state.yaml",
+      "sha256": "CB9D6DD78A3D59623589D40DC5985089BAEF64298B51E83AD966CDA2BD68332F"
+    },
+    {
+      "path": "paper/modules/00_contributions.md",
+      "sha256": "449CFFEDF0186BDD2075475ECCD87D8FFAA24A85AE02FD61871AE07194442F9C"
+    },
+    {
+      "path": "paper/modules/01_introduction.md",
+      "sha256": "36F55DF1D6741EA83A0D415DF9299792AAFE51636D8CABAFCFF345C6426DAE4E"
+    },
+    {
+      "path": "paper/modules/05_experimental_setup.md",
+      "sha256": "07F000534C2F8014AF7FF5BA3A9C46F503C3EBC61FF4DDA39326C9026A4EA3D2"
+    },
+    {
+      "path": "paper/modules/06_results.md",
+      "sha256": "D56C31446A805A4D89F1D651F2D02800124DD570E295E2CA72CBD58EE8B6EE7F"
+    },
+    {
+      "path": "paper/modules/07_discussion.md",
+      "sha256": "0004EB2E8FD61A9CA903067C6BB4457F76ED9639CAFA83A27CD3006925AF64A9"
+    },
+    {
+      "path": "paper/modules/08_limitations.md",
+      "sha256": "B99C2CF42CDE765CA0ED878A0BA5FA7C6D001042AE247ED82D88E1D8CEC2412C"
+    },
+    {
+      "path": "paper/modules_parts/results/rq3_multitask_unification.md",
+      "sha256": "F2A6CDEB045FE1BDF800A16623105D27B77FDED6887A50283A2D1E1EBA828EFD"
+    },
+    {
+      "path": "paper/modules_parts/results/rq4_hard_candidate_robustness.md",
+      "sha256": "9E4F1366C39DCCAB5B71806ED6E06A527EDFFF6AF1C944A2C25CBE086AC04203"
+    },
+    {
+      "path": "paper/modules_parts/results/rq5_sasrec_exposure.md",
+      "sha256": "0B12FA1F1173C369E4B8136AB80C786A08E0CDC002E8EA06C9F80482279A6A09"
+    },
+    {
+      "path": "paper/modules_parts/discussion/conditional_unification.md",
+      "sha256": "FB564960C00EBB20204DCCC3E6FD470B8DA199BE7B059EA71E36E3DBD38ECEE4"
+    },
+    {
+      "path": "paper/modules_parts/discussion/evaluation_protocol.md",
+      "sha256": "5DB5383420BEB806DF22115C6E186F216705CE1C5A6D24169B5CA2FDD5D9A8B2"
+    },
+    {
+      "path": "paper/modules_parts/discussion/exposure_interpretation.md",
+      "sha256": "D67230E5DB03703E791193A9BA86F4829DCD98D83176B5E72DBD96E060F3CE7F"
+    },
+    {
+      "path": "paper/modules_parts/discussion/exposure_aware_baselines.md",
+      "sha256": "F477617CD4D071A7295AD54C7A2D06A9428EF79A7840E5B586820ABE354660CB"
+    },
+    {
+      "path": "paper/modules_parts/methods/bootstrap_and_statistics.md",
+      "sha256": "8B58E247E1F2F2E809A10143C8312E314701280B02E58D576191F97BDA3D3643"
+    },
+    {
+      "path": "paper/evidence/source_of_truth.md",
+      "sha256": "06CD2A6FADA43DB339D2AAD3DC77713E64A99C25F6BCE2252EFBCE033BC96504"
+    },
+    {
+      "path": "paper/evidence/claim_matrix.md",
+      "sha256": "8C0247D0826D6B24D61AEF839B3178A722EDDF05972C8039EECA6694F3E86260"
+    },
+    {
+      "path": "paper/evidence/pending_evidence.md",
+      "sha256": "3CCA537941D03429DDD4BEC9B1AE0D2EBFF4A0D4CAF16B713F7C758D35308636"
+    },
+    {
+      "path": "paper/evidence/story_and_novelty_freeze.md",
+      "sha256": "7BAE5E6F0CDD00AD10EBDD191AB2DD804435EB782ECF334FA6F55BDA155DAD36"
+    },
+    {
+      "path": "paper/assembly/paper_manifest.yaml",
+      "sha256": "5D6B5E92DB9B1635D91FE6F3AAC15D88648CCA5CC624B639DB0BC10DB6D3DD36"
+    },
+    {
+      "path": "paper/assembly/tests/test_literature_assets.py",
+      "sha256": "9779AF1BA57CECA89479133B61ADCF2FE32A69548E154EFA2E8FC7E6137A5C80"
+    },
+    {
+      "path": "paper/plan/experiment-protocol.md",
+      "sha256": "080CA636DB2106916A210A1F467D2E2E5924B430C1940E48A21DCD40B8931848"
+    },
+    {
+      "path": "paper/tables/table-schema.md",
+      "sha256": "8DF2AE3542942A4345206F553988C9759939295D7BC9FF8961E1DCF3A47B2004"
+    },
+    {
+      "path": "paper/plan/progress.md",
+      "sha256": "28B7A3DA355690A888063BAABBEC3713806F3B9830BEAB2004639EB67856BE08"
+    },
+    {
+      "path": "paper/REVIEW_HANDOFF.md",
+      "sha256": "BC446B3C4A37D72716004173870F2F2B91FF57852BA6B90DB81F38B42C09DD14"
+    },
+    {
+      "path": "paper/plan/project-overview.md",
+      "sha256": "F5F6841E9AAFC8E2CA9E392693592A5C7B9AEC89A8E4A636404D60535ADCD36A"
+    },
+    {
+      "path": "paper/plan/outline.md",
+      "sha256": "B28023E50A44C9A9FC18495E5E57B9CBEBC732A8F5405E0F3F9A3E1B414419FE"
+    }
+  ]
+}

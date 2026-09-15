@@ -1,0 +1,7 @@
+# 本目录的作者源应可追踪；上层仓库广泛忽略 Markdown。
+!*.md
+!**/*.md
+builds/*
+!builds/.gitkeep
+__pycache__/
+*.pyc

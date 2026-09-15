@@ -1,0 +1,194 @@
+{
+  "audited_on": "2026-09-08",
+  "mode": "MANUSCRIPT_INTEGRATION",
+  "manuscript_application": "APPLIED",
+  "gaps": [
+    {
+      "label": "JOINT_CONDITIONING_COVERAGE",
+      "priority": "P0",
+      "paragraphs": [
+        "intro.p04"
+      ],
+      "needed": "以相同LLM适配设置联合比较监督目标、每任务曝光、候选协议及基线预算的直接研究或系统覆盖性综述。",
+      "claim": "监督形式、任务样本曝光与候选协议对推荐调优LLM结论的联合影响仍未充分刻画。",
+      "why": "2026-09-07完成原文核验，2026-09-08在新授权下应用；详见跨Agent裁决。",
+      "resolution": "删除对领域覆盖不足的无穷尽依据断言，承认任务、数据和评估的部分重合，提出对应累计监督下关系及候选条件的正向研究问题。",
+      "status": "REWRITTEN_AND_RESOLVED",
+      "action": "REWRITTEN_AND_RESOLVED",
+      "marker_required": false,
+      "supporting_citations": [
+        "krichene2020sampled",
+        "canamares2020target",
+        "pereira2025sampling",
+        "geng2022p5",
+        "liu2025itdr",
+        "zhou2025openonerec",
+        "penha2024bridging"
+      ],
+      "remaining_uncertainty": "领域穷尽性仍OPEN，非当前句子的前提；有限检索不能证明首创。",
+      "original_claim": "监督形式、任务样本曝光与候选协议对推荐调优LLM结论的联合影响仍未充分刻画。",
+      "evidence": "paper/references/citation_claim_map.md",
+      "blocker": false,
+      "evidence_status": "PARTIALLY_RESOLVED",
+      "proposed_action": "REWRITTEN_AND_RESOLVED",
+      "manuscript_application": "APPLIED",
+      "why_before_verification": "现有13条可用记录只能确认异质研究主题；题名及旧引言不足以证明整个领域缺少联合分析。",
+      "manuscript_status": "REWRITTEN_AND_RESOLVED",
+      "final_wording_en": "Evaluation conditions add another boundary. Sampled metrics, sampling strategies, and candidate construction can change measured performance and model orderings [@krichene2020sampled; @canamares2020target; @pereira2025sampling]. Task formulation and data allocation likewise intersect in unified recommendation and shared search-recommendation models [@geng2022p5; @liu2025itdr; @zhou2025openonerec; @penha2024bridging]. These precedents motivate jointly examining cumulative per-task supervision, specialist-shared modeling, and candidate protocol without treating any one as an isolated cause.",
+      "final_wording_zh": "评估条件构成另一项边界。采样指标、采样策略和候选构造能够改变测得的表现及模型次序 [@krichene2020sampled; @canamares2020target; @pereira2025sampling]。在统一推荐和搜索推荐共享模型中，任务形式与数据分配也相互关联 [@geng2022p5; @liu2025itdr; @zhou2025openonerec; @penha2024bridging]。这些先例促使本文联合考察累计每任务监督、专家与共享建模及候选协议，而不把其中任何一项视为孤立原因。"
+    },
+    {
+      "label": "INSTRUCTION_TASK_DETAILS",
+      "priority": "P1",
+      "paragraphs": [
+        "rw.llm.p02"
+      ],
+      "needed": "推荐指令调优与生成式推荐中明确列出训练任务、输入/响应、标签和loss的代表作原文。",
+      "claim": "指令调优和生成式形式将任务请求与预期响应纳入训练接口。",
+      "why": "2026-09-07完成原文核验，2026-09-08在新授权下应用；详见跨Agent裁决。",
+      "resolution": "以P5多任务语言输入输出、TALLRec指令/偏好历史/目标到YesNo、InstructRec多个指令接口替换泛化句。",
+      "status": "RESOLVED_WITH_CITATION",
+      "action": "RESOLVED_WITH_CITATION",
+      "marker_required": false,
+      "supporting_citations": [
+        "geng2022p5",
+        "bao2023tallrec",
+        "zhang2023instructrec"
+      ],
+      "remaining_uncertainty": "不推断所有指令推荐采用同一目标或loss。",
+      "original_claim": "指令调优和生成式形式将任务请求与预期响应纳入训练接口。",
+      "evidence": "paper/references/citation_claim_map.md",
+      "blocker": false,
+      "evidence_status": "RESOLVED",
+      "proposed_action": "RESOLVED_WITH_CITATION",
+      "manuscript_application": "APPLIED",
+      "why_before_verification": "TALLRec题名证明推荐调优，P5题名证明统一语言化；均不足以确认具体instruction实现或任务清单。",
+      "manuscript_status": "RESOLVED_WITH_CITATION",
+      "final_wording_en": "Recommendation-specific adaptation makes the training interface part of the model's role. P5 expresses multiple task families as language pairs, TALLRec trains Yes/No recommendation responses, and InstructRec supports pointwise, pairwise, matching, and reranking requests [@geng2022p5; @bao2023tallrec; @zhang2023instructrec]. These precedents establish language-based adaptation across tasks. We compare the capabilities measured after complete preference and next-interaction formulations under a shared model setting.",
+      "final_wording_zh": "推荐特定适配使训练接口成为模型职责的一部分。P5将多个任务族表述为语言输入输出对，TALLRec训练Yes/No推荐响应，InstructRec支持逐点、成对、匹配和重排序请求 [@geng2022p5; @bao2023tallrec; @zhang2023instructrec]。这些先例已覆盖多任务语言化适配；本文则在共同模型设置下比较完整偏好与下一交互形式适配后的被测能力。"
+    },
+    {
+      "label": "RATING_TARGETS",
+      "priority": "P1",
+      "paragraphs": [
+        "rw.tasks.p01"
+      ],
+      "needed": "明确区分显式rating prediction、隐式行为目标和序列下一物品目标的基础论文原文或任务定义综述。",
+      "claim": "基于评分的偏好监督与其他行为目标具有不同的操作性含义。",
+      "why": "2026-09-07完成原文核验，2026-09-08在新授权下应用；详见跨Agent裁决。",
+      "resolution": "引用原文明确区分已观测评分拟合、隐式偏好/置信度和历史到下一物品目标。",
+      "status": "RESOLVED_WITH_CITATION",
+      "action": "RESOLVED_WITH_CITATION",
+      "marker_required": false,
+      "supporting_citations": [
+        "koren2009mf",
+        "hu2008implicit",
+        "kang2018sasrec"
+      ],
+      "remaining_uncertainty": "本文Y的阈值和N的选择接口仍由本地方法定义，不外推给所有文献。",
+      "original_claim": "基于评分的偏好监督与其他行为目标具有不同的操作性含义。",
+      "evidence": "paper/references/citation_claim_map.md",
+      "blocker": false,
+      "evidence_status": "RESOLVED",
+      "proposed_action": "RESOLVED_WITH_CITATION",
+      "manuscript_application": "APPLIED",
+      "why_before_verification": "Koren题名只确认矩阵分解技术；Hu题名确认implicit feedback主题，不能据此指定原始loss或label含义。",
+      "manuscript_status": "RESOLVED_WITH_CITATION",
+      "final_wording_en": "Recommendation targets differ before any language interface. Matrix factorization fits ratings, implicit-feedback methods distinguish preference from confidence in observations, and sequential models predict a subsequent item [@koren2009mf; @hu2008implicit; @kang2018sasrec]. Their scores therefore concern assessments, observed behavior, or next-event selection. Separating target from modeling technique clarifies which capability a score supports.",
+      "final_wording_zh": "在引入语言接口之前，推荐目标就有区别。矩阵分解拟合评分，隐式反馈方法区分偏好与行为观测置信度，序列模型则预测后续物品 [@koren2009mf; @hu2008implicit; @kang2018sasrec]。相应分数分别涉及评价、观测行为或下一事件选择。区分目标与建模技术，才能明确分数支持何种能力判断。"
+    },
+    {
+      "label": "UNIFIED_TASK_ALLOCATION",
+      "priority": "P1",
+      "paragraphs": [
+        "rw.unified.p01"
+      ],
+      "needed": "具有明确任务混合、共享参数/adapter、每任务样本量以及专家对照的统一推荐或多任务LLM研究。",
+      "claim": "统一模型的任务表示与监督分配是研究shared model保留专门能力的重要背景。",
+      "why": "2026-09-07完成原文核验，2026-09-08在新授权下应用；详见跨Agent裁决。",
+      "resolution": "承认P5专家及衍生数据量、ITDR分别报告的两类消融、OpenOneRec任务权重及低数据单/多域对照；定位目标任务累计关系。",
+      "status": "REWRITTEN_AND_RESOLVED",
+      "action": "REWRITTEN_AND_RESOLVED",
+      "marker_required": false,
+      "supporting_citations": [
+        "geng2022p5",
+        "liu2025itdr",
+        "zhou2025openonerec"
+      ],
+      "remaining_uncertainty": "不证明以前无人对齐曝光；OneRec家族分开记录。",
+      "original_claim": "统一模型的任务表示与监督分配是研究shared model保留专门能力的重要背景。",
+      "evidence": "paper/references/citation_claim_map.md",
+      "blocker": false,
+      "evidence_status": "RESOLVED",
+      "proposed_action": "REWRITTEN_AND_RESOLVED",
+      "manuscript_application": "APPLIED",
+      "why_before_verification": "P5仅有题名级统一范式依据；没有任务分配、shared LoRA或曝光对齐的原文证据。OneRec仅为用户给出的名称线索。",
+      "manuscript_status": "REWRITTEN_AND_RESOLVED",
+      "final_wording_en": "Unified recommendation already links task design, shared modeling, and data allocation. P5 varies derived instances while comparing single- and multitask models; ITDR reports task-removal and data-subset studies; OpenOneRec specifies task-sampling weights and contrasts low-data, single-domain, and multidomain adaptation [@geng2022p5; @liu2025itdr; @zhou2025openonerec]. These are substantive data-aware multitask precedents. Our narrower question tracks specialist-shared relationships as corresponding-task cumulative exposure changes.",
+      "final_wording_zh": "统一推荐已将任务设计、共享建模和数据分配联系起来。P5在比较单任务与多任务模型时改变衍生实例数，ITDR报告任务删除与数据子集实验，OpenOneRec明确任务采样权重并比较低数据、单域与多域适配 [@geng2022p5; @liu2025itdr; @zhou2025openonerec]。这些都是数据感知多任务研究的实质先例；本文更具体地追踪对应任务累计曝光变化时的专家-共享关系。"
+    },
+    {
+      "label": "SAMPLING_EFFECT_DETAILS",
+      "priority": "P1",
+      "paragraphs": [
+        "rw.evaluation.p01"
+      ],
+      "needed": "有具体理论/实验结论的sampled metric、target sampling与candidate/distractor sampling原文。",
+      "claim": "采样选择如何改变模型排序和性能差距的可见程度。",
+      "why": "2026-09-07完成原文核验，2026-09-08在新授权下应用；详见跨Agent裁决。",
+      "resolution": "补限定的模型次序敏感性，纠正target set为待评分候选集合，承认InstructRec已有困难候选；保留非嵌套边界。",
+      "status": "REWRITTEN_AND_RESOLVED",
+      "action": "REWRITTEN_AND_RESOLVED",
+      "marker_required": false,
+      "supporting_citations": [
+        "krichene2020sampled",
+        "pereira2025sampling",
+        "canamares2020target",
+        "zhang2023instructrec"
+      ],
+      "remaining_uncertainty": "KDD全文未取得；既有理论不解释本文非嵌套协议的纯数量因果。",
+      "original_claim": "采样选择如何改变模型排序和性能差距的可见程度。",
+      "evidence": "paper/references/citation_claim_map.md",
+      "blocker": false,
+      "evidence_status": "RESOLVED",
+      "proposed_action": "REWRITTEN_AND_RESOLVED",
+      "manuscript_application": "APPLIED",
+      "why_before_verification": "Krichene、Cañamares与Pereira支持有限的采样可靠性边界，不能支持本文hard协议的效应方向、大小或纯数量因果。",
+      "manuscript_status": "REWRITTEN_AND_RESOLVED",
+      "final_wording_en": "Candidate construction can alter offline ranking conclusions: sampled metrics need not preserve exact-metric orderings, and sampling strategy can affect measurements and model rankings [@krichene2020sampled; @pereira2025sampling]. Target-set construction and difficult retrieved candidates provide related precedents [@canamares2020target; @zhang2023instructrec]. Candidate sensitivity is therefore established. We use separate non-nested protocols to delimit the higher-exposure specialist-multitask relationship, without isolating candidate count from composition or sampling.",
+      "final_wording_zh": "候选构造能够改变离线排序结论：采样指标不必保留精确指标的模型次序，采样策略也会影响测量结果和模型排序 [@krichene2020sampled; @pereira2025sampling]。target set构造与困难检索候选已有相关先例 [@canamares2020target; @zhang2023instructrec]。因此候选敏感性并非新发现；本文以独立非嵌套协议限定较高曝光下的专家-多任务关系，不把候选数量与组成或采样方式隔离开来。"
+    },
+    {
+      "label": "EXPOSURE_BUDGET_COMPARISONS",
+      "priority": "P1",
+      "paragraphs": [
+        "rw.evaluation.p02"
+      ],
+      "needed": "显式控制下游训练样本量/任务曝光并比较预训练模型与序列推荐器的实证研究，或清楚定义data-budget比较的评估方法工作。",
+      "claim": "基线比较需要解释每个运行点接受的下游任务监督量。",
+      "why": "2026-09-07完成原文核验，2026-09-08在新授权下应用；详见跨Agent裁决。",
+      "resolution": "承认TALLRec同K选样对照及few-shot曲线、序列模型重复训练；将本文比较明确为四点累计下游消费，不冒充计算公平。",
+      "status": "REWRITTEN_AND_RESOLVED",
+      "action": "REWRITTEN_AND_RESOLVED",
+      "marker_required": false,
+      "supporting_citations": [
+        "kang2018sasrec",
+        "milogradskii2024bpr",
+        "shehzad2025gnn",
+        "bao2023tallrec",
+        "zhang2023seqscaling"
+      ],
+      "remaining_uncertainty": "不声称总信息、预训练或算力匹配。",
+      "original_claim": "基线比较需要解释每个运行点接受的下游任务监督量。",
+      "evidence": "paper/references/citation_claim_map.md",
+      "blocker": false,
+      "evidence_status": "RESOLVED",
+      "proposed_action": "REWRITTEN_AND_RESOLVED",
+      "manuscript_application": "APPLIED",
+      "why_before_verification": "BPR复现与会话GNN重评估支持基线调优和标准化评价，不是task-sample matching或预训练/计算公平的直接论证。",
+      "manuscript_status": "REWRITTEN_AND_RESOLVED",
+      "final_wording_en": "Training conditions complement evaluation scope. SASRec is a sequential reference, while replicability and standardized-evaluation studies underscore careful tuning and the competitiveness of conventional baselines [@kang2018sasrec; @milogradskii2024bpr; @shehzad2025gnn]. TALLRec already compares an adapted LLM with SASRec under selected-example budgets, while sequence-scaling work studies data-pool size and repetition [@bao2023tallrec; @zhang2023seqscaling]. Our contribution is not the first budget-aware comparison: it follows both models over four approximately matched cumulative downstream-consumption points, a quantity distinct from selected examples and computation.",
+      "final_wording_zh": "训练条件补充了评估范围。SASRec提供序列参照，复现性与标准化评价研究强调谨慎调优以及传统基线的竞争力 [@kang2018sasrec; @milogradskii2024bpr; @shehzad2025gnn]。TALLRec已按选出样本预算比较适配LLM与SASRec，序列缩放研究也考察数据池规模和重复训练 [@bao2023tallrec; @zhang2023seqscaling]。本文并非首次开展预算感知比较，其贡献是在四个累计下游消费近似匹配点追踪两类模型；这一口径不同于选出样本数和计算量。"
+    }
+  ]
+}

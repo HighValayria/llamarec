@@ -1,0 +1,269 @@
+{
+  "schema_version": 1,
+  "parent_table_snapshot": "paper/archive/tables/pre_compression_2026-09-10",
+  "old_table_count": 14,
+  "new_main_table_count": 9,
+  "old_csv_deleted_or_overwritten": false,
+  "mapping": [
+    {
+      "old_logical_table": "datasets",
+      "old_pdf_table_number": "I",
+      "old_csv": "paper/tables/datasets.csv",
+      "old_source_sha256": "e024b08f34de57c6d56aeee87a2769fe05b6696c2b8c8ff4777a503ddf72d8b9",
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/datasets.csv",
+      "new_logical_table": "datasets",
+      "new_csv": "paper/tables/datasets.csv",
+      "new_source_sha256": {
+        "paper/tables/datasets.csv": "e024b08f34de57c6d56aeee87a2769fe05b6696c2b8c8ff4777a503ddf72d8b9"
+      },
+      "new_pdf_table_number": "I",
+      "status": "CORE_MAIN",
+      "evidence_summarized_by": "datasets",
+      "claim_coverage": [
+        "dataset scope and split counts"
+      ]
+    },
+    {
+      "old_logical_table": "training_exposure",
+      "old_pdf_table_number": "II",
+      "old_csv": "paper/tables/training_exposure.csv",
+      "old_source_sha256": "6d4ebdf08f8f8181d509964d2ee83fed4c085beafa88cabcf39a13acd7e9beec",
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/training_exposure.csv",
+      "new_logical_table": "training_exposure_compact",
+      "new_csv": "paper/tables/compression_2026-09-10/training_exposure_compact.csv",
+      "new_source_sha256": {
+        "paper/tables/compression_2026-09-10/training_exposure_compact.csv": "768dc965428493f47813aef65b7c3c0bab5e8f638f9b881d1de87950f554129e"
+      },
+      "new_pdf_table_number": "II",
+      "status": "REPLACED_IN_MAIN",
+      "evidence_summarized_by": "training_exposure_compact",
+      "claim_coverage": [
+        "optimizer steps",
+        "task-sample exposure"
+      ]
+    },
+    {
+      "old_logical_table": "binary_exposure",
+      "old_pdf_table_number": "III",
+      "old_csv": "paper/tables/binary_exposure.csv",
+      "old_source_sha256": "b0dcf78012a4c3a70e598ae344dcc98954d3c3c0a1689074df48ae9e846c92ab",
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/binary_exposure.csv",
+      "new_logical_table": "supervision_semantics_compact",
+      "new_csv": "paper/tables/compression_2026-09-10/supervision_semantics_compact.csv",
+      "new_source_sha256": {
+        "paper/tables/compression_2026-09-10/supervision_semantics_compact.csv": "cfd2b1072a3b19b61530a48f931940fe412a0e35867df6639bafd2bd1a8e6e4e"
+      },
+      "new_pdf_table_number": "III",
+      "status": "MERGED_INTO",
+      "evidence_summarized_by": "supervision_semantics_compact",
+      "claim_coverage": [
+        "Y-native exposure response"
+      ]
+    },
+    {
+      "old_logical_table": "semantics_bridge",
+      "old_pdf_table_number": "IV",
+      "old_csv": "paper/tables/semantics_bridge.csv",
+      "old_source_sha256": "7d86eef1fa8136e219714a3d7c7e70ac9170dd9a94028d7247cb71e52afce140",
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/semantics_bridge.csv",
+      "new_logical_table": "supervision_semantics_compact",
+      "new_csv": "paper/tables/compression_2026-09-10/supervision_semantics_compact.csv",
+      "new_source_sha256": {
+        "paper/tables/compression_2026-09-10/supervision_semantics_compact.csv": "cfd2b1072a3b19b61530a48f931940fe412a0e35867df6639bafd2bd1a8e6e4e"
+      },
+      "new_pdf_table_number": "III",
+      "status": "MERGED_INTO",
+      "evidence_summarized_by": "supervision_semantics_compact",
+      "claim_coverage": [
+        "Y bridge ranking",
+        "N96 native ranking"
+      ]
+    },
+    {
+      "old_logical_table": "exposure_scaling",
+      "old_pdf_table_number": "V",
+      "old_csv": "paper/tables/exposure_scaling.csv",
+      "old_source_sha256": "81ba50ab9731b39e63777df71d884ea50d3f7b43ca34c8ce06b00e9143d0a3af",
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/exposure_scaling.csv",
+      "new_logical_table": "exposure_scaling",
+      "new_csv": "paper/tables/exposure_scaling.csv",
+      "new_source_sha256": {
+        "paper/tables/exposure_scaling.csv": "81ba50ab9731b39e63777df71d884ea50d3f7b43ca34c8ce06b00e9143d0a3af"
+      },
+      "new_pdf_table_number": "IV",
+      "status": "CORE_MAIN",
+      "evidence_summarized_by": "exposure_scaling",
+      "claim_coverage": [
+        "N exposure trajectory"
+      ]
+    },
+    {
+      "old_logical_table": "ms96_main_validation",
+      "old_pdf_table_number": "VI",
+      "old_csv": "paper/tables/ms96_main_validation.csv",
+      "old_source_sha256": "f17f6dac96fcbdc908a2bc4cf9e144a4e8dba0c658c22f937ed160ba329dcbfe",
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/ms96_main_validation.csv",
+      "new_logical_table": "ms96_delta_summary_compact",
+      "new_csv": "paper/tables/compression_2026-09-10/ms96_delta_summary_compact.csv",
+      "new_source_sha256": {
+        "paper/tables/compression_2026-09-10/ms96_delta_summary_compact.csv": "622c9a477518dfe5ee6f05d53797912781f0f4f68621264e8c6ade62dab41248"
+      },
+      "new_pdf_table_number": "VI",
+      "status": "REMOVED_FROM_MAIN; RAW_ARCHIVED",
+      "evidence_summarized_by": "ms96_delta_summary_compact",
+      "claim_coverage": [
+        "96k validation three-seed deltas"
+      ]
+    },
+    {
+      "old_logical_table": "ms96_main_test",
+      "old_pdf_table_number": "VII",
+      "old_csv": "paper/tables/ms96_main_test.csv",
+      "old_source_sha256": "1e8c5fb46f0d17f713d662909cb6863644b4208075837d938acb14bfe0643270",
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/ms96_main_test.csv",
+      "new_logical_table": "ms96_delta_summary_compact; hard_candidate_compact",
+      "new_csv": "paper/tables/compression_2026-09-10/ms96_delta_summary_compact.csv; paper/tables/compression_2026-09-10/hard_candidate_compact.csv",
+      "new_source_sha256": {
+        "paper/tables/compression_2026-09-10/ms96_delta_summary_compact.csv": "622c9a477518dfe5ee6f05d53797912781f0f4f68621264e8c6ade62dab41248",
+        "paper/tables/compression_2026-09-10/hard_candidate_compact.csv": "44a7a29ef2cbd0d85e9996fca8178acc3e6b629373384e2c7ea6c9457efbdc76"
+      },
+      "new_pdf_table_number": "VI; VII",
+      "status": "REMOVED_FROM_MAIN; RAW_ARCHIVED",
+      "evidence_summarized_by": "ms96_delta_summary_compact; hard_candidate_compact",
+      "claim_coverage": [
+        "96k test three-seed deltas",
+        "seed42 paired intervals"
+      ]
+    },
+    {
+      "old_logical_table": "specialist_multitask",
+      "old_pdf_table_number": "VIII",
+      "old_csv": "paper/tables/specialist_multitask.csv",
+      "old_source_sha256": "348ffc1aa823d091c3d78f5ad26408dbd8033ae5775191e67c71d90b92ac5d53",
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/specialist_multitask.csv",
+      "new_logical_table": "specialist_multitask",
+      "new_csv": "paper/tables/specialist_multitask.csv",
+      "new_source_sha256": {
+        "paper/tables/specialist_multitask.csv": "348ffc1aa823d091c3d78f5ad26408dbd8033ae5775191e67c71d90b92ac5d53"
+      },
+      "new_pdf_table_number": "V",
+      "status": "CORE_MAIN",
+      "evidence_summarized_by": "specialist_multitask",
+      "claim_coverage": [
+        "matched-exposure specialist/shared comparison"
+      ]
+    },
+    {
+      "old_logical_table": "ms96_delta_summary",
+      "old_pdf_table_number": "IX",
+      "old_csv": "paper/tables/ms96_delta_summary.csv",
+      "old_source_sha256": "bd1f465c3dc3f165db0e2648493a69a05963149b5bafdb0aed5b507945b06ef8",
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/ms96_delta_summary.csv",
+      "new_logical_table": "ms96_delta_summary_compact",
+      "new_csv": "paper/tables/compression_2026-09-10/ms96_delta_summary_compact.csv",
+      "new_source_sha256": {
+        "paper/tables/compression_2026-09-10/ms96_delta_summary_compact.csv": "622c9a477518dfe5ee6f05d53797912781f0f4f68621264e8c6ade62dab41248"
+      },
+      "new_pdf_table_number": "VI",
+      "status": "REPLACED_IN_MAIN",
+      "evidence_summarized_by": "ms96_delta_summary_compact",
+      "claim_coverage": [
+        "mean",
+        "sample SD",
+        "direction by training seed"
+      ]
+    },
+    {
+      "old_logical_table": "hard_candidate",
+      "old_pdf_table_number": "X",
+      "old_csv": "paper/tables/hard_candidate.csv",
+      "old_source_sha256": "f86abf7185bc3ec3a47ae0ada74c3d3de20e7e502916b8303ca9191af7071770",
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/hard_candidate.csv",
+      "new_logical_table": "hard_candidate_compact",
+      "new_csv": "paper/tables/compression_2026-09-10/hard_candidate_compact.csv",
+      "new_source_sha256": {
+        "paper/tables/compression_2026-09-10/hard_candidate_compact.csv": "44a7a29ef2cbd0d85e9996fca8178acc3e6b629373384e2c7ea6c9457efbdc76"
+      },
+      "new_pdf_table_number": "VII",
+      "status": "REPLACED_IN_MAIN",
+      "evidence_summarized_by": "hard_candidate_compact",
+      "claim_coverage": [
+        "seed42 paired bootstrap interval status"
+      ]
+    },
+    {
+      "old_logical_table": "ms96_protocol_validation",
+      "old_pdf_table_number": "XI",
+      "old_csv": "paper/tables/ms96_protocol_validation.csv",
+      "old_source_sha256": "3cbef2b366e6a0043e759c565796411647a63b0eb72e7b10d02944b0416acf9a",
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/ms96_protocol_validation.csv",
+      "new_logical_table": "ms96_delta_summary_compact; hard_candidate_compact",
+      "new_csv": "paper/tables/compression_2026-09-10/ms96_delta_summary_compact.csv; paper/tables/compression_2026-09-10/hard_candidate_compact.csv",
+      "new_source_sha256": {
+        "paper/tables/compression_2026-09-10/ms96_delta_summary_compact.csv": "622c9a477518dfe5ee6f05d53797912781f0f4f68621264e8c6ade62dab41248",
+        "paper/tables/compression_2026-09-10/hard_candidate_compact.csv": "44a7a29ef2cbd0d85e9996fca8178acc3e6b629373384e2c7ea6c9457efbdc76"
+      },
+      "new_pdf_table_number": "VI; VII",
+      "status": "REMOVED_FROM_MAIN; RAW_ARCHIVED",
+      "evidence_summarized_by": "ms96_delta_summary_compact; hard_candidate_compact",
+      "claim_coverage": [
+        "validation protocol robustness"
+      ]
+    },
+    {
+      "old_logical_table": "ms96_protocol_test",
+      "old_pdf_table_number": "XII",
+      "old_csv": "paper/tables/ms96_protocol_test.csv",
+      "old_source_sha256": "c9d5c762212bc708f23ba51d519b1d4dc0da962fd1d82f7ebdb6b75ca0b21af2",
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/ms96_protocol_test.csv",
+      "new_logical_table": "ms96_delta_summary_compact; hard_candidate_compact",
+      "new_csv": "paper/tables/compression_2026-09-10/ms96_delta_summary_compact.csv; paper/tables/compression_2026-09-10/hard_candidate_compact.csv",
+      "new_source_sha256": {
+        "paper/tables/compression_2026-09-10/ms96_delta_summary_compact.csv": "622c9a477518dfe5ee6f05d53797912781f0f4f68621264e8c6ade62dab41248",
+        "paper/tables/compression_2026-09-10/hard_candidate_compact.csv": "44a7a29ef2cbd0d85e9996fca8178acc3e6b629373384e2c7ea6c9457efbdc76"
+      },
+      "new_pdf_table_number": "VI; VII",
+      "status": "REMOVED_FROM_MAIN; RAW_ARCHIVED",
+      "evidence_summarized_by": "ms96_delta_summary_compact; hard_candidate_compact",
+      "claim_coverage": [
+        "test protocol robustness"
+      ]
+    },
+    {
+      "old_logical_table": "n_vs_sasrec_exposure",
+      "old_pdf_table_number": "XIII",
+      "old_csv": "paper/tables/n_vs_sasrec_exposure.csv",
+      "old_source_sha256": "e6b27bc4671e6ebf581fc9e98b72b54baa1ee1a7c55d1ed022d0aa6fdd7e4459",
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/n_vs_sasrec_exposure.csv",
+      "new_logical_table": "n_vs_sasrec_exposure",
+      "new_csv": "paper/tables/n_vs_sasrec_exposure.csv",
+      "new_source_sha256": {
+        "paper/tables/n_vs_sasrec_exposure.csv": "e6b27bc4671e6ebf581fc9e98b72b54baa1ee1a7c55d1ed022d0aa6fdd7e4459"
+      },
+      "new_pdf_table_number": "VIII",
+      "status": "CORE_MAIN",
+      "evidence_summarized_by": "n_vs_sasrec_exposure",
+      "claim_coverage": [
+        "approximately exposure-aligned LlamaRec/SASRec comparison"
+      ]
+    },
+    {
+      "old_logical_table": "cross_dataset",
+      "old_pdf_table_number": "XIV",
+      "old_csv": "paper/tables/cross_dataset.csv",
+      "old_source_sha256": "fb4ae0152a44a8d70edccfbe5a42156f204c06b3a84a8384ccb1d3dc692d024d",
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/cross_dataset.csv",
+      "new_logical_table": "cross_dataset",
+      "new_csv": "paper/tables/cross_dataset.csv",
+      "new_source_sha256": {
+        "paper/tables/cross_dataset.csv": "fb4ae0152a44a8d70edccfbe5a42156f204c06b3a84a8384ccb1d3dc692d024d"
+      },
+      "new_pdf_table_number": "IX",
+      "status": "CORE_MAIN",
+      "evidence_summarized_by": "cross_dataset",
+      "claim_coverage": [
+        "Amazon directional external check"
+      ]
+    }
+  ]
+}

@@ -26,9 +26,9 @@ Data source: Phase 2A, Phase 2C, Cross-dataset Validation.
 
 ## Table 3: Sample-exposure-aware SASRec Comparison
 
-Purpose: present LLM-vs-SASRec without conflating budget regimes.
+Purpose: present LLM-vs-SASRec without conflating matched-exposure sample efficiency with a much-higher-exposure SASRec anchor.
 
-Rows: N-K0, M1 supplemental, SASRec closest exposure, SASRec high exposure.
+Rows: N-K0 low-exposure anchor, M1 supplemental, SASRec closest exposure, and SASRec high exposure. N-K0 high exposure is not available.
 
 Metrics: N-task exposure, total exposure, optimizer steps, effective batch,
 HR@1/NDCG@5/MRR.

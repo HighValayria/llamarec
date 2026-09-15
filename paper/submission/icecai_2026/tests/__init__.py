@@ -1,0 +1,1 @@
+"""ICECAI adapter tests."""

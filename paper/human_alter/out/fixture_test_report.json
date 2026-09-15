@@ -1,0 +1,30 @@
+[
+  {
+    "fixture": "A_sentence_edit",
+    "pass": true
+  },
+  {
+    "fixture": "B_numeric_edit",
+    "pass": true
+  },
+  {
+    "fixture": "C_citation_edit",
+    "pass": true
+  },
+  {
+    "fixture": "D_heading_edit",
+    "pass": true
+  },
+  {
+    "fixture": "E_table_cell_edit",
+    "pass": true
+  },
+  {
+    "fixture": "F_paragraph_delete",
+    "pass": true
+  },
+  {
+    "fixture": "G_paragraph_split",
+    "pass": true
+  }
+]

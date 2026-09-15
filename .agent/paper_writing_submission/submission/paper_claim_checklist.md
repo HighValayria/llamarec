@@ -5,7 +5,7 @@
 - [x] MC1 has direct MovieLens evidence.
 - [x] MC2 has direct MovieLens multi-seed evidence.
 - [x] MC3 has candidate robustness and PopMatch evidence.
-- [x] MC4 has sample-exposure and high-exposure evidence.
+- [x] MC4 has closest-exposure evidence plus a high-exposure SASRec anchor; it is not a completed high-budget N-K0-vs-SASRec frontier.
 - [x] Cross-dataset validation supports MC1-MC4 directionally.
 
 ## Required Wording Checks

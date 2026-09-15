@@ -8,7 +8,7 @@
 | MovieLens and Amazon roles clear | yes | MovieLens is full evidence; Amazon is seed42 cross-domain validation |
 | Random-k5 and PopMatch-k5 separated | yes | Tables and prose label protocols separately |
 | Y P(Yes) and N ranking separated | yes | Problem formulation and Results 6.1 distinguish scoring |
-| SASRec closest/high exposure separated | yes | Table 3 and Results 6.4 |
+| SASRec closest/high exposure separated | yes | Table 3 and Results 6.4 separate matched-exposure comparison from a much-higher-exposure SASRec anchor; no matched high-exposure head-to-head is claimed |
 | Amazon seed42 limitation explicit | yes | Results 6.5 and Limitations |
 | Amazon N/M small margin cautious | yes | Results 6.2 and Table 4 |
 | Amazon binary gap constrained | yes | Table 1 marks unavailable/diagnostic-only |

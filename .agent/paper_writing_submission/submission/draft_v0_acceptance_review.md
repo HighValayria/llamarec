@@ -14,7 +14,7 @@
 | Amazon binary gap is constrained | pass | Table 1 marks Amazon binary as unavailable/diagnostic-only |
 | Main/appendix split is clear | partial | Appendix plan is clear; appendix prose is not yet drafted |
 | Blocking missing evidence remains | no | Only optional evidence patches are listed |
-| Empirical paper story is coherent | pass | The story is supervision semantics -> multi-task tradeoff -> protocol difficulty -> budget regime -> cross-domain validation |
+| Empirical paper story is coherent | pass | The story is supervision semantics -> multi-task tradeoff -> protocol difficulty -> sample-efficiency boundary -> cross-domain validation |
 | Any experiment is required now | no | Optional patches require user approval |
 
 Draft v0 is suitable for manuscript polish and citation completion. It is not

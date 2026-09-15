@@ -1,0 +1,33 @@
+{
+  "commit": "a9c6cd959cf32afe046bb05be9eb5096bebfc5fb",
+  "aggregate": "equal seed weight; sample std ddof=1; n=3; descriptive only",
+  "seed42_precision": "Frozen point estimates retained; original bootstrap deltas/CIs unchanged.",
+  "count_note": "Blank seed42 counts are unavailable in these metric sources, not zero. M1 mixed-summary samples belong to binary Y.",
+  "excluded": "Y-as-ranker bridge columns and duplicate summary.txt are not additional native-task observations.",
+  "sources": [
+    {
+      "path": ".agent/exposure_scaling/final_evidence/exposure_main_table.csv",
+      "sha256": "d8dca542149319799b55a07a7f0c09677544fd8bf2b5a17ddef1f980e0415752"
+    },
+    {
+      "path": ".agent/exposure_scaling/final_evidence/tables/table_hard_candidate.csv",
+      "sha256": "f86abf7185bc3ec3a47ae0ada74c3d3de20e7e502916b8303ca9191af7071770"
+    },
+    {
+      "path": ".agent/ms96_integration/imported/a9c6cd9/artifacts/multiseed96/seed43/test_summary.txt",
+      "sha256": "fda7940060eb348d6f27f316fd86ce765c9f328a2ebf32d01c48f0fcf864072a"
+    },
+    {
+      "path": ".agent/ms96_integration/imported/a9c6cd9/artifacts/multiseed96/seed43/validation_summary.txt",
+      "sha256": "1267740dee67b90414583b22e4e9e088360855d22af437c7859d564aa4837673"
+    },
+    {
+      "path": ".agent/ms96_integration/imported/a9c6cd9/artifacts/multiseed96/seed44/test_summary.txt",
+      "sha256": "5a6b5127bf43650d26b9e345f4794f925090008554f3544ce4b1d8e3b099ecb9"
+    },
+    {
+      "path": ".agent/ms96_integration/imported/a9c6cd9/artifacts/multiseed96/seed44/validation_summary.txt",
+      "sha256": "5fd3514d63147a2b7ab40ea6ac2a306f9d82955cf60f77fdd4260e3ff5487737"
+    }
+  ]
+}

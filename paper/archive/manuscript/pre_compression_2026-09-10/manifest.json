@@ -1,0 +1,579 @@
+{
+  "schema_version": 1,
+  "snapshot_id": "pre_compression_2026-09-10",
+  "created_at": "2026-09-10T19:20:51.6597904+08:00",
+  "snapshot_stage": "pre_compression",
+  "snapshot_date": "2026-09-10",
+  "content_source_count": 35,
+  "placeholder_count": 2,
+  "aggregate_sha256": "0dd7bfc219bb47b1fa1fc649cd71cdfa399b2955ca62e391c0a25bf08f0565b5",
+  "aggregate_algorithm": "Sort source records by active_path using ordinal path order; encode each lowercase-SHA record as UTF-8 without BOM: active_path + TAB + sha256 + LF; concatenate all records and SHA-256 the resulting byte stream.",
+  "source_roots": [
+    "paper/modules",
+    "paper/modules_parts"
+  ],
+  "scientific_stage": "Pre-compression manuscript state after joint scientific compression judgment and before any approved compression execution.",
+  "reason": "Immutable manuscript snapshot before T-BALANCED + D-BALANCED + modified P-BALANCED compression execution.",
+  "recovery_verdict": "CONTENT_RECOVERY_READY",
+  "immutability": "DO_NOT_OVERWRITE_DELETE_OR_REGENERATE; create a new versioned snapshot for future revisions.",
+  "sources": [
+    {
+      "active_path": "paper/modules_parts/discussion/conditional_unification.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/discussion/conditional_unification.md",
+      "sha256": "d85a14c966979eec1943e2c20f740199c1b6111c59de5b9992d5eecd5286af5a",
+      "size_bytes": 2077,
+      "role": "module_part:discussion/conditional_unification",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/discussion/evaluation_protocol.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/discussion/evaluation_protocol.md",
+      "sha256": "e1e52e3917bf20bcef694cfad1250e4631d6cb0b2a814e81f66e2918fddf6d0b",
+      "size_bytes": 2134,
+      "role": "module_part:discussion/evaluation_protocol",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/discussion/exposure_aware_baselines.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/discussion/exposure_aware_baselines.md",
+      "sha256": "04453fda0354e59df6af4cd2fea8ea7ce7b1976f9f37e0126b8bb153a595e599",
+      "size_bytes": 2020,
+      "role": "module_part:discussion/exposure_aware_baselines",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/discussion/exposure_interpretation.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/discussion/exposure_interpretation.md",
+      "sha256": "fc41983d90eaea10822d9ce0f3cb35e3501e81be59f11cce3273f1119d071e7a",
+      "size_bytes": 2214,
+      "role": "module_part:discussion/exposure_interpretation",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/discussion/external_validity.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/discussion/external_validity.md",
+      "sha256": "e807c0e06d64df1de03c745234bc3531c168701b23e920244d9e136235583ba7",
+      "size_bytes": 1544,
+      "role": "module_part:discussion/external_validity",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/discussion/supervision_interface.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/discussion/supervision_interface.md",
+      "sha256": "976ad23174e3b1e4f65e723147da800865273a26584c46c38d3b8db7dbf6778f",
+      "size_bytes": 2257,
+      "role": "module_part:discussion/supervision_interface",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/methods/baseline_setup.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/methods/baseline_setup.md",
+      "sha256": "a821f921549fc8ba627d4c20e15aa81dd9c21fe6d6fd842435017980fe983f34",
+      "size_bytes": 2057,
+      "role": "module_part:methods/baseline_setup",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/methods/bootstrap_and_statistics.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/methods/bootstrap_and_statistics.md",
+      "sha256": "6fd47cabb5abeb32d09850a2588d6786d6d4766193b46d024e3f1c7ce61ce826",
+      "size_bytes": 2890,
+      "role": "module_part:methods/bootstrap_and_statistics",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/methods/datasets.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/methods/datasets.md",
+      "sha256": "e9910efcd0691580cf178eee37dd78f6c6e6b29bccc12e484660651e60222fcb",
+      "size_bytes": 2385,
+      "role": "module_part:methods/datasets",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/methods/evaluation_protocol.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/methods/evaluation_protocol.md",
+      "sha256": "bc03b2d66a595ca4704af12e8e949924c73910340d38d0a3211ce115054b8dfa",
+      "size_bytes": 3158,
+      "role": "module_part:methods/evaluation_protocol",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/methods/exposure_definition.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/methods/exposure_definition.md",
+      "sha256": "160522ca7dca8cf53410ef0ce2f355678989135352319c3579ab26d7eb5a630b",
+      "size_bytes": 3227,
+      "role": "module_part:methods/exposure_definition",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/methods/task_definition.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/methods/task_definition.md",
+      "sha256": "c269ac53e990e559050de1d631a0aa78459a8b032253c3e46cf43619c16648e1",
+      "size_bytes": 3421,
+      "role": "module_part:methods/task_definition",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/methods/temporal_split.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/methods/temporal_split.md",
+      "sha256": "7c8d4d891b53f5360ed9a3c07c8a8055e160b0e5abbc71a8a2e0c1710600ff7a",
+      "size_bytes": 2279,
+      "role": "module_part:methods/temporal_split",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/methods/training_setup.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/methods/training_setup.md",
+      "sha256": "eee58e82a8e7e73ffa469b6809fea112dc9c5387e76a9178f50b5e6a384d9d9c",
+      "size_bytes": 4044,
+      "role": "module_part:methods/training_setup",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/related_work/evaluation_baselines.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/related_work/evaluation_baselines.md",
+      "sha256": "d789b7a9e87102e765f5352f70c2748321848584221e454a684b37d94bd97e81",
+      "size_bytes": 3724,
+      "role": "module_part:related_work/evaluation_baselines",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/related_work/llm_recommendation.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/related_work/llm_recommendation.md",
+      "sha256": "da01fc0358b8c3a6d26cf0148db8b77eafde4bd0a5f10735b7a9d52ef5372a09",
+      "size_bytes": 2758,
+      "role": "module_part:related_work/llm_recommendation",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/related_work/multitask_unification.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/related_work/multitask_unification.md",
+      "sha256": "52689e98ae0cb39bbd6e5b9cf4ed1e3403735b078b5d31c044c04ec85681912a",
+      "size_bytes": 3371,
+      "role": "module_part:related_work/multitask_unification",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/related_work/supervision_formulation.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/related_work/supervision_formulation.md",
+      "sha256": "18ab43bc31bac3a9cdf474176e0080fce36a4ef076644570f926d5aecc0a3057",
+      "size_bytes": 3021,
+      "role": "module_part:related_work/supervision_formulation",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/results/cross_dataset_validation.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/results/cross_dataset_validation.md",
+      "sha256": "9def549054842bb382dcf1f8219f08877164b2bafe520a85019735d05b872f5a",
+      "size_bytes": 2117,
+      "role": "module_part:results/cross_dataset_validation",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/results/rq1_supervision_semantics.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/results/rq1_supervision_semantics.md",
+      "sha256": "2bb16ddf09a1c6dea91c3f6fd71db1450ef667d12fa3823105a3bb9456e4069b",
+      "size_bytes": 2425,
+      "role": "module_part:results/rq1_supervision_semantics",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/results/rq2_exposure_response.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/results/rq2_exposure_response.md",
+      "sha256": "cfbb41873c2fd1eb552fedea589ca4d102542f83fb0d23e80c0cb7bb347b6e23",
+      "size_bytes": 3218,
+      "role": "module_part:results/rq2_exposure_response",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/results/rq3_multitask_unification.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/results/rq3_multitask_unification.md",
+      "sha256": "889eb5942eef034f94312224a24343bab630b650c2cc4bb58baa96bc5161a302",
+      "size_bytes": 5182,
+      "role": "module_part:results/rq3_multitask_unification",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/results/rq4_hard_candidate_robustness.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/results/rq4_hard_candidate_robustness.md",
+      "sha256": "3addd3ec8878d7005e475bded8f44aab3dd09330d4a512c7d2ef28b32235d7ee",
+      "size_bytes": 4283,
+      "role": "module_part:results/rq4_hard_candidate_robustness",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/results/rq5_sasrec_exposure.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/results/rq5_sasrec_exposure.md",
+      "sha256": "1460484b12851fa262265b120228a4c4fe36ed78671b506d5d9e4b1eacb4f18a",
+      "size_bytes": 2458,
+      "role": "module_part:results/rq5_sasrec_exposure",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules/00_contributions.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules/00_contributions.md",
+      "sha256": "c61383380d45dda8ee2b01f30e8998abc7a0cd3614a60f6b12033e598f3a0989",
+      "size_bytes": 4721,
+      "role": "assembled_module:00_contributions",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules/01_introduction.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules/01_introduction.md",
+      "sha256": "9aadf06c2e0ddfb2ab74e36ac933df75b24edba7b97f051006aa870e5f67b3ce",
+      "size_bytes": 11072,
+      "role": "assembled_module:01_introduction",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules/02_related_work.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules/02_related_work.md",
+      "sha256": "dda8a5527cee53f635023824cefae2225da80534969ce39067c94b1d7f7ea2a3",
+      "size_bytes": 1713,
+      "role": "assembled_module:02_related_work",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules/03_problem_formulation.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules/03_problem_formulation.md",
+      "sha256": "0ee3f537860b8cdde6568fa05ffbee0afff6e1625944daa2925a58ad4b390c1a",
+      "size_bytes": 2640,
+      "role": "assembled_module:03_problem_formulation",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules/04_methodology.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules/04_methodology.md",
+      "sha256": "dbb7398086cf12169c5ce12fc2c4e0c917264ac75f79271a51705ff1b62a4285",
+      "size_bytes": 1228,
+      "role": "assembled_module:04_methodology",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules/05_experimental_setup.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules/05_experimental_setup.md",
+      "sha256": "07f000534c2f8014af7ff5ba3a9c46f503c3ebc61ff4dda39326c9026a4ea3d2",
+      "size_bytes": 1557,
+      "role": "assembled_module:05_experimental_setup",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules/06_results.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules/06_results.md",
+      "sha256": "d256f130222862de5082c1ff7732949e71b494dde70e1805af64b5e0a5261650",
+      "size_bytes": 1805,
+      "role": "assembled_module:06_results",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules/07_discussion.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules/07_discussion.md",
+      "sha256": "fc1d7d47069cf2840a51c1841fcc4f71145df6e52ef1d4e997e98b16aedeb835",
+      "size_bytes": 2617,
+      "role": "assembled_module:07_discussion",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules/08_limitations.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules/08_limitations.md",
+      "sha256": "01308a22568fff3fd54f5c5dfa35603535c96cf02d1214df75daa03b7eaa619a",
+      "size_bytes": 5529,
+      "role": "assembled_module:08_limitations",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules/09_conclusion.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules/09_conclusion.md",
+      "sha256": "e14eb0c275c1596f635fd8b24cd85339cc4faf21c2e5af3b7d65ed7ce63c4c54",
+      "size_bytes": 6111,
+      "role": "assembled_module:09_conclusion",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules/10_abstract.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules/10_abstract.md",
+      "sha256": "a3abccd9c4b1bcd57932d8d6956da9650f73a694e90eecdb22eb7d277fc51773",
+      "size_bytes": 3408,
+      "role": "assembled_module:10_abstract",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    }
+  ],
+  "placeholders": [
+    {
+      "active_path": "paper/modules_parts/discussion/.gitkeep",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/discussion/.gitkeep",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "size_bytes": 1,
+      "role": "directory_placeholder",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    },
+    {
+      "active_path": "paper/modules_parts/related_work/.gitkeep",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/source/modules_parts/related_work/.gitkeep",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "size_bytes": 1,
+      "role": "directory_placeholder",
+      "snapshot_stage": "pre_compression",
+      "snapshot_date": "2026-09-10"
+    }
+  ],
+  "contract": {
+    "original_path": "paper/plan/review/manuscript_contract_2026-09-10.json",
+    "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/metadata/contracts/manuscript_contract_2026-09-10.json",
+    "sha256": "d0efaa782237488c5cca99fc0ac61454ce862cc2e0d0e9e2613b37111873b54f",
+    "size_bytes": 10371,
+    "byte_equal": true
+  },
+  "planning_materials": [
+    {
+      "original_path": "paper/plan/task-packets/table-evidence-audit.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/metadata/planning/table-evidence-audit.md",
+      "sha256": "b8d535d8d88d69a369c0ca6769e9ed68ee95770245d0f00e778f894dbfe46e89",
+      "size_bytes": 13551,
+      "role": "table evidence audit",
+      "byte_equal": true
+    },
+    {
+      "original_path": "paper/plan/task-packets/table-evidence-judge-packet.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/metadata/planning/table-evidence-judge-packet.md",
+      "sha256": "091f236655e19a6d91f35276fada12b038473c6abf949a551af2a63ec4ca050b",
+      "size_bytes": 2987,
+      "role": "table compression judge packet",
+      "byte_equal": true
+    },
+    {
+      "original_path": "paper/plan/task-packets/figure-results-display-audit.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/metadata/planning/figure-results-display-audit.md",
+      "sha256": "1f7457bc01e7ccd0909f25ed7b3e14c229d464e82c5e876060179cc9dee0f532",
+      "size_bytes": 14207,
+      "role": "figure and results display audit",
+      "byte_equal": true
+    },
+    {
+      "original_path": "paper/plan/task-packets/figure-results-display-judge-packet.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/metadata/planning/figure-results-display-judge-packet.md",
+      "sha256": "38ce9da8443bacf30e9e172393e7276ae496b3d3295cbc492545ea7b4db1bd6c",
+      "size_bytes": 2008,
+      "role": "figure and results display judge packet",
+      "byte_equal": true
+    },
+    {
+      "original_path": "paper/plan/task-packets/text-compression-audit.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/metadata/planning/text-compression-audit.md",
+      "sha256": "a595e6f815e4101511b6f2cac16ef08ecc678d2805236b358fb5d8b85de79b42",
+      "size_bytes": 28550,
+      "role": "text compression audit",
+      "byte_equal": true
+    },
+    {
+      "original_path": "paper/plan/task-packets/text-compression-judge-packet.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/metadata/planning/text-compression-judge-packet.md",
+      "sha256": "34bd0d119d8d1f756bda0e35ddf107235aa46a9a30e0721f6ff44aa94b6cb731",
+      "size_bytes": 4602,
+      "role": "text compression judge packet",
+      "byte_equal": true
+    },
+    {
+      "original_path": "paper/plan/task-packets/compression-scientific-judge.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/metadata/planning/compression-scientific-judge.md",
+      "sha256": "78b188f3fd7fe7936bfe59eb175135e1674d7e6dd9b57aec8753a82f65311891",
+      "size_bytes": 24464,
+      "role": "joint compression scientific decision",
+      "byte_equal": true
+    }
+  ],
+  "table_archive": {
+    "path": "paper/archive/tables/pre_compression_2026-09-10",
+    "manifest_path": "paper/archive/tables/pre_compression_2026-09-10/manifest.json",
+    "manifest_sha256": "20ab2ad41b155ed3f877165187cbd0a9b7bd7b711c408aef563e6701dec67c1c",
+    "expected_table_count": 14,
+    "verified_table_count": 14,
+    "status": "PASS",
+    "duplicated_in_this_snapshot": false
+  },
+  "formal_figure_inventory": {
+    "file_count": 4,
+    "aggregate_sha256": "f9c5c55d438a296a7631fa518044fc31ca9b88345fe03ef50227dcf0c38d4376",
+    "aggregate_algorithm": "Sort figure records by active_path using ordinal path order; encode each lowercase-SHA record as UTF-8 without BOM: active_path + TAB + sha256 + LF; concatenate all records and SHA-256 the resulting byte stream.",
+    "files": [
+      {
+        "active_path": "paper/figures/fig_n_native_exposure.png",
+        "sha256": "663937fafe01f68b0e9f100d40a1b42128e7233cf233fbffa9780838595d944a",
+        "size_bytes": 105548,
+        "role": "publication_raster"
+      },
+      {
+        "active_path": "paper/figures/fig_n_native_exposure.svg",
+        "sha256": "46762155754c2fb75c1ec5b7e89ba6bd6f27e74a5dfe16b3dea253466dcfb526",
+        "size_bytes": 27375,
+        "role": "vector_counterpart"
+      },
+      {
+        "active_path": "paper/figures/fig_n_vs_sasrec_exposure.png",
+        "sha256": "9fdf32839798b8243f92641fc0b3c0ec21558a304e4fa38de41735f9cf8566f7",
+        "size_bytes": 142099,
+        "role": "publication_raster"
+      },
+      {
+        "active_path": "paper/figures/fig_n_vs_sasrec_exposure.svg",
+        "sha256": "9ab420a6fdf395824219749afabcb104fbc09fe2b6bd35e0976dd470ff160abe",
+        "size_bytes": 36026,
+        "role": "vector_counterpart"
+      }
+    ]
+  },
+  "current_pdfs": [
+    {
+      "variant": "English",
+      "active_path": "paper/builds/ieee_generic/en/main.pdf",
+      "sha256": "4e97eeb28adfd849f261bf555bc7feb9bfb2a58d2471f78448f913abfe12d2b3",
+      "size_bytes": 370971,
+      "page_count": 14
+    },
+    {
+      "variant": "Bilingual",
+      "active_path": "paper/builds/ieee_generic/bilingual/main.pdf",
+      "sha256": "fe9e33db4209f23d0e51eb0dfc6d028f33e5b3b602f53c1d0bb61b0b9d773ce6",
+      "size_bytes": 572713,
+      "page_count": 22
+    }
+  ],
+  "protected_active_assets": {
+    "table_csv_count": 14,
+    "table_csv": [
+      {
+        "active_path": "paper/tables/binary_exposure.csv",
+        "sha256": "b0dcf78012a4c3a70e598ae344dcc98954d3c3c0a1689074df48ae9e846c92ab",
+        "size_bytes": 664
+      },
+      {
+        "active_path": "paper/tables/cross_dataset.csv",
+        "sha256": "fb4ae0152a44a8d70edccfbe5a42156f204c06b3a84a8384ccb1d3dc692d024d",
+        "size_bytes": 484
+      },
+      {
+        "active_path": "paper/tables/datasets.csv",
+        "sha256": "e024b08f34de57c6d56aeee87a2769fe05b6696c2b8c8ff4777a503ddf72d8b9",
+        "size_bytes": 225
+      },
+      {
+        "active_path": "paper/tables/exposure_scaling.csv",
+        "sha256": "81ba50ab9731b39e63777df71d884ea50d3f7b43ca34c8ce06b00e9143d0a3af",
+        "size_bytes": 782
+      },
+      {
+        "active_path": "paper/tables/hard_candidate.csv",
+        "sha256": "f86abf7185bc3ec3a47ae0ada74c3d3de20e7e502916b8303ca9191af7071770",
+        "size_bytes": 3569
+      },
+      {
+        "active_path": "paper/tables/ms96_delta_summary.csv",
+        "sha256": "bd1f465c3dc3f165db0e2648493a69a05963149b5bafdb0aed5b507945b06ef8",
+        "size_bytes": 2967
+      },
+      {
+        "active_path": "paper/tables/ms96_main_test.csv",
+        "sha256": "1e8c5fb46f0d17f713d662909cb6863644b4208075837d938acb14bfe0643270",
+        "size_bytes": 747
+      },
+      {
+        "active_path": "paper/tables/ms96_main_validation.csv",
+        "sha256": "f17f6dac96fcbdc908a2bc4cf9e144a4e8dba0c658c22f937ed160ba329dcbfe",
+        "size_bytes": 748
+      },
+      {
+        "active_path": "paper/tables/ms96_protocol_test.csv",
+        "sha256": "c9d5c762212bc708f23ba51d519b1d4dc0da962fd1d82f7ebdb6b75ca0b21af2",
+        "size_bytes": 1766
+      },
+      {
+        "active_path": "paper/tables/ms96_protocol_validation.csv",
+        "sha256": "3cbef2b366e6a0043e759c565796411647a63b0eb72e7b10d02944b0416acf9a",
+        "size_bytes": 1772
+      },
+      {
+        "active_path": "paper/tables/n_vs_sasrec_exposure.csv",
+        "sha256": "e6b27bc4671e6ebf581fc9e98b72b54baa1ee1a7c55d1ed022d0aa6fdd7e4459",
+        "size_bytes": 1201
+      },
+      {
+        "active_path": "paper/tables/semantics_bridge.csv",
+        "sha256": "7d86eef1fa8136e219714a3d7c7e70ac9170dd9a94028d7247cb71e52afce140",
+        "size_bytes": 669
+      },
+      {
+        "active_path": "paper/tables/specialist_multitask.csv",
+        "sha256": "348ffc1aa823d091c3d78f5ad26408dbd8033ae5775191e67c71d90b92ac5d53",
+        "size_bytes": 937
+      },
+      {
+        "active_path": "paper/tables/training_exposure.csv",
+        "sha256": "6d4ebdf08f8f8181d509964d2ee83fed4c085beafa88cabcf39a13acd7e9beec",
+        "size_bytes": 481
+      }
+    ],
+    "reference_library": {
+      "active_path": "paper/references/library.bib",
+      "sha256": "16a80cece100edf8be186d4d7f25c368a5f388869d79279769cacd2a3169e6b3",
+      "size_bytes": 11387
+    },
+    "submission_adapter": [
+      {
+        "active_path": "paper/builds/ieee_generic/bilingual/build_manifest.json",
+        "sha256": "36085886ce6125795148c1727429c05b7b0e570905fbf790ab62809ea0bca0df",
+        "size_bytes": 23012
+      },
+      {
+        "active_path": "paper/builds/ieee_generic/bilingual/main.tex",
+        "sha256": "1b870ec97d780c0999485dc22491484ce756dcc394b6a81e4aa60699ec4d3d39",
+        "size_bytes": 1563
+      },
+      {
+        "active_path": "paper/builds/ieee_generic/en/build_manifest.json",
+        "sha256": "795e7f0db5a2be1f6550d1b6cfad6c43f69c43bf6090afbb8017e38f8ed51dd8",
+        "size_bytes": 22914
+      },
+      {
+        "active_path": "paper/builds/ieee_generic/en/main.tex",
+        "sha256": "6fdbe43b473b203956c5a56386062983943ccd07b27a804e86f42184e6d59a45",
+        "size_bytes": 895
+      }
+    ]
+  }
+}

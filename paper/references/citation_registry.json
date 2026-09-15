@@ -1,0 +1,828 @@
+{
+  "audited_on": "2026-09-11",
+  "mode": "ICECAI_2026_R_BALANCED_REFERENCE_REFRESH",
+  "manuscript_application": "APPLIED",
+  "verification_basis": "2026-09-07完成关键原文裁决，2026-09-08应用到00-02，2026-09-09关闭Methods引文缺口；2026-09-11按冻结R-BALANCED方案执行两项同工作正式版升级与三项来源替换。R1/R2沿用已核科学内容；R3-R5的正式书目由Crossref核对，科学角色严格限于冻结裁决。S09仍PARTIAL。",
+  "sources": [
+    {
+      "source_id": "S01",
+      "citation_key": "zhao2024llmrec",
+      "title": "Recommender Systems in the Era of Large Language Models (LLMs)",
+      "year": 2024,
+      "topic": "LLM推荐研究背景",
+      "candidate_paper_section": "intro.p01; rw.llm.p01",
+      "current_paper_section": "intro.p01; rw.llm.p01",
+      "supported_claim": "存在以LLM时代推荐系统为主题的研究。",
+      "source_location": ".agent/paper_writing_submission/refs/verified_sources.md#S01; paper/references/library.bib#zhao2024llmrec",
+      "verified": "VERIFIED",
+      "verification_scope": "题名主题级；继承2026-08-22书目核验，2026-09-07仅本地比对",
+      "full_text_read": false,
+      "authors": "Zihuai Zhao; Wenqi Fan; Jiatong Li; Yunqing Liu; Xiaowei Mei; Yiqi Wang; Zhen Wen; Fei Wang; Xiangyu Zhao; Jiliang Tang; Qing Li",
+      "venue": "IEEE TKDE",
+      "source": "https://doi.org/10.1109/TKDE.2024.3392335",
+      "body_sections_read": false,
+      "primary_sources": [
+        {
+          "url": "https://doi.org/10.1109/TKDE.2024.3392335",
+          "locator": "继承书目/题名级核验"
+        }
+      ]
+    },
+    {
+      "source_id": "S02",
+      "citation_key": "geng2022p5",
+      "title": "Recommendation as Language Processing (RLP): A Unified Pretrain, Personalized Prompt and Predict Paradigm (P5)",
+      "year": 2022,
+      "topic": "语言化/统一推荐",
+      "candidate_paper_section": "intro.p01; intro.p04; rw.llm.p02; rw.tasks.p02; rw.unified.p01",
+      "current_paper_section": "intro.p01; intro.p02; intro.p03; intro.p04; rw.llm.p02; rw.tasks.p02; rw.unified.p01",
+      "supported_claim": "P5共享T5表达五类任务；§3含rating>=4喜欢判断及下一物品生成/选择。§5.6 Fig5有专家/多任务对照。arXiv v7 Appendix C/Table16将每交互衍生训练实例数r从10变到200，不只是prompt模板数。没有据此确认每任务累计消费匹配的专家轨迹，也不能断言预算不匹配。",
+      "source_location": "paper/references/primary_source_notes.md#S02",
+      "verified": "VERIFIED",
+      "verification_scope": "Tier1定向复核§3/5.6并补arXiv v7 Appendix C；修正上轮作者站18页版遗漏；不冒充通读。正式RecSys2022，v7修订于2023-01-02。",
+      "full_text_read": false,
+      "authors": "Shijie Geng; Shuchang Liu; Zuohui Fu; Yingqiang Ge; Yongfeng Zhang",
+      "venue": "RecSys 2022",
+      "source": "https://yongfeng.me/attach/P5.pdf",
+      "body_sections_read": true,
+      "locator": "§3, §5.1, §5.6 Fig5；arXiv v7 Appendix C/Table16（PDF第14页）",
+      "primary_sources": [
+        {
+          "url": "https://yongfeng.me/attach/P5.pdf",
+          "locator": "作者站18页版本，§3/5.1/5.6 Fig5"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2203.13366v7",
+          "locator": "19页版本，Appendix C/Table16（PDF第14页）"
+        }
+      ]
+    },
+    {
+      "source_id": "S03",
+      "citation_key": "bao2023tallrec",
+      "title": "TALLRec: An Effective and Efficient Tuning Framework to Align Large Language Model with Recommendation",
+      "year": 2023,
+      "topic": "推荐特定调优",
+      "candidate_paper_section": "intro.p01; rw.llm.p02; rw.evaluation.p02",
+      "current_paper_section": "intro.p01; rw.llm.p02; rw.evaluation.p02",
+      "supported_claim": "指令+like/dislike历史+目标物品，输出Yes/No；alpaca tuning再rec-tuning，LoRA条件语言建模。 K-shot是随机抽取训练样本数量；同一K下与含SASRec的传统模型比较，Table3为16/64/256，Fig3b为1-256。 评价为binary AUC；不能等同本文N候选next-interaction排序或累计样本消费匹配。",
+      "source_location": "paper/references/primary_source_notes.md#S03",
+      "verified": "VERIFIED",
+      "verification_scope": "已读相关方法及数据/预算实验。 2026-09-07 Tier1复核Table3/Fig3b；K曲线已存在，K选样不可与本研究累计消费按倍数比较，不采纳loss攻击。",
+      "full_text_read": false,
+      "authors": "Keqin Bao; Jizhi Zhang; Yang Zhang; Wenjie Wang; Fuli Feng; Xiangnan He",
+      "venue": "RecSys 2023",
+      "source": "https://arxiv.org/pdf/2305.00447",
+      "body_sections_read": true,
+      "locator": "§2.1-2.2 Table2; §3 Table3 Fig.3",
+      "primary_sources": [
+        {
+          "url": "https://arxiv.org/pdf/2305.00447",
+          "locator": "§2.1-2.2 Table2; §3 Table3 Fig.3"
+        }
+      ]
+    },
+    {
+      "source_id": "S04",
+      "citation_key": "he2023zeroshotconv",
+      "title": "Large Language Models as Zero-Shot Conversational Recommenders",
+      "year": 2023,
+      "topic": "零样本对话推荐",
+      "candidate_paper_section": "intro.p01; rw.llm.p01",
+      "current_paper_section": "intro.p01; rw.llm.p01",
+      "supported_claim": "已有工作将LLM用于零样本对话推荐。",
+      "source_location": ".agent/paper_writing_submission/refs/verified_sources.md#S04; paper/references/library.bib#he2023zeroshotconv",
+      "verified": "VERIFIED",
+      "verification_scope": "题名主题级；继承2026-08-22书目核验，2026-09-07仅本地比对",
+      "full_text_read": false,
+      "authors": "Zhankui He; Zhouhang Xie; Rahul Jha; Harald Steck; Dawen Liang; Yesu Feng; Bodhisattwa Prasad Majumder; Nathan Kallus; Julian McAuley",
+      "venue": "CIKM 2023",
+      "source": "https://doi.org/10.1145/3583780.3614949",
+      "body_sections_read": false,
+      "primary_sources": [
+        {
+          "url": "https://doi.org/10.1145/3583780.3614949",
+          "locator": "继承书目/题名级核验"
+        }
+      ]
+    },
+    {
+      "source_id": "S05",
+      "citation_key": "hou2024zeroshotrankers",
+      "title": "Large Language Models are Zero-Shot Rankers for Recommender Systems",
+      "year": 2024,
+      "topic": "零样本排序",
+      "candidate_paper_section": "intro.p01; rw.llm.p01",
+      "current_paper_section": "intro.p01; rw.llm.p01",
+      "supported_claim": "已有工作研究LLM作为推荐系统中的零样本排序器。",
+      "source_location": ".agent/paper_writing_submission/refs/verified_sources.md#S05; paper/references/library.bib#hou2024zeroshotrankers",
+      "verified": "VERIFIED",
+      "verification_scope": "题名主题级；继承2026-08-22书目核验，2026-09-07仅本地比对",
+      "full_text_read": false,
+      "authors": "Yupeng Hou; Junjie Zhang; Zihan Lin; Hongyu Lu; Ruobing Xie; Julian McAuley; Wayne Xin Zhao",
+      "venue": "ECIR 2024",
+      "source": "https://doi.org/10.1007/978-3-031-56060-6_24",
+      "body_sections_read": false,
+      "primary_sources": [
+        {
+          "url": "https://doi.org/10.1007/978-3-031-56060-6_24",
+          "locator": "继承书目/题名级核验"
+        }
+      ]
+    },
+    {
+      "source_id": "S06",
+      "citation_key": "koren2009mf",
+      "title": "Matrix Factorization Techniques for Recommender Systems",
+      "year": 2009,
+      "topic": "矩阵分解建模背景",
+      "candidate_paper_section": "rw.tasks.p01",
+      "current_paper_section": "rw.tasks.p01",
+      "supported_claim": "基本MF通过正则化平方误差拟合已观测评分；显式评分与隐式行为不是同一数据语义。",
+      "source_location": "paper/references/primary_source_notes.md#S06",
+      "verified": "VERIFIED",
+      "verification_scope": "已核论文原始排版副本相关正文；作者网页核书目，副本印刷42-49与既有正式著录30-37不同，不改写书目页码。",
+      "full_text_read": false,
+      "authors": "Yehuda Koren; Robert Bell; Chris Volinsky",
+      "venue": "Computer 42(8), 2009",
+      "source": "https://datajobs.com/data-science-repo/Recommender-Systems-%5BNetflix%5D.pdf",
+      "body_sections_read": true,
+      "locator": "PDF p3（印刷p44），A Basic Matrix Factorization Model，Eq.1-2",
+      "primary_sources": [
+        {
+          "url": "https://datajobs.com/data-science-repo/Recommender-Systems-%5BNetflix%5D.pdf",
+          "locator": "PDF p3（印刷p44），A Basic Matrix Factorization Model，Eq.1-2"
+        }
+      ]
+    },
+    {
+      "source_id": "S07",
+      "citation_key": "hu2008implicit",
+      "title": "Collaborative Filtering for Implicit Feedback Datasets",
+      "year": 2008,
+      "topic": "隐式反馈协同过滤",
+      "candidate_paper_section": "intro.p02; rw.tasks.p01",
+      "current_paper_section": "intro.p02; rw.tasks.p01",
+      "supported_claim": "显式评价与隐式行为不同；原模型把行为转成偏好指示与置信度，未交互不等于明确不喜欢。",
+      "source_location": "paper/references/primary_source_notes.md#S07",
+      "verified": "VERIFIED",
+      "verification_scope": "已核作者原文的目标、反馈特性及置信度定义。",
+      "full_text_read": false,
+      "authors": "Yifan Hu; Yehuda Koren; Chris Volinsky",
+      "venue": "ICDM 2008",
+      "source": "https://yifanhu.net/PUB/cf.pdf",
+      "body_sections_read": true,
+      "locator": "§2，§4 Eq.3，PDF pp2-4",
+      "primary_sources": [
+        {
+          "url": "https://yifanhu.net/PUB/cf.pdf",
+          "locator": "§2，§4 Eq.3，PDF pp2-4"
+        }
+      ]
+    },
+    {
+      "source_id": "S08",
+      "citation_key": "kang2018sasrec",
+      "title": "Self-Attentive Sequential Recommendation",
+      "year": 2018,
+      "topic": "自注意力序列推荐",
+      "candidate_paper_section": "intro.p02; rw.tasks.p01; rw.evaluation.p02; methods.baseline.p01",
+      "current_paper_section": "intro.p02; rw.tasks.p01; rw.evaluation.p02; methods.baseline.p01",
+      "supported_claim": "从历史预测下一物品；时间步正目标是下一序列事件。 原论文是采样负例BCE，每时间步每epoch一个负例；评价采100负例加真值。 仅作任务历史与模型身份依据，不能归因本仓库full-item CE实现为原论文配置。",
+      "source_location": "paper/references/primary_source_notes.md#S08",
+      "verified": "VERIFIED",
+      "verification_scope": "已读任务、训练及评价章节。",
+      "full_text_read": false,
+      "authors": "Wang-Cheng Kang; Julian McAuley",
+      "venue": "ICDM 2018",
+      "source": "https://cseweb.ucsd.edu/~jmcauley/pdfs/icdm18.pdf",
+      "body_sections_read": true,
+      "locator": "§III.E, §IV.D",
+      "primary_sources": [
+        {
+          "url": "https://cseweb.ucsd.edu/~jmcauley/pdfs/icdm18.pdf",
+          "locator": "§III.E, §IV.D"
+        }
+      ]
+    },
+    {
+      "source_id": "S09",
+      "citation_key": "sun2019bert4rec",
+      "title": "BERT4Rec",
+      "year": 2019,
+      "topic": "序列模型候选背景",
+      "candidate_paper_section": "定位证据；本轮正文不引用",
+      "current_paper_section": "未引用；保留文献证据库存",
+      "supported_claim": "本地仅保留短题名和旧序列主题备注，不足以描述其具体目标/结构。",
+      "source_location": ".agent/paper_writing_submission/refs/verified_sources.md#S09; paper/references/library.bib#sun2019bert4rec",
+      "verified": "PARTIAL",
+      "verification_scope": "书目身份已记录，拟用技术claim缺直接内容",
+      "full_text_read": false,
+      "authors": "Fei Sun; Jun Liu; Jian Wu; Changhua Pei; Xiao Lin; Wenwu Ou; Peng Jiang",
+      "venue": "CIKM 2019",
+      "source": "https://doi.org/10.1145/3357384.3357895",
+      "body_sections_read": false,
+      "primary_sources": [
+        {
+          "url": "https://doi.org/10.1145/3357384.3357895",
+          "locator": "继承书目/题名级核验"
+        }
+      ]
+    },
+    {
+      "source_id": "S10",
+      "citation_key": "krichene2020sampled",
+      "title": "On Sampled Metrics for Item Recommendation",
+      "year": 2020,
+      "topic": "采样指标",
+      "candidate_paper_section": "intro.p04; rw.evaluation.p01",
+      "current_paper_section": "intro.p04; rw.evaluation.p01",
+      "supported_claim": "采样指标不必保留全库指标的模型相对次序，即使取期望也不保证。 研究采样指标相对精确指标的近似性质；不是本文hard协议的因果解释。",
+      "source_location": "paper/references/primary_source_notes.md#S10",
+      "verified": "VERIFIED",
+      "verification_scope": "KDD完整PDF未取得；官方摘要和同作者扩展稿正文支持限定采样结论，未假装通读KDD全文。",
+      "full_text_read": false,
+      "authors": "Walid Krichene; Steffen Rendle",
+      "venue": "KDD 2020",
+      "source": "https://research.google/pubs/on-sampled-metrics-for-item-recommendation/",
+      "body_sections_read": false,
+      "locator": "KDD官方摘要；IJCAI2021扩展稿§2-4",
+      "primary_sources": [
+        {
+          "url": "https://research.google/pubs/on-sampled-metrics-for-item-recommendation/",
+          "locator": "官方KDD摘要；同作者IJCAI2021扩展摘要§2-4（需定向阅读全文段落）"
+        },
+        {
+          "url": "https://www.ijcai.org/proceedings/2021/0651.pdf",
+          "locator": "同作者IJCAI2021扩展稿§2-4，已核定义与排序不一致例子；非新研究"
+        }
+      ]
+    },
+    {
+      "source_id": "S11",
+      "citation_key": "canamares2020target",
+      "title": "On Target Item Sampling in Offline Recommender System Evaluation",
+      "year": 2020,
+      "topic": "离线目标物品采样",
+      "candidate_paper_section": "rw.evaluation.p01",
+      "current_paper_section": "intro.p04; rw.evaluation.p01",
+      "supported_claim": "target set是模型待评分候选集合；固定已评分test items T_u，变化额外unrated N_u，不能误写成只采正目标。 小/大候选范围可改变比较并与missing-not-at-random及模型popular/high-rating偏好相关；最大集合亦非自动无偏。",
+      "source_location": "paper/references/primary_source_notes.md#S11",
+      "verified": "VERIFIED",
+      "verification_scope": "已读定义及论证章节；纠正上轮题名推断。",
+      "full_text_read": false,
+      "authors": "Rocío Cañamares; Pablo Castells",
+      "venue": "RecSys 2020",
+      "source": "https://castells.github.io/papers/recsys2020.pdf",
+      "body_sections_read": true,
+      "locator": "§1 pp1-2; §3 p3, T_u ∪ N_u",
+      "primary_sources": [
+        {
+          "url": "https://castells.github.io/papers/recsys2020.pdf",
+          "locator": "§1 pp1-2; §3 p3, T_u ∪ N_u"
+        }
+      ]
+    },
+    {
+      "source_id": "S12",
+      "citation_key": "pereira2025sampling",
+      "title": "On the Reliability of Sampling Strategies in Offline Recommender Evaluation",
+      "year": 2025,
+      "topic": "离线推荐采样策略可靠性",
+      "candidate_paper_section": "intro.p04; rw.evaluation.p01",
+      "current_paper_section": "intro.p04; rw.evaluation.p01",
+      "supported_claim": "采样策略会影响离线推荐测量与模型排序，因此评价结论依赖采样设计。不能继承Dallmann关于full、uniform、popularity或特定模型和数据集的实验细节，也不能解释本文非嵌套协议的纯候选数量因果。",
+      "source_location": "paper/references/primary_source_notes.md#S12",
+      "verified": "VERIFIED",
+      "verification_scope": "Crossref正式书目已核；科学角色按冻结R-BALANCED裁决限定，不转移被替换论文的实验细节。",
+      "full_text_read": false,
+      "authors": "Bruno L. Pereira; Alan Said; Rodrygo L. T. Santos",
+      "venue": "RecSys 2025",
+      "source": "https://doi.org/10.1145/3705328.3748086",
+      "body_sections_read": false,
+      "locator": "Crossref publication metadata and frozen R-BALANCED role boundary",
+      "replacement_provenance": {
+        "old_source": "dallmann2021sampling",
+        "action": "REPLACED_FOR_ICECAI_RECENCY",
+        "historical_meaning_guard": "Do not transfer Dallmann-specific full/uniform/popularity, model, dataset, or repeat-count details."
+      },
+      "primary_sources": [
+        {
+          "url": "https://doi.org/10.1145/3705328.3748086",
+          "locator": "formal publication DOI"
+        }
+      ]
+    },
+    {
+      "source_id": "S13",
+      "citation_key": "milogradskii2024bpr",
+      "title": "Revisiting BPR: A Replicability Study of a Common Recommender System Baseline",
+      "year": 2024,
+      "topic": "BPR基线复现与调优",
+      "candidate_paper_section": "rw.evaluation.p02",
+      "current_paper_section": "rw.evaluation.p02",
+      "supported_claim": "基线复现、实现选择和超参数调优会影响基线竞争力判断。仅用于基线可复现性与谨慎调优，不暗示该论文评价SASRec，也不是下游样本预算匹配证据。",
+      "source_location": "paper/references/primary_source_notes.md#S13",
+      "verified": "VERIFIED",
+      "verification_scope": "Crossref正式书目已核；科学角色按冻结R-BALANCED裁决限定为BPR基线复现与调优。",
+      "full_text_read": false,
+      "authors": "Aleksandr Milogradskii; Oleg Lashinin; Alexander P; Marina Ananyeva; Sergey Kolesnikov",
+      "venue": "RecSys 2024",
+      "source": "https://doi.org/10.1145/3640457.3688073",
+      "body_sections_read": false,
+      "locator": "Crossref publication metadata and frozen R-BALANCED role boundary",
+      "replacement_provenance": {
+        "old_source": "dacrema2019progress",
+        "action": "REPLACED_FOR_ICECAI_RECENCY",
+        "historical_meaning_guard": "Use only for baseline replicability and tuning; do not imply SASRec evaluation."
+      },
+      "primary_sources": [
+        {
+          "url": "https://doi.org/10.1145/3640457.3688073",
+          "locator": "formal publication DOI"
+        }
+      ]
+    },
+    {
+      "source_id": "S14",
+      "citation_key": "shehzad2025gnn",
+      "title": "Revisiting the Performance of Graph Neural Networks for Session-based Recommendation",
+      "year": 2025,
+      "topic": "会话推荐标准化评价与传统基线",
+      "candidate_paper_section": "rw.evaluation.p02",
+      "current_paper_section": "rw.evaluation.p02",
+      "supported_claim": "标准化评价和调优可使传统基线保持竞争力。仅用于评价规范与传统基线竞争力，不作为本仓库SASRec实现来源，也不支持下游曝光或总成本等价。",
+      "source_location": "paper/references/primary_source_notes.md#S14",
+      "verified": "VERIFIED",
+      "verification_scope": "Crossref正式书目已核；科学角色按冻结R-BALANCED裁决限定为标准化评价与传统基线竞争力。",
+      "full_text_read": false,
+      "authors": "Faisal Shehzad; Dietmar Jannach",
+      "venue": "RecSys 2025",
+      "source": "https://doi.org/10.1145/3705328.3748156",
+      "body_sections_read": false,
+      "locator": "Crossref publication metadata and frozen R-BALANCED role boundary",
+      "replacement_provenance": {
+        "old_source": "rendle2022ials",
+        "action": "REPLACED_FOR_ICECAI_RECENCY",
+        "historical_meaning_guard": "Use for standardized evaluation and tuned conventional baselines; not as the SASRec implementation source."
+      },
+      "primary_sources": [
+        {
+          "url": "https://doi.org/10.1145/3705328.3748156",
+          "locator": "formal publication DOI"
+        }
+      ]
+    },
+    {
+      "source_id": "S15",
+      "citation_key": "liu2025itdr",
+      "title": "ITDR: An Instruction Tuning Dataset for Enhancing Large Language Models in Recommendations",
+      "authors": "Zekun Liu; Xiaowen Huang; Jitao Sang",
+      "year": 2025,
+      "venue": "arXiv预印本/技术报告；正式venue未核",
+      "topic": "任务/数据规模",
+      "candidate_paper_section": "intro.p04; rw.unified.p01",
+      "current_paper_section": "intro.p03; intro.p04; rw.tasks.p02; rw.unified.p01",
+      "supported_claim": "多任务LoRA，评分/下一物品等任务；§4.3 RQ2/Fig3和RQ3/Table1删除任务，RQ5/Fig4b按25/50/75%分层数据子集实验。两类消融分别报告，不是全交叉，也不是任务与数据完全隔离。",
+      "source_location": "paper/references/primary_source_notes.md#S15",
+      "source": "https://arxiv.org/abs/2508.05667",
+      "verified": "VERIFIED",
+      "verification_scope": "已核与当前claim直接相关的原文方法/实验章节，不宣称复现论文结果。v1；HTML会议模板未替换，不视为正式录用；2026-09-07 Tier1复核§4.3 RQ2/3/5",
+      "full_text_read": false,
+      "body_sections_read": true,
+      "locator": "§3、§4.2-4.3 RQ2/3/5 Fig3/Table1/Fig4b、附录C",
+      "primary_sources": [
+        {
+          "url": "https://arxiv.org/html/2508.05667v1",
+          "locator": "§3、§4.2-4.3、附录C"
+        }
+      ]
+    },
+    {
+      "source_id": "S16",
+      "citation_key": "zhang2023instructrec",
+      "title": "Recommendation as Instruction Following: A Large Language Model Empowered Recommendation Approach",
+      "authors": "Junjie Zhang; Ruobing Xie; Yupeng Hou; Wayne Xin Zhao; Leyu Lin; Ji-Rong Wen",
+      "year": 2025,
+      "venue": "ACM Transactions on Information Systems 43(5), 2025",
+      "topic": "指令/候选稳健性",
+      "candidate_paper_section": "intro.p04; rw.llm.p02; rw.evaluation.p01",
+      "current_paper_section": "rw.llm.p02; rw.evaluation.p01",
+      "supported_claim": "共享Flan-T5指令适配；pointwise/pairwise/matching/reranking；有困难检索候选及较大候选检验。",
+      "source_location": "paper/references/primary_source_notes.md#S16",
+      "source": "https://doi.org/10.1145/3708882",
+      "verified": "VERIFIED",
+      "verification_scope": "科学内容沿用已核同一工作；2026-09-11仅将书目升级为TOIS正式版，不把2025出版视为新科学证据。",
+      "bibliographic_action": "SAME_WORK_FORMAL_PUBLICATION_UPGRADE",
+      "full_text_read": false,
+      "body_sections_read": true,
+      "locator": "§2.1-2.3、§3.3.1-3.3.4",
+      "primary_sources": [
+        {
+          "url": "https://arxiv.org/pdf/2305.07001",
+          "locator": "§2.1-2.3、§3.3.1-3.3.4"
+        }
+      ]
+    },
+    {
+      "source_id": "S17",
+      "citation_key": "liu2023llmrecbenchmark",
+      "title": "LLMRec: Benchmarking Large Language Models on Recommendation Task",
+      "authors": "Junling Liu; Chao Liu; Peilin Zhou; Qichen Ye; Dading Chong; Kang Zhou; Yueqi Xie; Yuwei Cao; Shoujin Wang; Chenyu You; Philip S. Yu",
+      "year": 2024,
+      "venue": "RecSys 2024",
+      "topic": "能力/比较条件",
+      "candidate_paper_section": "定位证据；本轮正文不引用",
+      "current_paper_section": "未引用；保留文献证据库存",
+      "supported_claim": "五类任务画像与SFT；明确讨论与P5训练量、prompt多样性的差异，不是预算隔离实验。",
+      "source_location": "paper/references/primary_source_notes.md#S17",
+      "source": "https://arxiv.org/abs/2308.12241",
+      "verified": "VERIFIED",
+      "verification_scope": "已核与当前claim直接相关的原文方法/实验章节，不宣称复现论文结果。不是Wei等同名图增强LLMRec；本项目名LlamaRec亦非此文",
+      "full_text_read": false,
+      "body_sections_read": true,
+      "locator": "实验设置及SFT分析PDF pp4-7",
+      "primary_sources": [
+        {
+          "url": "https://arxiv.org/pdf/2308.12241",
+          "locator": "实验设置及SFT分析PDF pp4-7"
+        }
+      ]
+    },
+    {
+      "source_id": "S18",
+      "citation_key": "deng2025onerec",
+      "title": "OneRec: Unifying Retrieve and Rank with Generative Recommender and Iterative Preference Alignment",
+      "authors": "Jiaxin Deng; Shiyao Wang; Kuo Cai; Lejian Ren; Qigen Hu; Weifeng Ding; Qiang Luo; Guorui Zhou",
+      "year": 2025,
+      "venue": "arXiv预印本/技术报告；正式venue未核",
+      "topic": "统一流程",
+      "candidate_paper_section": "rw.unified.p02",
+      "current_paper_section": "未引用；保留文献证据库存",
+      "supported_claim": "用session生成和偏好对齐统一召回排序；DPO抽样比例不是Y/N任务配比。",
+      "source_location": "paper/references/primary_source_notes.md#S18",
+      "source": "https://arxiv.org/abs/2502.18965",
+      "verified": "VERIFIED",
+      "verification_scope": "已核与当前claim直接相关的原文方法/实验章节，不宣称复现论文结果。摘要题名含Iterative，HTML省略；HTML会议模板日期无效；正式venue未确认",
+      "full_text_read": false,
+      "body_sections_read": true,
+      "locator": "§3.2-3.3、§4、§5.1-5.3",
+      "primary_sources": [
+        {
+          "url": "https://arxiv.org/html/2502.18965",
+          "locator": "§3.2-3.3、§4、§5.1-5.3"
+        }
+      ]
+    },
+    {
+      "source_id": "S19",
+      "citation_key": "zhou2025onerecreport",
+      "title": "OneRec Technical Report",
+      "authors": "Guorui Zhou et al.（完整署名见arXiv身份页）",
+      "year": 2025,
+      "venue": "arXiv预印本/技术报告；正式venue未核",
+      "topic": "样本/工业scaling",
+      "candidate_paper_section": "定位证据；本轮正文不引用",
+      "current_paper_section": "未引用；保留文献证据库存",
+      "supported_claim": "工业生成推荐中报告训练样本轴的模型loss曲线，另研究参数、特征与推理规模。",
+      "source_location": "paper/references/primary_source_notes.md#S19",
+      "source": "https://arxiv.org/abs/2506.13695",
+      "verified": "VERIFIED",
+      "verification_scope": "已核与当前claim直接相关的原文方法/实验章节，不宣称复现论文结果。独立技术报告，不与2502.18965合并",
+      "full_text_read": false,
+      "body_sections_read": true,
+      "locator": "§4.1-4.2",
+      "primary_sources": [
+        {
+          "url": "https://arxiv.org/html/2506.13695",
+          "locator": "§4.1-4.2"
+        }
+      ]
+    },
+    {
+      "source_id": "S20",
+      "citation_key": "liu2025onerecthink",
+      "title": "OneRec-Think: In-Text Reasoning for Generative Recommendation",
+      "authors": "Zhanyu Liu et al.（完整署名见arXiv身份页）",
+      "year": 2025,
+      "venue": "arXiv预印本/技术报告；正式venue未核",
+      "topic": "多任务/推理",
+      "candidate_paper_section": "定位证据；本轮正文不引用",
+      "current_paper_section": "未引用；保留文献证据库存",
+      "supported_claim": "多任务item-text对齐、next-item、推理SFT与RL；明确混合比例，开放与工业参数训练范围不同。",
+      "source_location": "paper/references/primary_source_notes.md#S20",
+      "source": "https://arxiv.org/abs/2510.11639",
+      "verified": "VERIFIED",
+      "verification_scope": "已核与当前claim直接相关的原文方法/实验章节，不宣称复现论文结果。未核正式venue；不反向套给早期OneRec",
+      "full_text_read": false,
+      "body_sections_read": true,
+      "locator": "§4、§5.3-5.4、附录A.3/Table5",
+      "primary_sources": [
+        {
+          "url": "https://arxiv.org/html/2510.11639",
+          "locator": "§4、§5.3-5.4、附录A.3/Table5"
+        }
+      ]
+    },
+    {
+      "source_id": "S21",
+      "citation_key": "zhou2025openonerec",
+      "title": "OpenOneRec Technical Report",
+      "authors": "Guorui Zhou et al.；正文署OneRec Team（完整署名见arXiv身份页）",
+      "year": 2025,
+      "venue": "arXiv预印本/技术报告；正式venue未核",
+      "topic": "多任务/预算",
+      "candidate_paper_section": "rw.unified.p01; rw.evaluation.p02",
+      "current_paper_section": "intro.p04; rw.unified.p01",
+      "supported_claim": "统一行为Yes/No和生成推荐；B.5/Table15明确SFT采样权重（label7.800%、video3.971%、recommendation合计35.022%）；§6.3.2/Fig8比较10%few-shot、全量single-domain、全量multi-domain。未确认多个匹配每任务累计点的专家/共享轨迹。",
+      "source_location": "paper/references/primary_source_notes.md#S21",
+      "source": "https://arxiv.org/abs/2512.24762",
+      "verified": "VERIFIED",
+      "verification_scope": "已核与当前claim直接相关的原文方法/实验章节，不宣称复现论文结果。首发2025；核读v2为2026-02-04，未将co-pretraining预算说成下游Y/N预算；2026-09-07 Tier1复核§3.2.2/6.3.2及B.5，不把家族概括成未报告配比",
+      "full_text_read": false,
+      "body_sections_read": true,
+      "locator": "v2 §3.2-3.3、§4.2-4.3、§5.1、§6.3-6.4、附录B.4-B.5",
+      "primary_sources": [
+        {
+          "url": "https://arxiv.org/html/2512.24762v2",
+          "locator": "v2 §3.2-3.3、§4.2-4.3、§5.1、§6.3-6.4、附录B.4-B.5"
+        }
+      ]
+    },
+    {
+      "source_id": "S22",
+      "citation_key": "onerecteam2026onereason",
+      "title": "OneReason Technical Report",
+      "authors": "OneRec Team及署名作者（完整名单见arXiv身份页）",
+      "year": 2026,
+      "venue": "arXiv预印本/技术报告；正式venue未核",
+      "topic": "专家/统一",
+      "candidate_paper_section": "rw.unified.p02",
+      "current_paper_section": "rw.unified.p02",
+      "supported_claim": "混域RL、域专家和RFT/MOPD统一学生对照；不是Y/N共享监督adapter的曝光消融。",
+      "source_location": "paper/references/primary_source_notes.md#S22",
+      "source": "https://arxiv.org/abs/2606.06260",
+      "verified": "VERIFIED",
+      "verification_scope": "已核与当前claim直接相关的原文方法/实验章节，不宣称复现论文结果。以报告团体作者引用；未核正式venue",
+      "full_text_read": false,
+      "body_sections_read": true,
+      "locator": "§6.1-6.4",
+      "primary_sources": [
+        {
+          "url": "https://arxiv.org/html/2606.06260",
+          "locator": "§6.1-6.4"
+        }
+      ]
+    },
+    {
+      "source_id": "S23",
+      "citation_key": "zhang2023seqscaling",
+      "title": "Scaling Law of Large Sequential Recommendation Models",
+      "authors": "Gaowei Zhang; Yupeng Hou; Hongyu Lu; Yu Chen; Wayne Xin Zhao; Ji-Rong Wen",
+      "year": 2023,
+      "venue": "arXiv预印本/技术报告；正式venue未核",
+      "topic": "样本池/重复训练",
+      "candidate_paper_section": "rw.evaluation.p02",
+      "current_paper_section": "rw.evaluation.p02",
+      "supported_claim": "ID-only序列模型研究数据池和模型规模；§IV.C/Fig3明确研究多epoch数据重复，不能概括为只有unique raw data scaling。不是本文预训练LLM与SASRec累计下游任务对齐。",
+      "source_location": "paper/references/primary_source_notes.md#S23",
+      "source": "https://doi.org/10.1145/3640457.3688129",
+      "verified": "VERIFIED",
+      "verification_scope": "科学内容沿用已核同一工作；2026-09-11仅将书目升级为RecSys 2024正式版，不改变其科学角色。",
+      "bibliographic_action": "SAME_WORK_FORMAL_PUBLICATION_UPGRADE",
+      "full_text_read": false,
+      "body_sections_read": true,
+      "locator": "§III.C-E、§IV.A-C Fig.2-3",
+      "primary_sources": [
+        {
+          "url": "https://arxiv.org/pdf/2311.11351",
+          "locator": "§III.C-E、§IV.A-C Fig.2-3"
+        }
+      ]
+    },
+    {
+      "source_id": "S24",
+      "citation_key": "ardalani2022scaling",
+      "title": "Understanding Scaling Laws for Recommendation Models",
+      "authors": "Newsha Ardalani; Carole-Jean Wu; Zeliang Chen; Bhargav Bhushanam; Adnan Aziz",
+      "year": 2022,
+      "venue": "arXiv预印本/技术报告；正式venue未核",
+      "topic": "数据/参数/算力",
+      "candidate_paper_section": "定位证据；本轮正文不引用",
+      "current_paper_section": "未引用；保留文献证据库存",
+      "supported_claim": "DLRM式CTR研究分别改变数据、参数和FLOPs；数据子集均一epoch，重复更久不在该实验内。",
+      "source_location": "paper/references/primary_source_notes.md#S24",
+      "source": "https://arxiv.org/abs/2208.08489",
+      "verified": "VERIFIED",
+      "verification_scope": "已核与当前claim直接相关的原文方法/实验章节，不宣称复现论文结果。arXiv版本；不用于宣称LLM计算公平",
+      "full_text_read": false,
+      "body_sections_read": true,
+      "locator": "§2.1-2.2、附录A.1-A.4",
+      "primary_sources": [
+        {
+          "url": "https://arxiv.org/pdf/2208.08489",
+          "locator": "§2.1-2.2、附录A.1-A.4"
+        }
+      ]
+    },
+    {
+      "source_id": "S25",
+      "citation_key": "penha2024bridging",
+      "title": "Bridging Search and Recommendation in Generative Retrieval: Does One Task Help the Other?",
+      "authors": "Gustavo Penha; Ali Vardasbi; Enrico Palumbo; Marco de Nadai; Hugues Bouchard",
+      "year": 2024,
+      "venue": "RecSys 2024",
+      "topic": "搜索/推荐共享与辅助任务数据分配",
+      "candidate_paper_section": "intro.p04; rw.unified.p02",
+      "current_paper_section": "intro.p04; rw.unified.p02",
+      "supported_claim": "Flan-T5-base适配GenR/GenS/GenR+S；§7 Fig4把新增任务每物品训练实例上限设为5/10/50/500，观察两任务表现。不是单点或非预训练LM；上限共同改变辅助量与流行度，不等于目标任务累计曝光配对。",
+      "source_location": "paper/references/primary_source_notes.md#S25",
+      "source": "https://doi.org/10.1145/3640457.3688123",
+      "verified": "VERIFIED",
+      "verification_scope": "Tier1仅核§3/5/7与Fig4以及PDF首页身份；来自用户Claude既有候选而非扩搜，未通读全文或复现。",
+      "full_text_read": false,
+      "body_sections_read": true,
+      "locator": "§3/5/7 Fig4（PDF第7页）；首页RecSys2024及DOI",
+      "primary_sources": [
+        {
+          "url": "https://arxiv.org/html/2410.16823v1",
+          "locator": "§3/5/7 Fig4"
+        },
+        {
+          "url": "https://arxiv.org/pdf/2410.16823",
+          "locator": "首页正式身份、PDF第7页Fig4"
+        }
+      ]
+    },
+    {
+      "source_id": "S26",
+      "citation_key": "meta2024llama32",
+      "title": "Llama 3.2 Model Card",
+      "authors": "Meta",
+      "year": 2024,
+      "venue": "Meta official model documentation",
+      "topic": "Llama-3.2-3B-Instruct model identity",
+      "candidate_paper_section": "methods.training.p01",
+      "current_paper_section": "methods.training.p01",
+      "supported_claim": "Meta's Llama 3.2 instruction-tuned collection includes a 3B model. This source supports the base-model identity only, not the repository's QLoRA configuration or run metadata.",
+      "source_location": "paper/references/library.bib#meta2024llama32; paper/references/citation_claim_map.md#methods-citation-closure-2026-09-09",
+      "source": "https://github.com/meta-llama/llama-models/blob/main/models/llama3_2/MODEL_CARD.md",
+      "verified": "VERIFIED",
+      "verification_scope": "Official Meta model card; model family, instruction-tuned variant, and 3B size only.",
+      "full_text_read": false,
+      "body_sections_read": true,
+      "locator": "Model Information; Model Architecture",
+      "primary_sources": [
+        {
+          "url": "https://github.com/meta-llama/llama-models/blob/main/models/llama3_2/MODEL_CARD.md",
+          "locator": "Model Information; Model Architecture"
+        }
+      ]
+    },
+    {
+      "source_id": "S27",
+      "citation_key": "hu2022lora",
+      "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+      "authors": "Edward J. Hu; Yelong Shen; Phillip Wallis; Zeyuan Allen-Zhu; Yuanzhi Li; Shean Wang; Lu Wang; Weizhu Chen",
+      "year": 2022,
+      "venue": "ICLR 2022",
+      "topic": "Low-rank adaptation",
+      "candidate_paper_section": "methods.training.p01",
+      "current_paper_section": "methods.training.p01",
+      "supported_claim": "LoRA freezes pretrained weights and introduces trainable low-rank matrices. It does not support this repository's adapter rank, alpha, dropout, or target-module choices.",
+      "source_location": "paper/references/library.bib#hu2022lora; paper/references/citation_claim_map.md#methods-citation-closure-2026-09-09",
+      "source": "https://openreview.net/forum?id=nZeVKeeFYf9",
+      "verified": "VERIFIED",
+      "verification_scope": "Primary paper identity and method definition.",
+      "full_text_read": false,
+      "body_sections_read": true,
+      "locator": "Abstract; §1; §4.1",
+      "primary_sources": [
+        {
+          "url": "https://arxiv.org/abs/2106.09685",
+          "locator": "Abstract; §1; §4.1"
+        },
+        {
+          "url": "https://openreview.net/forum?id=nZeVKeeFYf9",
+          "locator": "ICLR 2022 publication record"
+        }
+      ]
+    },
+    {
+      "source_id": "S28",
+      "citation_key": "dettmers2023qlora",
+      "title": "QLoRA: Efficient Finetuning of Quantized LLMs",
+      "authors": "Tim Dettmers; Artidoro Pagnoni; Ari Holtzman; Luke Zettlemoyer",
+      "year": 2023,
+      "venue": "NeurIPS 2023",
+      "topic": "QLoRA and NF4",
+      "candidate_paper_section": "methods.training.p01",
+      "current_paper_section": "methods.training.p01",
+      "supported_claim": "QLoRA backpropagates through a frozen 4-bit quantized pretrained language model into LoRA adapters and introduces NormalFloat4. It does not support this repository's exact adapter hyperparameters or training run.",
+      "source_location": "paper/references/library.bib#dettmers2023qlora; paper/references/citation_claim_map.md#methods-citation-closure-2026-09-09",
+      "source": "https://proceedings.neurips.cc/paper_files/paper/2023/hash/1feb87871436031bdc0f2beaa62a049b-Abstract.html",
+      "verified": "VERIFIED",
+      "verification_scope": "Official NeurIPS abstract and primary paper method description.",
+      "full_text_read": false,
+      "body_sections_read": true,
+      "locator": "Abstract; §3",
+      "primary_sources": [
+        {
+          "url": "https://proceedings.neurips.cc/paper_files/paper/2023/hash/1feb87871436031bdc0f2beaa62a049b-Abstract.html",
+          "locator": "Official abstract"
+        },
+        {
+          "url": "https://arxiv.org/abs/2305.14314",
+          "locator": "Abstract; §3"
+        }
+      ]
+    },
+    {
+      "source_id": "S29",
+      "citation_key": "harper2015movielens",
+      "title": "The MovieLens Datasets: History and Context",
+      "authors": "F. Maxwell Harper; Joseph A. Konstan",
+      "year": 2015,
+      "venue": "ACM Transactions on Interactive Intelligent Systems",
+      "topic": "MovieLens dataset provenance",
+      "candidate_paper_section": "methods.datasets.p01",
+      "current_paper_section": "methods.datasets.p01",
+      "supported_claim": "This is the canonical MovieLens dataset citation. It supports dataset identity and provenance, not the repository's processed split sizes or task-specific filtering.",
+      "source_location": "paper/references/library.bib#harper2015movielens; paper/references/citation_claim_map.md#methods-citation-closure-2026-09-09",
+      "source": "https://doi.org/10.1145/2827872",
+      "verified": "VERIFIED",
+      "verification_scope": "Official GroupLens citation guidance and primary paper bibliographic record.",
+      "full_text_read": false,
+      "body_sections_read": true,
+      "locator": "GroupLens citation page; paper abstract and dataset history",
+      "primary_sources": [
+        {
+          "url": "https://grouplens.org/blog/movielens-datasets-context-and-history/",
+          "locator": "Official requested citation"
+        },
+        {
+          "url": "https://files.grouplens.org/papers/harper-tiis2015.pdf",
+          "locator": "Primary paper"
+        }
+      ]
+    },
+    {
+      "source_id": "S30",
+      "citation_key": "hou2026amazonreviews",
+      "title": "Bridging Language and Items for Retrieval and Recommendation: Benchmarking LLMs as Semantic Encoders",
+      "authors": "Yupeng Hou; Jiacheng Li; Xiangjun Fu; Zhankui He; An Yan; Xiusi Chen; Julian McAuley",
+      "year": 2026,
+      "venue": "ACL 2026",
+      "topic": "Amazon Reviews 2023 dataset provenance and 5-core variant",
+      "candidate_paper_section": "methods.datasets.p02",
+      "current_paper_section": "methods.datasets.p02",
+      "supported_claim": "The paper introduces Amazon Reviews 2023; the official processing page defines the 5-core/de-duplicated subsets and lists Musical Instruments. These sources support dataset/version identity, not this repository's processed counts.",
+      "source_location": "paper/references/library.bib#hou2026amazonreviews; paper/references/citation_claim_map.md#methods-citation-closure-2026-09-09",
+      "source": "https://aclanthology.org/2026.acl-long.147/",
+      "verified": "VERIFIED",
+      "verification_scope": "ACL Anthology paper record plus official Amazon Reviews 2023 and 5-core pages; local source-decision file used only to match the project variant.",
+      "full_text_read": false,
+      "body_sections_read": true,
+      "locator": "ACL abstract; official 5-core page, Musical_Instruments row",
+      "primary_sources": [
+        {
+          "url": "https://aclanthology.org/2026.acl-long.147/",
+          "locator": "Official publication record and abstract"
+        },
+        {
+          "url": "https://amazon-reviews-2023.github.io/",
+          "locator": "Official dataset page"
+        },
+        {
+          "url": "https://amazon-reviews-2023.github.io/data_processing/5core.html",
+          "locator": "5-core definition and Musical_Instruments row"
+        }
+      ]
+    },
+    {
+      "source_id": "S31",
+      "citation_key": "efron1993bootstrap",
+      "title": "An Introduction to the Bootstrap",
+      "authors": "Bradley Efron; Robert J. Tibshirani",
+      "year": 1993,
+      "venue": "Chapman and Hall",
+      "topic": "Bootstrap and percentile confidence intervals",
+      "candidate_paper_section": "methods.statistics.p01",
+      "current_paper_section": "methods.statistics.p01",
+      "supported_claim": "This standard source supports bootstrap resampling and confidence intervals based on bootstrap percentiles. It does not establish this study's pairing, user-level resampling unit, replicate count, seed, metrics, or execution provenance.",
+      "source_location": "paper/references/library.bib#efron1993bootstrap; paper/references/citation_claim_map.md#methods-citation-closure-2026-09-09",
+      "source": "https://www.routledge.com/An-Introductionto-the-Bootstrap/Efron-Tibshirani/p/book/9780412042317",
+      "verified": "VERIFIED",
+      "verification_scope": "Publisher bibliographic record and table of contents for bootstrap percentile intervals.",
+      "full_text_read": false,
+      "body_sections_read": true,
+      "locator": "Table of contents: Confidence Intervals Based on Bootstrap Percentiles",
+      "primary_sources": [
+        {
+          "url": "https://www.routledge.com/An-Introductionto-the-Bootstrap/Efron-Tibshirani/p/book/9780412042317",
+          "locator": "Publisher record and table of contents"
+        }
+      ]
+    }
+  ]
+}

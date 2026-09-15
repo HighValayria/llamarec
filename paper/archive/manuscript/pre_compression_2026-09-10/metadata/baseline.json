@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "snapshot_id": "pre_compression_2026-09-10",
+  "captured_at": "2026-09-10T19:20:51.6597904+08:00",
+  "manuscript_aggregate_sha256": "0dd7bfc219bb47b1fa1fc649cd71cdfa399b2955ca62e391c0a25bf08f0565b5",
+  "manuscript_content_source_count": 35,
+  "manuscript_placeholder_count": 2,
+  "active_table_csv_count": 14,
+  "active_table_csv": [
+    {
+      "active_path": "paper/tables/binary_exposure.csv",
+      "sha256": "b0dcf78012a4c3a70e598ae344dcc98954d3c3c0a1689074df48ae9e846c92ab",
+      "size_bytes": 664
+    },
+    {
+      "active_path": "paper/tables/cross_dataset.csv",
+      "sha256": "fb4ae0152a44a8d70edccfbe5a42156f204c06b3a84a8384ccb1d3dc692d024d",
+      "size_bytes": 484
+    },
+    {
+      "active_path": "paper/tables/datasets.csv",
+      "sha256": "e024b08f34de57c6d56aeee87a2769fe05b6696c2b8c8ff4777a503ddf72d8b9",
+      "size_bytes": 225
+    },
+    {
+      "active_path": "paper/tables/exposure_scaling.csv",
+      "sha256": "81ba50ab9731b39e63777df71d884ea50d3f7b43ca34c8ce06b00e9143d0a3af",
+      "size_bytes": 782
+    },
+    {
+      "active_path": "paper/tables/hard_candidate.csv",
+      "sha256": "f86abf7185bc3ec3a47ae0ada74c3d3de20e7e502916b8303ca9191af7071770",
+      "size_bytes": 3569
+    },
+    {
+      "active_path": "paper/tables/ms96_delta_summary.csv",
+      "sha256": "bd1f465c3dc3f165db0e2648493a69a05963149b5bafdb0aed5b507945b06ef8",
+      "size_bytes": 2967
+    },
+    {
+      "active_path": "paper/tables/ms96_main_test.csv",
+      "sha256": "1e8c5fb46f0d17f713d662909cb6863644b4208075837d938acb14bfe0643270",
+      "size_bytes": 747
+    },
+    {
+      "active_path": "paper/tables/ms96_main_validation.csv",
+      "sha256": "f17f6dac96fcbdc908a2bc4cf9e144a4e8dba0c658c22f937ed160ba329dcbfe",
+      "size_bytes": 748
+    },
+    {
+      "active_path": "paper/tables/ms96_protocol_test.csv",
+      "sha256": "c9d5c762212bc708f23ba51d519b1d4dc0da962fd1d82f7ebdb6b75ca0b21af2",
+      "size_bytes": 1766
+    },
+    {
+      "active_path": "paper/tables/ms96_protocol_validation.csv",
+      "sha256": "3cbef2b366e6a0043e759c565796411647a63b0eb72e7b10d02944b0416acf9a",
+      "size_bytes": 1772
+    },
+    {
+      "active_path": "paper/tables/n_vs_sasrec_exposure.csv",
+      "sha256": "e6b27bc4671e6ebf581fc9e98b72b54baa1ee1a7c55d1ed022d0aa6fdd7e4459",
+      "size_bytes": 1201
+    },
+    {
+      "active_path": "paper/tables/semantics_bridge.csv",
+      "sha256": "7d86eef1fa8136e219714a3d7c7e70ac9170dd9a94028d7247cb71e52afce140",
+      "size_bytes": 669
+    },
+    {
+      "active_path": "paper/tables/specialist_multitask.csv",
+      "sha256": "348ffc1aa823d091c3d78f5ad26408dbd8033ae5775191e67c71d90b92ac5d53",
+      "size_bytes": 937
+    },
+    {
+      "active_path": "paper/tables/training_exposure.csv",
+      "sha256": "6d4ebdf08f8f8181d509964d2ee83fed4c085beafa88cabcf39a13acd7e9beec",
+      "size_bytes": 481
+    }
+  ],
+  "formal_figure_inventory": {
+    "file_count": 4,
+    "aggregate_sha256": "f9c5c55d438a296a7631fa518044fc31ca9b88345fe03ef50227dcf0c38d4376",
+    "aggregate_algorithm": "Sort figure records by active_path using ordinal path order; encode each lowercase-SHA record as UTF-8 without BOM: active_path + TAB + sha256 + LF; concatenate all records and SHA-256 the resulting byte stream.",
+    "files": [
+      {
+        "active_path": "paper/figures/fig_n_native_exposure.png",
+        "sha256": "663937fafe01f68b0e9f100d40a1b42128e7233cf233fbffa9780838595d944a",
+        "size_bytes": 105548,
+        "role": "publication_raster"
+      },
+      {
+        "active_path": "paper/figures/fig_n_native_exposure.svg",
+        "sha256": "46762155754c2fb75c1ec5b7e89ba6bd6f27e74a5dfe16b3dea253466dcfb526",
+        "size_bytes": 27375,
+        "role": "vector_counterpart"
+      },
+      {
+        "active_path": "paper/figures/fig_n_vs_sasrec_exposure.png",
+        "sha256": "9fdf32839798b8243f92641fc0b3c0ec21558a304e4fa38de41735f9cf8566f7",
+        "size_bytes": 142099,
+        "role": "publication_raster"
+      },
+      {
+        "active_path": "paper/figures/fig_n_vs_sasrec_exposure.svg",
+        "sha256": "9ab420a6fdf395824219749afabcb104fbc09fe2b6bd35e0976dd470ff160abe",
+        "size_bytes": 36026,
+        "role": "vector_counterpart"
+      }
+    ]
+  },
+  "reference_library": {
+    "active_path": "paper/references/library.bib",
+    "sha256": "16a80cece100edf8be186d4d7f25c368a5f388869d79279769cacd2a3169e6b3",
+    "size_bytes": 11387
+  },
+  "submission_adapter": [
+    {
+      "active_path": "paper/builds/ieee_generic/bilingual/build_manifest.json",
+      "sha256": "36085886ce6125795148c1727429c05b7b0e570905fbf790ab62809ea0bca0df",
+      "size_bytes": 23012
+    },
+    {
+      "active_path": "paper/builds/ieee_generic/bilingual/main.tex",
+      "sha256": "1b870ec97d780c0999485dc22491484ce756dcc394b6a81e4aa60699ec4d3d39",
+      "size_bytes": 1563
+    },
+    {
+      "active_path": "paper/builds/ieee_generic/en/build_manifest.json",
+      "sha256": "795e7f0db5a2be1f6550d1b6cfad6c43f69c43bf6090afbb8017e38f8ed51dd8",
+      "size_bytes": 22914
+    },
+    {
+      "active_path": "paper/builds/ieee_generic/en/main.tex",
+      "sha256": "6fdbe43b473b203956c5a56386062983943ccd07b27a804e86f42184e6d59a45",
+      "size_bytes": 895
+    }
+  ],
+  "current_pdfs": [
+    {
+      "variant": "English",
+      "active_path": "paper/builds/ieee_generic/en/main.pdf",
+      "sha256": "4e97eeb28adfd849f261bf555bc7feb9bfb2a58d2471f78448f913abfe12d2b3",
+      "size_bytes": 370971,
+      "page_count": 14
+    },
+    {
+      "variant": "Bilingual",
+      "active_path": "paper/builds/ieee_generic/bilingual/main.pdf",
+      "sha256": "fe9e33db4209f23d0e51eb0dfc6d028f33e5b3b602f53c1d0bb61b0b9d773ce6",
+      "size_bytes": 572713,
+      "page_count": 22
+    }
+  ],
+  "existing_table_archive": {
+    "path": "paper/archive/tables/pre_compression_2026-09-10",
+    "manifest_path": "paper/archive/tables/pre_compression_2026-09-10/manifest.json",
+    "manifest_sha256": "20ab2ad41b155ed3f877165187cbd0a9b7bd7b711c408aef563e6701dec67c1c",
+    "expected_table_count": 14,
+    "verified_table_count": 14,
+    "status": "PASS",
+    "duplicated_in_this_snapshot": false
+  },
+  "contract": {
+    "original_path": "paper/plan/review/manuscript_contract_2026-09-10.json",
+    "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/metadata/contracts/manuscript_contract_2026-09-10.json",
+    "sha256": "d0efaa782237488c5cca99fc0ac61454ce862cc2e0d0e9e2613b37111873b54f",
+    "size_bytes": 10371,
+    "byte_equal": true
+  },
+  "planning_materials": [
+    {
+      "original_path": "paper/plan/task-packets/table-evidence-audit.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/metadata/planning/table-evidence-audit.md",
+      "sha256": "b8d535d8d88d69a369c0ca6769e9ed68ee95770245d0f00e778f894dbfe46e89",
+      "size_bytes": 13551,
+      "role": "table evidence audit",
+      "byte_equal": true
+    },
+    {
+      "original_path": "paper/plan/task-packets/table-evidence-judge-packet.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/metadata/planning/table-evidence-judge-packet.md",
+      "sha256": "091f236655e19a6d91f35276fada12b038473c6abf949a551af2a63ec4ca050b",
+      "size_bytes": 2987,
+      "role": "table compression judge packet",
+      "byte_equal": true
+    },
+    {
+      "original_path": "paper/plan/task-packets/figure-results-display-audit.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/metadata/planning/figure-results-display-audit.md",
+      "sha256": "1f7457bc01e7ccd0909f25ed7b3e14c229d464e82c5e876060179cc9dee0f532",
+      "size_bytes": 14207,
+      "role": "figure and results display audit",
+      "byte_equal": true
+    },
+    {
+      "original_path": "paper/plan/task-packets/figure-results-display-judge-packet.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/metadata/planning/figure-results-display-judge-packet.md",
+      "sha256": "38ce9da8443bacf30e9e172393e7276ae496b3d3295cbc492545ea7b4db1bd6c",
+      "size_bytes": 2008,
+      "role": "figure and results display judge packet",
+      "byte_equal": true
+    },
+    {
+      "original_path": "paper/plan/task-packets/text-compression-audit.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/metadata/planning/text-compression-audit.md",
+      "sha256": "a595e6f815e4101511b6f2cac16ef08ecc678d2805236b358fb5d8b85de79b42",
+      "size_bytes": 28550,
+      "role": "text compression audit",
+      "byte_equal": true
+    },
+    {
+      "original_path": "paper/plan/task-packets/text-compression-judge-packet.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/metadata/planning/text-compression-judge-packet.md",
+      "sha256": "34bd0d119d8d1f756bda0e35ddf107235aa46a9a30e0721f6ff44aa94b6cb731",
+      "size_bytes": 4602,
+      "role": "text compression judge packet",
+      "byte_equal": true
+    },
+    {
+      "original_path": "paper/plan/task-packets/compression-scientific-judge.md",
+      "archive_path": "paper/archive/manuscript/pre_compression_2026-09-10/metadata/planning/compression-scientific-judge.md",
+      "sha256": "78b188f3fd7fe7936bfe59eb175135e1674d7e6dd9b57aec8753a82f65311891",
+      "size_bytes": 24464,
+      "role": "joint compression scientific decision",
+      "byte_equal": true
+    }
+  ]
+}

@@ -1,0 +1,599 @@
+{
+  "schema_version": 2,
+  "contract_id": "icecai-2026-pre-final-2026-09-11",
+  "created": "2026-09-11",
+  "venue": "ICECAI 2026",
+  "stage": "venue_adapted_pre_final",
+  "status": "VENUE_ADAPTED_AWAITING_USER_METADATA",
+  "purpose": "Current-state contract after ICECAI R-BALANCED reference refresh, textual table-reference repair, venue metadata configuration, and pre-final rebuild.",
+  "parent_contract": {
+    "path": "paper/plan/review/manuscript_contract_post_compression_2026-09-10.json",
+    "contract_id": "post-compression-2026-09-10",
+    "sha256": "1ffa72e8827768c7694620ba1d28962ee2a86432681d5b19691d6d81c3fee79e"
+  },
+  "inherited_historical_baselines": [
+    {
+      "path": "paper/evidence/asset_provenance.json",
+      "sha256": "8b181266492faba242732d9016cbc718a7eb3f3c25f9c7c6948314a42a3e4e51",
+      "role": "Historical frozen-evidence export snapshot; retained unchanged and no longer treated as the current product hash contract."
+    },
+    {
+      "path": "paper/plan/review/ms96_scope_baseline.json",
+      "sha256": "b3cbaeca414dbd1546c1acd44560ebfc8958343b43d397752689c43d085ddff7",
+      "role": "Historical pre-MS96 scope snapshot; retained unchanged and no longer treated as the current manuscript hash contract."
+    }
+  ],
+  "historical_baselines": [
+    {
+      "path": "paper/evidence/asset_provenance.json",
+      "sha256": "8b181266492faba242732d9016cbc718a7eb3f3c25f9c7c6948314a42a3e4e51",
+      "role": "Historical frozen-evidence export snapshot; retained unchanged and no longer treated as the current product hash contract."
+    },
+    {
+      "path": "paper/plan/review/ms96_scope_baseline.json",
+      "sha256": "b3cbaeca414dbd1546c1acd44560ebfc8958343b43d397752689c43d085ddff7",
+      "role": "Historical pre-MS96 scope snapshot; retained unchanged and no longer treated as the current manuscript hash contract."
+    }
+  ],
+  "author_status": "USER_MANUAL_COMPLETION_REQUIRED",
+  "genai_status": "USER_MANUAL_COMPLETION_REQUIRED",
+  "word_status": "ORGANIZER_OR_PORTAL_CONFIRMATION_REQUIRED",
+  "reference_recency": {
+    "active_cited_references": 25,
+    "ratio": 0.52,
+    "recent_2024_2026": 13,
+    "recent_citation_keys": [
+      "hou2024zeroshotrankers",
+      "hou2026amazonreviews",
+      "liu2025itdr",
+      "meta2024llama32",
+      "milogradskii2024bpr",
+      "onerecteam2026onereason",
+      "penha2024bridging",
+      "pereira2025sampling",
+      "shehzad2025gnn",
+      "zhang2023instructrec",
+      "zhang2023seqscaling",
+      "zhao2024llmrec",
+      "zhou2025openonerec"
+    ],
+    "status": "PASS"
+  },
+  "country_source_compliance": {
+    "active_reference_evidence": [
+      {
+        "citation_key": "zhang2023instructrec",
+        "country": "China"
+      },
+      {
+        "citation_key": "kang2018sasrec",
+        "country": "United States"
+      },
+      {
+        "citation_key": "canamares2020target",
+        "country": "Spain"
+      }
+    ],
+    "countries": [
+      "China",
+      "Spain",
+      "United States"
+    ],
+    "missing_active_keys": [],
+    "status": "PASS"
+  },
+  "keywords": [
+    "Large language model recommendation",
+    "Recommendation supervision",
+    "Sequential recommendation",
+    "Multitask learning",
+    "Task-sample exposure"
+  ],
+  "approved_source_changes": [
+    "paper/modules/01_introduction.md",
+    "paper/modules_parts/related_work/evaluation_baselines.md",
+    "paper/modules_parts/results/rq2_exposure_response.md",
+    "paper/modules_parts/results/rq3_multitask_unification.md",
+    "paper/modules_parts/results/rq4_hard_candidate_robustness.md",
+    "paper/references/library.bib",
+    "paper/references/citation_registry.json",
+    "paper/references/citation_inventory.md",
+    "paper/references/primary_source_notes.md",
+    "paper/references/citation_claim_map.md",
+    "paper/references/literature_gap_registry.json"
+  ],
+  "frozen_parent_invariants": [
+    {
+      "path": "paper/modules/10_abstract.md",
+      "parent_sha256": "a3abccd9c4b1bcd57932d8d6956da9650f73a694e90eecdb22eb7d277fc51773",
+      "current_sha256": "a3abccd9c4b1bcd57932d8d6956da9650f73a694e90eecdb22eb7d277fc51773",
+      "status": "PASS"
+    },
+    {
+      "path": "paper/tables/datasets.csv",
+      "parent_sha256": "e024b08f34de57c6d56aeee87a2769fe05b6696c2b8c8ff4777a503ddf72d8b9",
+      "current_sha256": "e024b08f34de57c6d56aeee87a2769fe05b6696c2b8c8ff4777a503ddf72d8b9",
+      "status": "PASS"
+    },
+    {
+      "path": "paper/tables/compression_2026-09-10/training_exposure_compact.csv",
+      "parent_sha256": "768dc965428493f47813aef65b7c3c0bab5e8f638f9b881d1de87950f554129e",
+      "current_sha256": "768dc965428493f47813aef65b7c3c0bab5e8f638f9b881d1de87950f554129e",
+      "status": "PASS"
+    },
+    {
+      "path": "paper/tables/compression_2026-09-10/supervision_semantics_compact.csv",
+      "parent_sha256": "cfd2b1072a3b19b61530a48f931940fe412a0e35867df6639bafd2bd1a8e6e4e",
+      "current_sha256": "cfd2b1072a3b19b61530a48f931940fe412a0e35867df6639bafd2bd1a8e6e4e",
+      "status": "PASS"
+    },
+    {
+      "path": "paper/tables/exposure_scaling.csv",
+      "parent_sha256": "81ba50ab9731b39e63777df71d884ea50d3f7b43ca34c8ce06b00e9143d0a3af",
+      "current_sha256": "81ba50ab9731b39e63777df71d884ea50d3f7b43ca34c8ce06b00e9143d0a3af",
+      "status": "PASS"
+    },
+    {
+      "path": "paper/tables/specialist_multitask.csv",
+      "parent_sha256": "348ffc1aa823d091c3d78f5ad26408dbd8033ae5775191e67c71d90b92ac5d53",
+      "current_sha256": "348ffc1aa823d091c3d78f5ad26408dbd8033ae5775191e67c71d90b92ac5d53",
+      "status": "PASS"
+    },
+    {
+      "path": "paper/tables/compression_2026-09-10/ms96_delta_summary_compact.csv",
+      "parent_sha256": "622c9a477518dfe5ee6f05d53797912781f0f4f68621264e8c6ade62dab41248",
+      "current_sha256": "622c9a477518dfe5ee6f05d53797912781f0f4f68621264e8c6ade62dab41248",
+      "status": "PASS"
+    },
+    {
+      "path": "paper/tables/compression_2026-09-10/hard_candidate_compact.csv",
+      "parent_sha256": "44a7a29ef2cbd0d85e9996fca8178acc3e6b629373384e2c7ea6c9457efbdc76",
+      "current_sha256": "44a7a29ef2cbd0d85e9996fca8178acc3e6b629373384e2c7ea6c9457efbdc76",
+      "status": "PASS"
+    },
+    {
+      "path": "paper/tables/n_vs_sasrec_exposure.csv",
+      "parent_sha256": "e6b27bc4671e6ebf581fc9e98b72b54baa1ee1a7c55d1ed022d0aa6fdd7e4459",
+      "current_sha256": "e6b27bc4671e6ebf581fc9e98b72b54baa1ee1a7c55d1ed022d0aa6fdd7e4459",
+      "status": "PASS"
+    },
+    {
+      "path": "paper/tables/cross_dataset.csv",
+      "parent_sha256": "fb4ae0152a44a8d70edccfbe5a42156f204c06b3a84a8384ccb1d3dc692d024d",
+      "current_sha256": "fb4ae0152a44a8d70edccfbe5a42156f204c06b3a84a8384ccb1d3dc692d024d",
+      "status": "PASS"
+    },
+    {
+      "path": "paper/figures/fig_n_native_exposure.png",
+      "parent_sha256": "663937fafe01f68b0e9f100d40a1b42128e7233cf233fbffa9780838595d944a",
+      "current_sha256": "663937fafe01f68b0e9f100d40a1b42128e7233cf233fbffa9780838595d944a",
+      "status": "PASS"
+    },
+    {
+      "path": "paper/figures/fig_n_vs_sasrec_exposure.png",
+      "parent_sha256": "9fdf32839798b8243f92641fc0b3c0ec21558a304e4fa38de41735f9cf8566f7",
+      "current_sha256": "9fdf32839798b8243f92641fc0b3c0ec21558a304e4fa38de41735f9cf8566f7",
+      "status": "PASS"
+    }
+  ],
+  "generic_adapter_unchanged": {
+    "status": "PASS",
+    "git_diff": "EMPTY",
+    "files": [
+      {
+        "path": "paper/submission/ieee_generic/build_submission.py",
+        "category": "generic_adapter",
+        "sha256": "fd580c5b14505472018bf69619d843238f7e7a3e68951063787dd4a600e25519"
+      },
+      {
+        "path": "paper/submission/ieee_generic/submission_config.yaml",
+        "category": "generic_adapter",
+        "sha256": "08935341d49702357683c735b231389fd18426ddf946472c96f8ab481af46c7c"
+      },
+      {
+        "path": "paper/submission/ieee_generic/main_template.tex",
+        "category": "generic_adapter",
+        "sha256": "128fb0478fcc0efe1a7b31047cfb259aa427e8aada2778a383fe3ef84229b832"
+      }
+    ]
+  },
+  "artifacts": {
+    "english": {
+      "pdf": "paper/builds/icecai_2026/en/main.pdf",
+      "pdf_sha256": "0c450fe976aaeb3d4a2d9a5f18540b393d1676a0b3409b9b17f46c308a9fc2c4",
+      "manifest": "paper/builds/icecai_2026/en/build_manifest.json",
+      "manifest_sha256": "7d4f9ec9c3459b7b53f364ef1e64e7e952dd22f9fd202b5b4d408d23c9011091",
+      "page_count": 10,
+      "tables": 9,
+      "figures": 2,
+      "compile_status": "COMPILED"
+    },
+    "bilingual": {
+      "pdf": "paper/builds/icecai_2026/bilingual/main.pdf",
+      "pdf_sha256": "956362153ce827efde1e0a8d63c6c8fb7953bd03ccf2b70e7376930f4b585177",
+      "manifest": "paper/builds/icecai_2026/bilingual/build_manifest.json",
+      "manifest_sha256": "2a68dbf3e207448304acd8855326c61ecf35e2c10130fb1ced42baf0ea48dd5f",
+      "page_count": 16,
+      "tables": 9,
+      "figures": 2,
+      "compile_status": "COMPILED"
+    }
+  },
+  "visual_audit": {
+    "status": "PASS_AUTOMATED_RENDER_AND_LAYOUT_AUDIT",
+    "english_pages_rendered": 10,
+    "out_of_bounds_text_origins": 0,
+    "raster_border_dark_pixels": 0,
+    "overfull_hboxes": 0,
+    "overfull_vboxes": 0,
+    "missing_characters": 0,
+    "embedded_images": 2,
+    "table_labels": 9,
+    "figure_labels": 2,
+    "english_cjk_leak": false,
+    "unexpected_placeholders": 0,
+    "allowed_placeholder": "AUTHOR INFORMATION REQUIRED"
+  },
+  "protected": [
+    {
+      "path": "paper/modules/00_contributions.md",
+      "category": "author_source",
+      "sha256": "c61383380d45dda8ee2b01f30e8998abc7a0cd3614a60f6b12033e598f3a0989"
+    },
+    {
+      "path": "paper/modules/01_introduction.md",
+      "category": "author_source",
+      "sha256": "53bd350a893f6df6a992804a103ca33076aa590e82a054e1325a09d7ce0d0783"
+    },
+    {
+      "path": "paper/modules/02_related_work.md",
+      "category": "author_source",
+      "sha256": "67fc2bef89956d8332e80c49e3b8430fddeb9f6e5ce4959d900c56c577fe0eb8"
+    },
+    {
+      "path": "paper/modules/03_problem_formulation.md",
+      "category": "author_source",
+      "sha256": "fb2ccc439c61ef24f667b77be8a6c1724128753f7babb8dae88e1105e9fe44c6"
+    },
+    {
+      "path": "paper/modules/04_methodology.md",
+      "category": "author_source",
+      "sha256": "90322d8a3e89a01101550672ab9a9a2c8ad0a558de896995167c45b3ad7b7745"
+    },
+    {
+      "path": "paper/modules/05_experimental_setup.md",
+      "category": "author_source",
+      "sha256": "eb6c2b3df887afbd2ac050a9b5485223ec08a877703f3d915d5e7811e2e1b744"
+    },
+    {
+      "path": "paper/modules/06_results.md",
+      "category": "author_source",
+      "sha256": "a70991d364687400d1c925e2f19b76375c6df0bc85af68d5290c606d80d0054b"
+    },
+    {
+      "path": "paper/modules/07_discussion.md",
+      "category": "author_source",
+      "sha256": "763f9e5541b7396ee5db9664247411adcaf734a4c4f13a442fb327fb1fea269d"
+    },
+    {
+      "path": "paper/modules/08_limitations.md",
+      "category": "author_source",
+      "sha256": "a34da11034ffc3b20a5eff13c864ba9b22a08e97ee7fd2ebd5594ae85cb8cf9e"
+    },
+    {
+      "path": "paper/modules/09_conclusion.md",
+      "category": "author_source",
+      "sha256": "02df3ec4198cc2fbb70ca20ad904920cb81a535053f22243a1fecad5d4ab9a82"
+    },
+    {
+      "path": "paper/modules/10_abstract.md",
+      "category": "author_source",
+      "sha256": "a3abccd9c4b1bcd57932d8d6956da9650f73a694e90eecdb22eb7d277fc51773"
+    },
+    {
+      "path": "paper/modules_parts/discussion/conditional_unification.md",
+      "category": "author_source",
+      "sha256": "d85a14c966979eec1943e2c20f740199c1b6111c59de5b9992d5eecd5286af5a"
+    },
+    {
+      "path": "paper/modules_parts/discussion/evaluation_protocol.md",
+      "category": "author_source",
+      "sha256": "f9477e424de48ad052fee0f55b6f89b1ab52f56ebd01d45b7b9750066ef77faf"
+    },
+    {
+      "path": "paper/modules_parts/discussion/exposure_aware_baselines.md",
+      "category": "author_source",
+      "sha256": "da1aacc7b19c3d90e88b45c0a1ee36e0f705a98a8f687504bdcee6006e3c9237"
+    },
+    {
+      "path": "paper/modules_parts/discussion/exposure_interpretation.md",
+      "category": "author_source",
+      "sha256": "a3fe3858441f2e8627c498403a37f42148880ba43e0394c1ee50ab4a2fd34e0e"
+    },
+    {
+      "path": "paper/modules_parts/discussion/external_validity.md",
+      "category": "author_source",
+      "sha256": "e807c0e06d64df1de03c745234bc3531c168701b23e920244d9e136235583ba7"
+    },
+    {
+      "path": "paper/modules_parts/discussion/supervision_interface.md",
+      "category": "author_source",
+      "sha256": "d2d9d5060e44b2356c0bdfe7fc4bd447be275262af4a1d84233b85a112494279"
+    },
+    {
+      "path": "paper/modules_parts/methods/baseline_setup.md",
+      "category": "author_source",
+      "sha256": "4d6eeacf50879bc6bcd85dd3fa174dda853d5af07d449a25de48cd1bb805e9fc"
+    },
+    {
+      "path": "paper/modules_parts/methods/bootstrap_and_statistics.md",
+      "category": "author_source",
+      "sha256": "51dcc8cef920e9dba446858e74b196dac728a7dcb89f1e9e9a9f7794ad57c54e"
+    },
+    {
+      "path": "paper/modules_parts/methods/datasets.md",
+      "category": "author_source",
+      "sha256": "4edbcc41ec489d80d9e9af44ab51f2440deb3112fe9ea1af00f189e1bfde7a89"
+    },
+    {
+      "path": "paper/modules_parts/methods/evaluation_protocol.md",
+      "category": "author_source",
+      "sha256": "cdb63a6f68dcd575e9870bc4ccb0974f73962fe30940afd888de152fde9f6a5f"
+    },
+    {
+      "path": "paper/modules_parts/methods/exposure_definition.md",
+      "category": "author_source",
+      "sha256": "16f63a07a3ce8faa2101f01ecc0747cd1359e9ed7aca8edc024ce62079ddf0a0"
+    },
+    {
+      "path": "paper/modules_parts/methods/task_definition.md",
+      "category": "author_source",
+      "sha256": "25af6e4ca453f51ab20131f12781374fd1a14ac7a1812e417c198799ba431f1a"
+    },
+    {
+      "path": "paper/modules_parts/methods/temporal_split.md",
+      "category": "author_source",
+      "sha256": "292cdd79a67628769519e1961c1578d662190431d13d4478fafd51bb86674e3c"
+    },
+    {
+      "path": "paper/modules_parts/methods/training_setup.md",
+      "category": "author_source",
+      "sha256": "5fc0292fdf780f2b2a9c9bfda4f6d29da5b9cd264e74f1ee9f32e46ddf3969d7"
+    },
+    {
+      "path": "paper/modules_parts/related_work/evaluation_baselines.md",
+      "category": "author_source",
+      "sha256": "998e5bdafe7577038563e54c17aea3477bb1717f795b1372959dd91599ac0e0d"
+    },
+    {
+      "path": "paper/modules_parts/related_work/llm_recommendation.md",
+      "category": "author_source",
+      "sha256": "d332319a0d957718a0354b5b011171d87666ef981d2ffe89dbe9451fa46f3a44"
+    },
+    {
+      "path": "paper/modules_parts/related_work/multitask_unification.md",
+      "category": "author_source",
+      "sha256": "4f3406bdee78ae4d5a6840c086940a34956a0f264abad1f743a9b6cfb0621bcc"
+    },
+    {
+      "path": "paper/modules_parts/related_work/supervision_formulation.md",
+      "category": "author_source",
+      "sha256": "7a2025f5b542982fb24267cee0ff61ea795db1dd23e331402aeb13c25569bb40"
+    },
+    {
+      "path": "paper/modules_parts/results/cross_dataset_validation.md",
+      "category": "author_source",
+      "sha256": "9a6966beef8929b2fe2f5e1be52b8edb640898e41a2f4b6687479cd34915991e"
+    },
+    {
+      "path": "paper/modules_parts/results/rq1_supervision_semantics.md",
+      "category": "author_source",
+      "sha256": "7a8a94f623b56dc9551717fb1875d0a23651e82cf97917c83634c480ad05ec2a"
+    },
+    {
+      "path": "paper/modules_parts/results/rq2_exposure_response.md",
+      "category": "author_source",
+      "sha256": "d4e858952d55cb81353b29edbb9e7130f2f921c05be98ce29cfe0f448a51e685"
+    },
+    {
+      "path": "paper/modules_parts/results/rq3_multitask_unification.md",
+      "category": "author_source",
+      "sha256": "12d852d6e610da243d049f07e70a9ca2650bb557cc8ebc225fe61b45c1eade75"
+    },
+    {
+      "path": "paper/modules_parts/results/rq4_hard_candidate_robustness.md",
+      "category": "author_source",
+      "sha256": "108abf8ec6fd9b4f9016cb12dc6d65c8153f85992bb967f9dab89e99aa4c5851"
+    },
+    {
+      "path": "paper/modules_parts/results/rq5_sasrec_exposure.md",
+      "category": "author_source",
+      "sha256": "357a830912b22d195b0faa412615f8ca614a27390b8596905bbffa6584aa257d"
+    },
+    {
+      "path": "paper/tables/datasets.csv",
+      "category": "current_main_table",
+      "sha256": "e024b08f34de57c6d56aeee87a2769fe05b6696c2b8c8ff4777a503ddf72d8b9"
+    },
+    {
+      "path": "paper/tables/compression_2026-09-10/training_exposure_compact.csv",
+      "category": "current_main_table",
+      "sha256": "768dc965428493f47813aef65b7c3c0bab5e8f638f9b881d1de87950f554129e"
+    },
+    {
+      "path": "paper/tables/compression_2026-09-10/supervision_semantics_compact.csv",
+      "category": "current_main_table",
+      "sha256": "cfd2b1072a3b19b61530a48f931940fe412a0e35867df6639bafd2bd1a8e6e4e"
+    },
+    {
+      "path": "paper/tables/exposure_scaling.csv",
+      "category": "current_main_table",
+      "sha256": "81ba50ab9731b39e63777df71d884ea50d3f7b43ca34c8ce06b00e9143d0a3af"
+    },
+    {
+      "path": "paper/tables/specialist_multitask.csv",
+      "category": "current_main_table",
+      "sha256": "348ffc1aa823d091c3d78f5ad26408dbd8033ae5775191e67c71d90b92ac5d53"
+    },
+    {
+      "path": "paper/tables/compression_2026-09-10/ms96_delta_summary_compact.csv",
+      "category": "current_main_table",
+      "sha256": "622c9a477518dfe5ee6f05d53797912781f0f4f68621264e8c6ade62dab41248"
+    },
+    {
+      "path": "paper/tables/compression_2026-09-10/hard_candidate_compact.csv",
+      "category": "current_main_table",
+      "sha256": "44a7a29ef2cbd0d85e9996fca8178acc3e6b629373384e2c7ea6c9457efbdc76"
+    },
+    {
+      "path": "paper/tables/n_vs_sasrec_exposure.csv",
+      "category": "current_main_table",
+      "sha256": "e6b27bc4671e6ebf581fc9e98b72b54baa1ee1a7c55d1ed022d0aa6fdd7e4459"
+    },
+    {
+      "path": "paper/tables/cross_dataset.csv",
+      "category": "current_main_table",
+      "sha256": "fb4ae0152a44a8d70edccfbe5a42156f204c06b3a84a8384ccb1d3dc692d024d"
+    },
+    {
+      "path": "paper/figures/fig_n_native_exposure.png",
+      "category": "formal_figure",
+      "sha256": "663937fafe01f68b0e9f100d40a1b42128e7233cf233fbffa9780838595d944a"
+    },
+    {
+      "path": "paper/figures/fig_n_vs_sasrec_exposure.png",
+      "category": "formal_figure",
+      "sha256": "9fdf32839798b8243f92641fc0b3c0ec21558a304e4fa38de41735f9cf8566f7"
+    },
+    {
+      "path": "paper/assembly/paper_manifest.yaml",
+      "category": "evidence_or_reference_control",
+      "sha256": "81a7eb5bb15e8ed52948c63d1d20fe5a7f348a3c1a820b9550af40d8e1c650c1"
+    },
+    {
+      "path": "paper/evidence/bootstrap_provenance_closure.md",
+      "category": "evidence_or_reference_control",
+      "sha256": "739a91f77afb4925d0a35978c805397a753433646fc8e129ce667577cb3d05fa"
+    },
+    {
+      "path": "paper/evidence/claim_matrix.md",
+      "category": "evidence_or_reference_control",
+      "sha256": "0a3e7a905f7fe17e2994b9521dcee7a36225ab9f16aa7cab78f838f339ea9492"
+    },
+    {
+      "path": "paper/evidence/pending_evidence.md",
+      "category": "evidence_or_reference_control",
+      "sha256": "0a2c4bd1c385e88f62466acd04d4afccacba3b82d7b746fbd8ddc31d7c15a74d"
+    },
+    {
+      "path": "paper/evidence/run_metadata_ledger.md",
+      "category": "evidence_or_reference_control",
+      "sha256": "ccdac6c84e2251c754ada9cb18c4c2d44b67c85ceabee27142bf8c671f6ab6b8"
+    },
+    {
+      "path": "paper/evidence/source_of_truth.md",
+      "category": "evidence_or_reference_control",
+      "sha256": "81fdc3b17f0fac573ff060d77a1530b53315fd094ceafeade5e8f922f7de14f3"
+    },
+    {
+      "path": "paper/evidence/story_and_novelty_freeze.md",
+      "category": "evidence_or_reference_control",
+      "sha256": "abb604a194e8e6a56d11030ac9655b594669829d9a3aeea0938e44333d3b2a5b"
+    },
+    {
+      "path": "paper/references/citation_claim_map.md",
+      "category": "evidence_or_reference_control",
+      "sha256": "d460dcd999f920330daace645848bfde135b1bd2777d920503fbd5c00c8adf0f"
+    },
+    {
+      "path": "paper/references/citation_inventory.md",
+      "category": "evidence_or_reference_control",
+      "sha256": "6953be0c515375a4f27435bde8595ec3430a2eb29d0de77f8dd86ad93c58d1ce"
+    },
+    {
+      "path": "paper/references/citation_registry.json",
+      "category": "evidence_or_reference_control",
+      "sha256": "051309be42990bdaf4e5d32922ea743de09dced822a9e4dbc9cf5ee2c46ca3d4"
+    },
+    {
+      "path": "paper/references/literature_gap_registry.json",
+      "category": "evidence_or_reference_control",
+      "sha256": "557a20e001d4d071f654aedd195711aa05b9a060917e17261b0389e87e31b7a7"
+    },
+    {
+      "path": "paper/references/library.bib",
+      "category": "evidence_or_reference_control",
+      "sha256": "d1bcc581bac0dd09df081d20cf433d3600e43c7b6e4de5166986230b446ba91d"
+    },
+    {
+      "path": "paper/references/primary_source_notes.md",
+      "category": "evidence_or_reference_control",
+      "sha256": "d90bff044c829aacb4fd0e63310db8a93abe98cba7a978d6cddbcc46858f8847"
+    },
+    {
+      "path": "paper/tables/compression_2026-09-10/manifest.json",
+      "category": "evidence_or_reference_control",
+      "sha256": "ebd5fe349fbfeb5fd37e72aafadee8df2cc11dbf5226540707b4f7789e676463"
+    },
+    {
+      "path": "paper/tables/compression_2026-09-10/lineage.csv",
+      "category": "evidence_or_reference_control",
+      "sha256": "c8c41de18ee86b4b6d904453903f9ffba53e42ee98af5dab2f433e606536e6d6"
+    },
+    {
+      "path": "paper/plan/review/compression_paragraph_mapping_2026-09-10.json",
+      "category": "evidence_or_reference_control",
+      "sha256": "80c0df9881f193d78d63eb031b595545ebf8e6c85b986d11058130f7fea9f857"
+    },
+    {
+      "path": "paper/plan/review/compression_table_mapping_2026-09-10.json",
+      "category": "evidence_or_reference_control",
+      "sha256": "a0f60d558c5376df820713b41a3bdce55833e0229731833083aa34b8a81e375c"
+    },
+    {
+      "path": "paper/submission/icecai_2026/__init__.py",
+      "category": "venue_adapter",
+      "sha256": "66a8a0f58b9172c1fc8efb8eea07c3707d5df894ba4a59271fedd43579809fd8"
+    },
+    {
+      "path": "paper/submission/icecai_2026/build_submission.py",
+      "category": "venue_adapter",
+      "sha256": "b53c54a5c86e57e49c91eb6d63fa25cc143daf07e86c21b80ac07cceb54b98cf"
+    },
+    {
+      "path": "paper/submission/icecai_2026/submission_config.yaml",
+      "category": "venue_adapter",
+      "sha256": "77e4141316652824dfcef28c0e79bfe93a2b955ae9b102eb233ad2a742060fe7"
+    },
+    {
+      "path": "paper/submission/icecai_2026/AUTHOR_INPUT_REQUIRED.md",
+      "category": "venue_adapter",
+      "sha256": "eba3b03ec18d272608a35e1ba7b71b97865fd56fcd7e87d0fb2e3315f4bd5067"
+    },
+    {
+      "path": "paper/submission/icecai_2026/GENAI_DISCLOSURE_INPUT_REQUIRED.md",
+      "category": "venue_adapter",
+      "sha256": "f6e0595ba99f65a7bec0869983e6753a63022f9bbc53d278b2e0498793bd4a0c"
+    },
+    {
+      "path": "paper/submission/icecai_2026/README.md",
+      "category": "venue_adapter",
+      "sha256": "2fd86487bf29c3d0d8a80e5e0c3bf465ac1355c8bf20dca10213f2c8000db070"
+    },
+    {
+      "path": "paper/submission/icecai_2026/tests/__init__.py",
+      "category": "venue_adapter",
+      "sha256": "dd080aaac3d5c666e2209ba8fadba92a797620537fc7ce0a23b9aa68774d026f"
+    },
+    {
+      "path": "paper/submission/icecai_2026/tests/test_submission.py",
+      "category": "venue_adapter",
+      "sha256": "c40f3dd5831a8af7dd1aa634d7c5fa27d142e77be8f373167cc53edff3f5504f"
+    },
+    {
+      "path": "paper/plan/review/build_icecai_contract.py",
+      "category": "venue_adapter",
+      "sha256": "8606e52744bff8143d424f854867b466482f4d1613798d5ba234d41fab05ecb3"
+    }
+  ]
+}

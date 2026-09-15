@@ -1,0 +1,11 @@
+panel,run,exposure,split,interface,metric_1,value_1,metric_2,value_2,metric_3,value_3
+A,Y24,24000,validation,Y-native preference,AUC,0.7761274819,F1,0.7791746032,Accuracy,0.7190856958
+A,Y48,48000,validation,Y-native preference,AUC,0.7816111073,F1,0.7848403087,Accuracy,0.7230433729
+A,Y96,96000,validation,Y-native preference,AUC,0.7843504067,F1,0.7783174665,Accuracy,0.7235279864
+A,Y96,96000,test,Y-native preference,AUC,0.7853511126,F1,0.7780238029,Accuracy,0.7221067221
+B,Y24,24000,validation,Y-as-ranker bridge,HR@1,0.2156828194,NDCG@5,0.6002715889,MRR,0.4704082232
+B,Y48,48000,validation,Y-as-ranker bridge,HR@1,0.2165638767,NDCG@5,0.5994649797,MRR,0.4694772394
+B,Y96,96000,validation,Y-as-ranker bridge,HR@1,0.2211453744,NDCG@5,0.6030699894,MRR,0.4741791483
+B,N96,96000,validation,N-native ranking,HR@1,0.6237885463,NDCG@5,0.8302923694,MRR,0.7732422907
+B,Y96,96000,test,Y-as-ranker bridge,HR@1,0.2065198238,NDCG@5,0.5921565513,MRR,0.4600528634
+B,N96,96000,test,N-native ranking,HR@1,0.6100440529,NDCG@5,0.8218966233,MRR,0.7622026432

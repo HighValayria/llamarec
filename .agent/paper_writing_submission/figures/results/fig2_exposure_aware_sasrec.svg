@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1500" viewBox="0 0 2400 1500">
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Arial,Calibri,sans-serif;fill:#20242A}.title{font-size:44px;font-weight:700}.subtitle{font-size:30px;fill:#6E7781}.head{font-size:35px;font-weight:700}.body{font-size:28px}.small{font-size:24px}.tiny{font-size:21px;fill:#6E7781}</style>
+<text x="110.0" y="105.0" class="title" text-anchor="start">SASRec comparison depends on supervision exposure</text>
+<text x="110.0" y="160.0" class="subtitle" text-anchor="start">Closest-exposure and high-exposure regimes support different interpretations.</text>
+<rect x="100.0" y="230.0" width="1480.0" height="900.0" fill="#F7F9FB" rx="8.0"/>
+<text x="132.0" y="300.0" class="head" text-anchor="start">MovieLens-1M PopMatch-k5 sample-exposure curve</text>
+<rect x="245.6" y="345.0" width="440.2" height="635.0" fill="#E9F5FB"/>
+<rect x="1168.8" y="345.0" width="341.2" height="635.0" fill="#FFF4E2"/>
+<text x="465.6" y="381.0" class="tiny" text-anchor="middle">closest-exposure regime</text>
+<text x="1339.4" y="381.0" class="tiny" text-anchor="middle">high sequential exposure</text>
+<line x1="220.0" y1="980.0" x2="1510.0" y2="980.0" stroke="#D8DEE6" stroke-width="2.0" stroke-linecap="round"/>
+<text x="192.0" y="988.0" class="tiny" text-anchor="end">0.0</text>
+<line x1="220.0" y1="798.6" x2="1510.0" y2="798.6" stroke="#D8DEE6" stroke-width="2.0" stroke-linecap="round"/>
+<text x="192.0" y="806.6" class="tiny" text-anchor="end">0.2</text>
+<line x1="220.0" y1="617.1" x2="1510.0" y2="617.1" stroke="#D8DEE6" stroke-width="2.0" stroke-linecap="round"/>
+<text x="192.0" y="625.1" class="tiny" text-anchor="end">0.4</text>
+<line x1="220.0" y1="435.7" x2="1510.0" y2="435.7" stroke="#D8DEE6" stroke-width="2.0" stroke-linecap="round"/>
+<text x="192.0" y="443.7" class="tiny" text-anchor="end">0.6</text>
+<line x1="259.2" y1="980.0" x2="259.2" y2="990.0" stroke="#2A2F35" stroke-width="2.0" stroke-linecap="round"/>
+<text x="259.2" y="1035.0" class="tiny" text-anchor="middle">3k</text>
+<line x1="396.1" y1="980.0" x2="396.1" y2="990.0" stroke="#2A2F35" stroke-width="2.0" stroke-linecap="round"/>
+<text x="396.1" y="1035.0" class="tiny" text-anchor="middle">6k</text>
+<line x1="533.0" y1="980.0" x2="533.0" y2="990.0" stroke="#2A2F35" stroke-width="2.0" stroke-linecap="round"/>
+<text x="533.0" y="1035.0" class="tiny" text-anchor="middle">12k</text>
+<line x1="669.9" y1="980.0" x2="669.9" y2="990.0" stroke="#2A2F35" stroke-width="2.0" stroke-linecap="round"/>
+<text x="669.9" y="1035.0" class="tiny" text-anchor="middle">24k</text>
+<line x1="1354.4" y1="980.0" x2="1354.4" y2="990.0" stroke="#2A2F35" stroke-width="2.0" stroke-linecap="round"/>
+<text x="1354.4" y="1035.0" class="tiny" text-anchor="middle">768k</text>
+<line x1="1491.2" y1="980.0" x2="1491.2" y2="990.0" stroke="#2A2F35" stroke-width="2.0" stroke-linecap="round"/>
+<text x="1491.2" y="1035.0" class="tiny" text-anchor="middle">1.53M</text>
+<line x1="220.0" y1="345.0" x2="220.0" y2="980.0" stroke="#2A2F35" stroke-width="3.0" stroke-linecap="round"/>
+<line x1="220.0" y1="980.0" x2="1510.0" y2="980.0" stroke="#2A2F35" stroke-width="3.0" stroke-linecap="round"/>
+<text x="142.0" y="662.5" class="small" text-anchor="middle">HR@1</text>
+<text x="865.0" y="1088.0" class="small" text-anchor="middle">N-task sample exposure (log scale)</text>
+<polyline points="259.2,588.7 396.1,506.2 533.0,484.1 669.9,470.9" fill="none" stroke="#0077BB" stroke-width="5.0" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="259.2" cy="588.7" r="11.0" fill="#0077BB" stroke="white" stroke-width="3.0"/>
+<text x="259.2" y="562.7" class="tiny" text-anchor="middle">0.431</text>
+<circle cx="396.1" cy="506.2" r="11.0" fill="#0077BB" stroke="white" stroke-width="3.0"/>
+<text x="396.1" y="480.2" class="tiny" text-anchor="middle">0.522</text>
+<circle cx="533.0" cy="484.1" r="11.0" fill="#0077BB" stroke="white" stroke-width="3.0"/>
+<text x="533.0" y="458.1" class="tiny" text-anchor="middle">0.547</text>
+<circle cx="669.9" cy="470.9" r="11.0" fill="#0077BB" stroke="white" stroke-width="3.0"/>
+<text x="669.9" y="444.9" class="tiny" text-anchor="middle">0.561</text>
+<polyline points="263.9,788.3 400.8,760.4 529.3,735.1 670.4,722.3 1354.3,427.7 1491.2,413.7" fill="none" stroke="#EE7733" stroke-width="5.0" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="263.9" cy="788.3" r="11.0" fill="#EE7733" stroke="white" stroke-width="3.0"/>
+<text x="263.9" y="826.3" class="tiny" text-anchor="middle">0.211</text>
+<circle cx="400.8" cy="760.4" r="11.0" fill="#EE7733" stroke="white" stroke-width="3.0"/>
+<text x="400.8" y="798.4" class="tiny" text-anchor="middle">0.242</text>
+<circle cx="529.3" cy="735.1" r="11.0" fill="#EE7733" stroke="white" stroke-width="3.0"/>
+<text x="529.3" y="773.1" class="tiny" text-anchor="middle">0.270</text>
+<circle cx="670.4" cy="722.3" r="11.0" fill="#EE7733" stroke="white" stroke-width="3.0"/>
+<text x="670.4" y="760.3" class="tiny" text-anchor="middle">0.284</text>
+<circle cx="1354.3" cy="427.7" r="11.0" fill="#EE7733" stroke="white" stroke-width="3.0"/>
+<text x="1354.3" y="465.7" class="tiny" text-anchor="middle">0.609</text>
+<circle cx="1491.2" cy="413.7" r="11.0" fill="#EE7733" stroke="white" stroke-width="3.0"/>
+<text x="1491.2" y="451.7" class="tiny" text-anchor="middle">0.624</text>
+<line x1="980.0" y1="295.0" x2="1035.0" y2="295.0" stroke="#0077BB" stroke-width="6.0" stroke-linecap="round"/>
+<circle cx="1009.0" cy="295.0" r="9.0" fill="#0077BB" stroke="white" stroke-width="3.0"/>
+<text x="1050.0" y="303.0" class="small" text-anchor="start">N-K0</text>
+<line x1="1170.0" y1="295.0" x2="1225.0" y2="295.0" stroke="#EE7733" stroke-width="6.0" stroke-linecap="round"/>
+<circle cx="1199.0" cy="295.0" r="9.0" fill="#EE7733" stroke="white" stroke-width="3.0"/>
+<text x="1240.0" y="303.0" class="small" text-anchor="start">SASRec</text>
+<rect x="1660.0" y="230.0" width="640.0" height="900.0" fill="#F7F9FB" rx="8.0"/>
+<text x="1692.0" y="300.0" class="head" text-anchor="start">Amazon seed42 boundary</text>
+<text x="1692.0" y="343.0" class="small" text-anchor="start">Closest-exposure row only; high-exposure SASRec</text>
+<text x="1692.0" y="373.0" class="small" text-anchor="start">was not evaluated.</text>
+<line x1="1760.0" y1="920.0" x2="2240.0" y2="920.0" stroke="#D8DEE6" stroke-width="2.0" stroke-linecap="round"/>
+<text x="1736.0" y="928.0" class="tiny" text-anchor="end">0.0</text>
+<line x1="1760.0" y1="761.4" x2="2240.0" y2="761.4" stroke="#D8DEE6" stroke-width="2.0" stroke-linecap="round"/>
+<text x="1736.0" y="769.4" class="tiny" text-anchor="end">0.2</text>
+<line x1="1760.0" y1="602.9" x2="2240.0" y2="602.9" stroke="#D8DEE6" stroke-width="2.0" stroke-linecap="round"/>
+<text x="1736.0" y="610.9" class="tiny" text-anchor="end">0.4</text>
+<line x1="1760.0" y1="444.3" x2="2240.0" y2="444.3" stroke="#D8DEE6" stroke-width="2.0" stroke-linecap="round"/>
+<text x="1736.0" y="452.3" class="tiny" text-anchor="end">0.6</text>
+<line x1="1760.0" y1="365.0" x2="1760.0" y2="920.0" stroke="#2A2F35" stroke-width="3.0" stroke-linecap="round"/>
+<line x1="1760.0" y1="920.0" x2="2240.0" y2="920.0" stroke="#2A2F35" stroke-width="3.0" stroke-linecap="round"/>
+<text x="1690.0" y="642.5" class="small" text-anchor="middle">HR@1</text>
+<rect x="1857.0" y="549.8" width="96.0" height="370.2" fill="#0077BB"/>
+<text x="1905.0" y="534.8" class="tiny" text-anchor="middle">0.467</text>
+<text x="1905.0" y="975.0" class="small" text-anchor="middle">N-K0</text>
+<rect x="2047.0" y="780.7" width="96.0" height="139.3" fill="#EE7733"/>
+<text x="2095.0" y="765.7" class="tiny" text-anchor="middle">0.176</text>
+<text x="2095.0" y="975.0" class="small" text-anchor="middle">SASRec</text>
+<rect x="1750.0" y="985.0" width="460.0" height="74.0" fill="#FFFFFF" stroke="#A6B0BB" stroke-width="2.0" rx="14.0"/>
+<text x="1980.0" y="1024.0" class="small" text-anchor="middle">Amazon high-exposure SASRec: not evaluated</text>
+<text x="110.0" y="1305.0" class="tiny" text-anchor="start">Sources: final_curve/sample_efficiency_curve.csv and table3_exposure_aware_baseline.csv. Exposure is sample exposure, not strict FLOPs or wall-clock matching.</text>
+</svg>

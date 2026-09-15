@@ -17,8 +17,8 @@ with PopMatch-k5 and candidate-size stress tests.
 
 ## Contribution 4
 
-A budget-regime analysis of LLM adapters versus SASRec, separating closest
-N-task sample exposure from high-exposure sequential training.
+A sample-efficiency analysis of LLM adapters versus SASRec, separating closest
+N-task sample exposure from a much-higher-exposure SASRec anchor and leaving full high-budget head-to-head comparison open.
 
 ## Cross-dataset Strengthening
 

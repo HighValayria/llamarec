@@ -41,3 +41,30 @@ task.md
 *.tar.gz
 *.tmp
 *.log
+
+# Track the reusable interview guide inside the otherwise ignored wiki tree.
+!/wiki/
+!/wiki/reports/
+!/wiki/reports/interview_guide/
+!/wiki/reports/interview_guide/**
+
+# Local temp/cache/output material kept out of GitHub sync.
+tmp/
+.pytest_tmp*/
+.obsidian/
+**/~$*.docx
+
+# Local agent/import/recovery scratch material that should not be pushed.
+.agent/.agent/
+.agent/missing_prediction_bundles_imported/
+.agent/ms96_integration/
+.agent/prediction-report-generator-repo/
+.agent/pytest_tmp*/
+.agent/sample_efficiency_training_efficiency/
+.agent/state_reconstruction/
+recovery/provenance/local_snapshot_*/
+true_paper/*.pdf
+true_paper/*.docx
+!true_paper/paper.docx
+paper/templates/**/*.pdf
+paper/templates/**/*.docx

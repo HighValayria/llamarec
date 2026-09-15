@@ -1,0 +1,91 @@
+version: 1
+template: icecai_2026_ieee
+template_version:
+  conference_template: "2019-10-17"
+  ieee_class: "IEEEtran V1.8b 2015-08-26"
+mode: prefinal_placeholder
+language_variants: [en, bilingual]
+paper_size: letter
+columns: 2
+title:
+  en: Recommendation Supervision Semantics and Exposure-Aware Evaluation for Recommendation-Tuned LLMs
+  zh: 推荐监督语义与面向曝光量的推荐调优 LLM 评估
+  source: existing_manuscript_metadata
+authors:
+  # USER MUST FILL BEFORE SUBMISSION. Author order is significant.
+  # - name: ""
+  #   department: ""
+  #   institution: ""
+  #   city: ""
+  #   country: ""
+  #   email: ""
+  #   corresponding: false
+genai_disclosure:
+  # USER MANUAL ENTRY BEFORE SUBMISSION.
+  enabled: false
+  text: ""
+keywords:
+  en:
+    - Large language model recommendation
+    - Recommendation supervision
+    - Sequential recommendation
+    - Multitask learning
+    - Task-sample exposure
+  zh:
+    - Large language model recommendation
+    - Recommendation supervision
+    - Sequential recommendation
+    - Multitask learning
+    - Task-sample exposure
+bilingual_cjk_font: AUTO
+bilingual_cjk_font_candidates:
+  - Noto Serif CJK SC
+  - Noto Serif SC
+  - Source Han Serif SC
+  - SimSun
+table_numeric_display_precision: 5
+venue: ICECAI 2026
+track: USER_SELECTION_REQUIRED
+anonymous_policy: INITIAL_PDF_REQUIRES_REAL_AUTHORS
+page_limit_reference_policy: 4_TO_20_PAGES_REFERENCES_INCLUDED
+appendix_policy: ORGANIZER_OR_PORTAL_CONFIRMATION_REQUIRED
+supplement_policy: ORGANIZER_OR_PORTAL_CONFIRMATION_REQUIRED
+abstract_word_limit: ORGANIZER_OR_PORTAL_CONFIRMATION_REQUIRED
+section_order:
+  - introduction
+  - related_work
+  - problem_formulation
+  - methodology
+  - experimental_setup
+  - results
+  - discussion
+  - limitations
+  - conclusion
+excluded_modules:
+  contributions: internal working contribution summary; not a submission section
+table_width_class:
+  datasets: SINGLE_COLUMN_OK
+  training_exposure_compact: NEEDS_COMPILE_CHECK
+  supervision_semantics_compact: LIKELY_DOUBLE_COLUMN
+  exposure_scaling: LIKELY_DOUBLE_COLUMN
+  specialist_multitask: SINGLE_COLUMN_OK
+  ms96_delta_summary_compact: LIKELY_DOUBLE_COLUMN
+  hard_candidate_compact: SINGLE_COLUMN_OK
+  n_vs_sasrec_exposure: LIKELY_DOUBLE_COLUMN
+  cross_dataset: SINGLE_COLUMN_OK
+figure_width_class:
+  n_native_exposure: NEEDS_COMPILE_CHECK
+  n_vs_sasrec_exposure: NEEDS_COMPILE_CHECK
+reference_recency:
+  start_year: 2024
+  end_year: 2026
+  minimum_ratio: 0.5
+  expected_active: 25
+  expected_recent: 13
+country_source_evidence:
+  - country: China
+    citation_key: zhang2023instructrec
+  - country: United States
+    citation_key: kang2018sasrec
+  - country: Spain
+    citation_key: canamares2020target

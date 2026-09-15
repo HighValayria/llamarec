@@ -7,7 +7,9 @@ interface only. M1 adapts the model under a unified multi-task construction that
 keeps both preference and next-item outputs available. The paper does not
 present these variants as a new architecture; they are controlled interfaces
 for studying what different recommendation supervision signals teach the same
-base model family.
+base model family. Figure 1 summarizes this interface-level framing by showing
+the same user history routed through preference, next-item, and unified
+multi-task scoring paths.
 
 For preference prediction, the input consists of a user history and a target
 item. The output is a yes/no decision or probability-like score associated with

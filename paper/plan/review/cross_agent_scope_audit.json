@@ -1,0 +1,456 @@
+{
+  "updated": "2026-09-08",
+  "type": "本轮只读范围与作者源审计",
+  "protected_count": 54,
+  "protected_files": [
+    {
+      "path": "paper/modules_parts/methods/baseline_setup.md",
+      "before_sha256": "469d8fe204fda925b9767f453002c72a6d6013c80fb8abb0ee5ffeafaaccfc24",
+      "after_sha256": "469d8fe204fda925b9767f453002c72a6d6013c80fb8abb0ee5ffeafaaccfc24",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/methods/bootstrap_and_statistics.md",
+      "before_sha256": "8b58e247e1f2f2e809a10143c8312e314701280b02e58d576191f97bda3d3643",
+      "after_sha256": "8b58e247e1f2f2e809a10143c8312e314701280b02e58d576191f97bda3d3643",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/methods/datasets.md",
+      "before_sha256": "1ef7ed909593b0bddba21dfd13b8bd21cbee73de44417f5dad3641ddff92c335",
+      "after_sha256": "1ef7ed909593b0bddba21dfd13b8bd21cbee73de44417f5dad3641ddff92c335",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/methods/evaluation_protocol.md",
+      "before_sha256": "bc03b2d66a595ca4704af12e8e949924c73910340d38d0a3211ce115054b8dfa",
+      "after_sha256": "bc03b2d66a595ca4704af12e8e949924c73910340d38d0a3211ce115054b8dfa",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/methods/exposure_definition.md",
+      "before_sha256": "160522ca7dca8cf53410ef0ce2f355678989135352319c3579ab26d7eb5a630b",
+      "after_sha256": "160522ca7dca8cf53410ef0ce2f355678989135352319c3579ab26d7eb5a630b",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/methods/task_definition.md",
+      "before_sha256": "c269ac53e990e559050de1d631a0aa78459a8b032253c3e46cf43619c16648e1",
+      "after_sha256": "c269ac53e990e559050de1d631a0aa78459a8b032253c3e46cf43619c16648e1",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/methods/temporal_split.md",
+      "before_sha256": "7c8d4d891b53f5360ed9a3c07c8a8055e160b0e5abbc71a8a2e0c1710600ff7a",
+      "after_sha256": "7c8d4d891b53f5360ed9a3c07c8a8055e160b0e5abbc71a8a2e0c1710600ff7a",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/methods/training_setup.md",
+      "before_sha256": "39ac3867822f2b926d659dc3ecbc677e4da252e50996cdc9315d2101b308d313",
+      "after_sha256": "39ac3867822f2b926d659dc3ecbc677e4da252e50996cdc9315d2101b308d313",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/results/cross_dataset_validation.md",
+      "before_sha256": "4ba6aa60d5db128fc9eaefc28a731e033cb604abbe011c874738871e328c55cf",
+      "after_sha256": "4ba6aa60d5db128fc9eaefc28a731e033cb604abbe011c874738871e328c55cf",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/results/rq1_supervision_semantics.md",
+      "before_sha256": "3849f3ff98c0d6b92b34e0d6eca69a3e4435c27ad9caf5a12310c4f24b822618",
+      "after_sha256": "3849f3ff98c0d6b92b34e0d6eca69a3e4435c27ad9caf5a12310c4f24b822618",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/results/rq2_exposure_response.md",
+      "before_sha256": "0bb1600f2811767afb35bf7e3b991ac1e291c7b4cc28535d057139653ede53f3",
+      "after_sha256": "0bb1600f2811767afb35bf7e3b991ac1e291c7b4cc28535d057139653ede53f3",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/results/rq3_multitask_unification.md",
+      "before_sha256": "f2a6cdeb045fe1bdf800a16623105d27b77fded6887a50283a2d1e1eba828efd",
+      "after_sha256": "f2a6cdeb045fe1bdf800a16623105d27b77fded6887a50283a2d1e1eba828efd",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/results/rq4_hard_candidate_robustness.md",
+      "before_sha256": "9e4f1366c39dccab5b71806ed6e06a527edfff6af1c944a2c25cbe086ac04203",
+      "after_sha256": "9e4f1366c39dccab5b71806ed6e06a527edfff6af1c944a2c25cbe086ac04203",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/results/rq5_sasrec_exposure.md",
+      "before_sha256": "0b12fa1f1173c369e4b8136ab80c786a08e0cdc002e8ea06c9f80482279a6a09",
+      "after_sha256": "0b12fa1f1173c369e4b8136ab80c786a08e0cdc002e8ea06c9f80482279a6a09",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/discussion/.gitkeep",
+      "before_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "after_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/discussion/conditional_unification.md",
+      "before_sha256": "fb564960c00ebb20204dccc3e6fd470b8da199be7b059ea71e36e3dbd38ecee4",
+      "after_sha256": "fb564960c00ebb20204dccc3e6fd470b8da199be7b059ea71e36e3dbd38ecee4",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/discussion/evaluation_protocol.md",
+      "before_sha256": "5db5383420beb806df22115c6e186f216705ce1c5a6d24169b5ca2fdd5d9a8b2",
+      "after_sha256": "5db5383420beb806df22115c6e186f216705ce1c5a6d24169b5ca2fdd5d9a8b2",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/discussion/exposure_aware_baselines.md",
+      "before_sha256": "f477617cd4d071a7295ad54c7a2d06a9428ef79a7840e5b586820abe354660cb",
+      "after_sha256": "f477617cd4d071a7295ad54c7a2d06a9428ef79a7840e5b586820abe354660cb",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/discussion/exposure_interpretation.md",
+      "before_sha256": "d67230e5db03703e791193a9ba86f4829dcd98d83176b5e72dbd96e060f3ce7f",
+      "after_sha256": "d67230e5db03703e791193a9ba86f4829dcd98d83176b5e72dbd96e060f3ce7f",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/discussion/external_validity.md",
+      "before_sha256": "d6356eb70f5efced8d7881ec2071ef97cae39f38f962c85da3cf8ed1dc5a25dc",
+      "after_sha256": "d6356eb70f5efced8d7881ec2071ef97cae39f38f962c85da3cf8ed1dc5a25dc",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules_parts/discussion/supervision_interface.md",
+      "before_sha256": "976ad23174e3b1e4f65e723147da800865273a26584c46c38d3b8db7dbf6778f",
+      "after_sha256": "976ad23174e3b1e4f65e723147da800865273a26584c46c38d3b8db7dbf6778f",
+      "unchanged": true
+    },
+    {
+      "path": "paper/tables/binary_exposure.csv",
+      "before_sha256": "b0dcf78012a4c3a70e598ae344dcc98954d3c3c0a1689074df48ae9e846c92ab",
+      "after_sha256": "b0dcf78012a4c3a70e598ae344dcc98954d3c3c0a1689074df48ae9e846c92ab",
+      "unchanged": true
+    },
+    {
+      "path": "paper/tables/cross_dataset.csv",
+      "before_sha256": "fb4ae0152a44a8d70edccfbe5a42156f204c06b3a84a8384ccb1d3dc692d024d",
+      "after_sha256": "fb4ae0152a44a8d70edccfbe5a42156f204c06b3a84a8384ccb1d3dc692d024d",
+      "unchanged": true
+    },
+    {
+      "path": "paper/tables/datasets.csv",
+      "before_sha256": "e024b08f34de57c6d56aeee87a2769fe05b6696c2b8c8ff4777a503ddf72d8b9",
+      "after_sha256": "e024b08f34de57c6d56aeee87a2769fe05b6696c2b8c8ff4777a503ddf72d8b9",
+      "unchanged": true
+    },
+    {
+      "path": "paper/tables/exposure_scaling.csv",
+      "before_sha256": "81ba50ab9731b39e63777df71d884ea50d3f7b43ca34c8ce06b00e9143d0a3af",
+      "after_sha256": "81ba50ab9731b39e63777df71d884ea50d3f7b43ca34c8ce06b00e9143d0a3af",
+      "unchanged": true
+    },
+    {
+      "path": "paper/tables/hard_candidate.csv",
+      "before_sha256": "f86abf7185bc3ec3a47ae0ada74c3d3de20e7e502916b8303ca9191af7071770",
+      "after_sha256": "f86abf7185bc3ec3a47ae0ada74c3d3de20e7e502916b8303ca9191af7071770",
+      "unchanged": true
+    },
+    {
+      "path": "paper/tables/n_vs_sasrec_exposure.csv",
+      "before_sha256": "e6b27bc4671e6ebf581fc9e98b72b54baa1ee1a7c55d1ed022d0aa6fdd7e4459",
+      "after_sha256": "e6b27bc4671e6ebf581fc9e98b72b54baa1ee1a7c55d1ed022d0aa6fdd7e4459",
+      "unchanged": true
+    },
+    {
+      "path": "paper/tables/semantics_bridge.csv",
+      "before_sha256": "7d86eef1fa8136e219714a3d7c7e70ac9170dd9a94028d7247cb71e52afce140",
+      "after_sha256": "7d86eef1fa8136e219714a3d7c7e70ac9170dd9a94028d7247cb71e52afce140",
+      "unchanged": true
+    },
+    {
+      "path": "paper/tables/specialist_multitask.csv",
+      "before_sha256": "348ffc1aa823d091c3d78f5ad26408dbd8033ae5775191e67c71d90b92ac5d53",
+      "after_sha256": "348ffc1aa823d091c3d78f5ad26408dbd8033ae5775191e67c71d90b92ac5d53",
+      "unchanged": true
+    },
+    {
+      "path": "paper/tables/table-schema.md",
+      "before_sha256": "8df2ae3542942a4345206f553988c9759939295d7bc9ff8961e1dcf3a47b2004",
+      "after_sha256": "8df2ae3542942a4345206f553988c9759939295d7bc9ff8961e1dcf3a47b2004",
+      "unchanged": true
+    },
+    {
+      "path": "paper/tables/training_exposure.csv",
+      "before_sha256": "6d4ebdf08f8f8181d509964d2ee83fed4c085beafa88cabcf39a13acd7e9beec",
+      "after_sha256": "6d4ebdf08f8f8181d509964d2ee83fed4c085beafa88cabcf39a13acd7e9beec",
+      "unchanged": true
+    },
+    {
+      "path": "paper/figures/data-manifest.md",
+      "before_sha256": "9a06d91880a9356aee70298690acd0297c8ab4e1bf46619d5d9428f2ea20440c",
+      "after_sha256": "9a06d91880a9356aee70298690acd0297c8ab4e1bf46619d5d9428f2ea20440c",
+      "unchanged": true
+    },
+    {
+      "path": "paper/figures/fig_n_native_exposure.png",
+      "before_sha256": "663937fafe01f68b0e9f100d40a1b42128e7233cf233fbffa9780838595d944a",
+      "after_sha256": "663937fafe01f68b0e9f100d40a1b42128e7233cf233fbffa9780838595d944a",
+      "unchanged": true
+    },
+    {
+      "path": "paper/figures/fig_n_native_exposure.svg",
+      "before_sha256": "46762155754c2fb75c1ec5b7e89ba6bd6f27e74a5dfe16b3dea253466dcfb526",
+      "after_sha256": "46762155754c2fb75c1ec5b7e89ba6bd6f27e74a5dfe16b3dea253466dcfb526",
+      "unchanged": true
+    },
+    {
+      "path": "paper/figures/fig_n_vs_sasrec_exposure.png",
+      "before_sha256": "9fdf32839798b8243f92641fc0b3c0ec21558a304e4fa38de41735f9cf8566f7",
+      "after_sha256": "9fdf32839798b8243f92641fc0b3c0ec21558a304e4fa38de41735f9cf8566f7",
+      "unchanged": true
+    },
+    {
+      "path": "paper/figures/fig_n_vs_sasrec_exposure.svg",
+      "before_sha256": "9ab420a6fdf395824219749afabcb104fbc09fe2b6bd35e0976dd470ff160abe",
+      "after_sha256": "9ab420a6fdf395824219749afabcb104fbc09fe2b6bd35e0976dd470ff160abe",
+      "unchanged": true
+    },
+    {
+      "path": "paper/figures/data/fig_n_native_exposure.csv",
+      "before_sha256": "cf76291d188ab6f9e9129a84dd7771d71056e4e720d95c5e6c27304e66c06b18",
+      "after_sha256": "cf76291d188ab6f9e9129a84dd7771d71056e4e720d95c5e6c27304e66c06b18",
+      "unchanged": true
+    },
+    {
+      "path": "paper/figures/data/fig_n_vs_sasrec_exposure.csv",
+      "before_sha256": "2ad01f8ab2058e8726fbcae2f64d16cad1b2a1946ce6fa89c838c325368ccb82",
+      "after_sha256": "2ad01f8ab2058e8726fbcae2f64d16cad1b2a1946ce6fa89c838c325368ccb82",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules/03_problem_formulation.md",
+      "before_sha256": "0ee3f537860b8cdde6568fa05ffbee0afff6e1625944daa2925a58ad4b390c1a",
+      "after_sha256": "0ee3f537860b8cdde6568fa05ffbee0afff6e1625944daa2925a58ad4b390c1a",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules/04_methodology.md",
+      "before_sha256": "dbb7398086cf12169c5ce12fc2c4e0c917264ac75f79271a51705ff1b62a4285",
+      "after_sha256": "dbb7398086cf12169c5ce12fc2c4e0c917264ac75f79271a51705ff1b62a4285",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules/05_experimental_setup.md",
+      "before_sha256": "07f000534c2f8014af7ff5ba3a9c46f503c3ebc61ff4dda39326c9026a4ea3d2",
+      "after_sha256": "07f000534c2f8014af7ff5ba3a9c46f503c3ebc61ff4dda39326c9026a4ea3d2",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules/06_results.md",
+      "before_sha256": "d56c31446a805a4d89f1d651f2d02800124dd570e295e2ca72cbd58ee8b6ee7f",
+      "after_sha256": "d56c31446a805a4d89f1d651f2d02800124dd570e295e2ca72cbd58ee8b6ee7f",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules/07_discussion.md",
+      "before_sha256": "0004eb2e8fd61a9ca903067c6bb4457f76ed9639cafa83a27cd3006925af64a9",
+      "after_sha256": "0004eb2e8fd61a9ca903067c6bb4457f76ed9639cafa83a27cd3006925af64a9",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules/08_limitations.md",
+      "before_sha256": "b99c2cf42cde765ca0ed878a0ba5fa7c6d001042ae247ed82d88e1d8cec2412c",
+      "after_sha256": "b99c2cf42cde765ca0ed878a0ba5fa7c6d001042ae247ed82d88e1d8cec2412c",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules/09_conclusion.md",
+      "before_sha256": "091e230b70355fe9685f965b931d7fbdf6caa837ad8e30d5c26b613a7e5ca45d",
+      "after_sha256": "091e230b70355fe9685f965b931d7fbdf6caa837ad8e30d5c26b613a7e5ca45d",
+      "unchanged": true
+    },
+    {
+      "path": "paper/modules/10_abstract.md",
+      "before_sha256": "80b5674038c935d2723a0e0a5b070568c5bd7d7efdd99b038fb0dd0572774a3e",
+      "after_sha256": "80b5674038c935d2723a0e0a5b070568c5bd7d7efdd99b038fb0dd0572774a3e",
+      "unchanged": true
+    },
+    {
+      "path": ".agent/paper_writing_submission/manuscript/introduction.md",
+      "before_sha256": "1f0036044f39fcd71df666a62efe2ca6720e8e163f6cf3edcd9dde71f8705258",
+      "after_sha256": "1f0036044f39fcd71df666a62efe2ca6720e8e163f6cf3edcd9dde71f8705258",
+      "unchanged": true
+    },
+    {
+      "path": ".agent/paper_writing_submission/manuscript/related_work_outline.md",
+      "before_sha256": "b1e187cd6261d878012c7890e46a2cdd4e27926656c8202818dbd71071f1f6ce",
+      "after_sha256": "b1e187cd6261d878012c7890e46a2cdd4e27926656c8202818dbd71071f1f6ce",
+      "unchanged": true
+    },
+    {
+      "path": ".agent/paper_writing_submission/refs/verified_sources.md",
+      "before_sha256": "012cb606549582b12d21f753f39922b0f48be61715f79a12e85d43fcc2f14eec",
+      "after_sha256": "012cb606549582b12d21f753f39922b0f48be61715f79a12e85d43fcc2f14eec",
+      "unchanged": true
+    },
+    {
+      "path": ".agent/paper_writing_submission/refs/evidence-map.md",
+      "before_sha256": "d29c13ecf0828a81ad7512a937af4cf9dd8c6a8463e3d0d3e47dc94eb35562b0",
+      "after_sha256": "d29c13ecf0828a81ad7512a937af4cf9dd8c6a8463e3d0d3e47dc94eb35562b0",
+      "unchanged": true
+    },
+    {
+      "path": ".agent/paper_writing_submission/refs/bib_candidates.bib",
+      "before_sha256": "00eb64a49ca2d76182da4320d87ee8d7acc035cb019734922d1970e111e63bb7",
+      "after_sha256": "00eb64a49ca2d76182da4320d87ee8d7acc035cb019734922d1970e111e63bb7",
+      "unchanged": true
+    },
+    {
+      "path": "paper/references/claude_novelty_positioning_evidence_package.md",
+      "before_sha256": "afe81bc6c7b1451b33af1925bdb9d58193b04e188a29692d16cb9599c44032ca",
+      "after_sha256": "afe81bc6c7b1451b33af1925bdb9d58193b04e188a29692d16cb9599c44032ca",
+      "unchanged": true
+    },
+    {
+      "path": "paper/references/LITERATURE_VERIFICATION_AND_NOVELTY_REPORT.md",
+      "before_sha256": "2cad14e200b552944c74001c39b67e7eace74c5ab5849c517c8cb045df674f64",
+      "after_sha256": "2cad14e200b552944c74001c39b67e7eace74c5ab5849c517c8cb045df674f64",
+      "unchanged": true
+    },
+    {
+      "path": "paper/references/UNAPPLIED_MANUSCRIPT_EDIT_SNAPSHOT.md",
+      "before_sha256": "d426f7beda9e430ab4d104f9588b69042a5bd2d778709eb03f82396126a63c04",
+      "after_sha256": "d426f7beda9e430ab4d104f9588b69042a5bd2d778709eb03f82396126a63c04",
+      "unchanged": true
+    }
+  ],
+  "authoring": {
+    "authors": [
+      {
+        "path": "paper/modules/00_contributions.md",
+        "ids_unchanged": true,
+        "paragraphs": 4,
+        "en_words": [
+          44,
+          97,
+          55,
+          61
+        ]
+      },
+      {
+        "path": "paper/modules/01_introduction.md",
+        "ids_unchanged": true,
+        "paragraphs": 7,
+        "en_words": [
+          87,
+          104,
+          105,
+          86,
+          95,
+          103,
+          91
+        ]
+      },
+      {
+        "path": "paper/modules/02_related_work.md",
+        "ids_unchanged": true,
+        "paragraphs": 1,
+        "en_words": [
+          79
+        ]
+      },
+      {
+        "path": "paper/modules_parts/related_work/llm_recommendation.md",
+        "ids_unchanged": true,
+        "paragraphs": 2,
+        "en_words": [
+          72,
+          97
+        ]
+      },
+      {
+        "path": "paper/modules_parts/related_work/supervision_formulation.md",
+        "ids_unchanged": true,
+        "paragraphs": 2,
+        "en_words": [
+          91,
+          93
+        ]
+      },
+      {
+        "path": "paper/modules_parts/related_work/multitask_unification.md",
+        "ids_unchanged": true,
+        "paragraphs": 2,
+        "en_words": [
+          103,
+          100
+        ]
+      },
+      {
+        "path": "paper/modules_parts/related_work/evaluation_baselines.md",
+        "ids_unchanged": true,
+        "paragraphs": 2,
+        "en_words": [
+          106,
+          109
+        ]
+      }
+    ],
+    "intro_p06_text_unchanged": true
+  },
+  "ms96_source_markers": 14,
+  "citation_needed_source_markers": 0,
+  "checks": {
+    "unittest": {
+      "passed": 35,
+      "exit_code": 0
+    },
+    "all_module_dry_check": {
+      "modules": 11,
+      "paragraph_pairs": 78,
+      "pending_hits": 24,
+      "exit_code": 0
+    },
+    "edited_module_dry_check": {
+      "modules": 3,
+      "paragraph_pairs": 20,
+      "pending_hits": 3,
+      "exit_code": 0
+    },
+    "final_dry_probe": {
+      "exit_code": 1,
+      "expected": true,
+      "reason": "3处MS96与7个draft作者源阻止正式输出"
+    },
+    "forbidden_prose_scan": {
+      "matches": 0,
+      "rg_exit_code": 1
+    },
+    "git_diff_check": {
+      "exit_code": 0,
+      "line_ending_warnings": 68,
+      "other_output": []
+    },
+    "stage_guard": {
+      "exit_code": 0,
+      "errors": 0,
+      "warnings": 0
+    },
+    "local_artifacts": {
+      "files": 40,
+      "local_links": 52,
+      "missing_files": [],
+      "broken_links": []
+    }
+  },
+  "limitations": [
+    "哈希只说明文件未变，不认证文献新颖性。",
+    "EN/ZH数字、引用与结构由测试核对，语义对应仍经过人工审读。",
+    "旧builds审校件未重建，不能代表当前作者源。",
+    "没有查询新实验、重算指标或写完整稿。"
+  ]
+}

@@ -1,0 +1,5 @@
+M1_point,split,retained,full_holdout,coverage_percent
+M1-48,validation,5494,5675,96.81
+M1-48,test,5600,5675,98.68
+M1-96,validation,5318,5675,93.71
+M1-96,test,5535,5675,97.53

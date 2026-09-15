@@ -1,0 +1,529 @@
+{
+  "collector": "minimal_run_metadata_v1",
+  "machine_block": "D",
+  "root": "/root/llamarec",
+  "read_only_inputs": true,
+  "no_training": true,
+  "no_inference": true,
+  "no_evaluation": true,
+  "records": [
+    {
+      "run_id": "S47",
+      "task": "SASRec",
+      "dataset_expected": "movielens-1m",
+      "kind": "sasrec",
+      "run_path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s47",
+      "run_path_status": "FOUND",
+      "expected_seed": 42,
+      "expected_step": 47,
+      "frozen_actual_exposure": 24064,
+      "files": {
+        "run_summary": {
+          "status": "FOUND",
+          "paths": [
+            "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s47/run_summary.json"
+          ]
+        },
+        "config_snapshot": {
+          "status": "FOUND",
+          "paths": [
+            "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s47/config_snapshot.yaml"
+          ]
+        },
+        "trainer_state": {
+          "status": "MISSING",
+          "paths": []
+        },
+        "evaluation_summary": {
+          "status": "MISSING",
+          "paths": []
+        },
+        "valid_metrics": {
+          "status": "FOUND",
+          "paths": [
+            "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s47/valid_metrics.json"
+          ]
+        },
+        "test_metrics": {
+          "status": "FOUND",
+          "paths": [
+            "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s47/test_metrics.json"
+          ]
+        }
+      },
+      "documents": [
+        {
+          "path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s47/config_snapshot.yaml",
+          "size": 7550,
+          "error": null,
+          "selected_fields": {
+            "seed": "{\"deterministic_candidates\": true, \"deterministic_splits\": true, \"random_seed\": 42}",
+            "dataset": "{\"development\": \"movielens-100k\", \"formal\": \"movielens-1m\", \"full_sequence_order\": \"timestamp_ascending\", \"history_length\": 10, \"minimum_interactions_for_eval\": 3, \"positive_rating_threshold\": 4, \"sequence_sources\": {\"auxiliary_positive_sequence\": \"statistics_and_phase_2_only\", \"primary\": \"full_sequence\"}, \"task_history_source\": {\"n_next_item\": \"full_sequence\", \"y_preference\": \"full_sequence\"}}",
+            "tasks.y.task": "yes_no_preference_prediction",
+            "tasks.n.task": "full_sequence_next_item_prediction",
+            "tasks.m.task": "y_plus_n_multitask",
+            "processed_outputs.split": "data/processed/{dataset}/split.json",
+            "split": "{\"leakage_invariants\": [\"max_history_timestamp_lt_target_timestamp\", \"target_not_in_own_history\", \"no_future_interaction_in_prompt\", \"fixed_y_validation_test_for_base_y_m_y\", \"fixed_n_validation_test_for_base_n_m_n\"], \"method\": \"timestamp_bucket_strict_history_per_task\", \"n_split\": {\"minimum_legal_next_item_samples_for_n\": 2, \"test_target\": \"last_legal_next_item_sample\", \"train_region\": \"legal_next_item_samples_before_validation_sample\", \"validation_target\": \"second_last_legal_next_item_sample\"}, \"strict_history\": \"timestamp_lt_target_timestamp\", \"timestamp_tie_policy\": {\"n\": \"skip_ambiguous_next_item_sample_only\", \"skip_entire_user_on_tie\": false, \"y\": \"same_timestamp_targets_share_strict_history\"}, \"y_split\": {\"test_target\": \"last_timestamp_bucket\", \"train_region\": \"timestamp_buckets_before_validation_bucket\", \"validation_target\": \"second_last_timestamp_bucket\"}}",
+            "model": "{\"answer_tokens_to_check\": {\"candidate_labels\": [\"A\", \"B\", \"C\", \"D\", \"E\"], \"yesno\": [\"Yes\", \"No\"]}, \"base_model\": {\"access_check_stage\": \"cloud_before_step_4\", \"local_download_required\": false, \"model_family\": \"llama\", \"name_or_path\": \"meta-llama/Llama-3.2-3B-Instruct\", \"require_instruct_chat_format\": true}, \"max_seq_length\": 2048, \"tokenization_rule\": \"use_sequence_likelihood_if_answer_is_not_single_token\"}",
+            "model.base_model": "{\"access_check_stage\": \"cloud_before_step_4\", \"local_download_required\": false, \"model_family\": \"llama\", \"name_or_path\": \"meta-llama/Llama-3.2-3B-Instruct\", \"require_instruct_chat_format\": true}",
+            "training.checkpointing.resume_from_checkpoint": true
+          }
+        },
+        {
+          "path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s47/run_summary.json",
+          "size": 1177,
+          "error": null,
+          "selected_fields": {
+            "model": "sasrec",
+            "dataset": "movielens-1m",
+            "candidate_files": "{\"test\": \"/root/llamarec/data/candidates/movielens-1m/variants/k5_popmatch_seed42/test.jsonl\", \"validation\": \"/root/llamarec/data/candidates/movielens-1m/variants/k5_popmatch_seed42/valid.jsonl\"}",
+            "train_examples": 200000,
+            "max_steps": 47,
+            "optimizer_steps": 47,
+            "training_stop": "max_steps",
+            "batch_size": 512,
+            "seed": 42
+          }
+        },
+        {
+          "path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s47/test_metrics.json",
+          "size": 277,
+          "error": null,
+          "selected_fields": {
+            "model": "sasrec",
+            "dataset": "movielens-1m",
+            "split": "test",
+            "ranking.samples": 5675
+          }
+        },
+        {
+          "path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s47/valid_metrics.json",
+          "size": 284,
+          "error": null,
+          "selected_fields": {
+            "model": "sasrec",
+            "dataset": "movielens-1m",
+            "split": "validation",
+            "ranking.samples": 5675
+          }
+        }
+      ],
+      "checks": [
+        {
+          "field": "training_seed",
+          "status": "OK",
+          "expected": 42,
+          "observed": [
+            42
+          ]
+        },
+        {
+          "field": "optimizer_steps",
+          "status": "OK",
+          "expected": 47,
+          "observed": [
+            47
+          ]
+        },
+        {
+          "field": "actual_consumed_examples",
+          "status": "UNKNOWN",
+          "expected": 24064,
+          "observed": []
+        }
+      ],
+      "note": "Do not derive exposure by multiplying batch_size and steps. The frozen exposure is a comparison reference only.",
+      "status": "UNKNOWN"
+    },
+    {
+      "run_id": "S94",
+      "task": "SASRec",
+      "dataset_expected": "movielens-1m",
+      "kind": "sasrec",
+      "run_path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s94",
+      "run_path_status": "FOUND",
+      "expected_seed": 42,
+      "expected_step": 94,
+      "frozen_actual_exposure": 48128,
+      "files": {
+        "run_summary": {
+          "status": "FOUND",
+          "paths": [
+            "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s94/run_summary.json"
+          ]
+        },
+        "config_snapshot": {
+          "status": "FOUND",
+          "paths": [
+            "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s94/config_snapshot.yaml"
+          ]
+        },
+        "trainer_state": {
+          "status": "MISSING",
+          "paths": []
+        },
+        "evaluation_summary": {
+          "status": "MISSING",
+          "paths": []
+        },
+        "valid_metrics": {
+          "status": "FOUND",
+          "paths": [
+            "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s94/valid_metrics.json"
+          ]
+        },
+        "test_metrics": {
+          "status": "FOUND",
+          "paths": [
+            "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s94/test_metrics.json"
+          ]
+        }
+      },
+      "documents": [
+        {
+          "path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s94/config_snapshot.yaml",
+          "size": 7550,
+          "error": null,
+          "selected_fields": {
+            "seed": "{\"deterministic_candidates\": true, \"deterministic_splits\": true, \"random_seed\": 42}",
+            "dataset": "{\"development\": \"movielens-100k\", \"formal\": \"movielens-1m\", \"full_sequence_order\": \"timestamp_ascending\", \"history_length\": 10, \"minimum_interactions_for_eval\": 3, \"positive_rating_threshold\": 4, \"sequence_sources\": {\"auxiliary_positive_sequence\": \"statistics_and_phase_2_only\", \"primary\": \"full_sequence\"}, \"task_history_source\": {\"n_next_item\": \"full_sequence\", \"y_preference\": \"full_sequence\"}}",
+            "tasks.y.task": "yes_no_preference_prediction",
+            "tasks.n.task": "full_sequence_next_item_prediction",
+            "tasks.m.task": "y_plus_n_multitask",
+            "processed_outputs.split": "data/processed/{dataset}/split.json",
+            "split": "{\"leakage_invariants\": [\"max_history_timestamp_lt_target_timestamp\", \"target_not_in_own_history\", \"no_future_interaction_in_prompt\", \"fixed_y_validation_test_for_base_y_m_y\", \"fixed_n_validation_test_for_base_n_m_n\"], \"method\": \"timestamp_bucket_strict_history_per_task\", \"n_split\": {\"minimum_legal_next_item_samples_for_n\": 2, \"test_target\": \"last_legal_next_item_sample\", \"train_region\": \"legal_next_item_samples_before_validation_sample\", \"validation_target\": \"second_last_legal_next_item_sample\"}, \"strict_history\": \"timestamp_lt_target_timestamp\", \"timestamp_tie_policy\": {\"n\": \"skip_ambiguous_next_item_sample_only\", \"skip_entire_user_on_tie\": false, \"y\": \"same_timestamp_targets_share_strict_history\"}, \"y_split\": {\"test_target\": \"last_timestamp_bucket\", \"train_region\": \"timestamp_buckets_before_validation_bucket\", \"validation_target\": \"second_last_timestamp_bucket\"}}",
+            "model": "{\"answer_tokens_to_check\": {\"candidate_labels\": [\"A\", \"B\", \"C\", \"D\", \"E\"], \"yesno\": [\"Yes\", \"No\"]}, \"base_model\": {\"access_check_stage\": \"cloud_before_step_4\", \"local_download_required\": false, \"model_family\": \"llama\", \"name_or_path\": \"meta-llama/Llama-3.2-3B-Instruct\", \"require_instruct_chat_format\": true}, \"max_seq_length\": 2048, \"tokenization_rule\": \"use_sequence_likelihood_if_answer_is_not_single_token\"}",
+            "model.base_model": "{\"access_check_stage\": \"cloud_before_step_4\", \"local_download_required\": false, \"model_family\": \"llama\", \"name_or_path\": \"meta-llama/Llama-3.2-3B-Instruct\", \"require_instruct_chat_format\": true}",
+            "training.checkpointing.resume_from_checkpoint": true
+          }
+        },
+        {
+          "path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s94/run_summary.json",
+          "size": 1178,
+          "error": null,
+          "selected_fields": {
+            "model": "sasrec",
+            "dataset": "movielens-1m",
+            "candidate_files": "{\"test\": \"/root/llamarec/data/candidates/movielens-1m/variants/k5_popmatch_seed42/test.jsonl\", \"validation\": \"/root/llamarec/data/candidates/movielens-1m/variants/k5_popmatch_seed42/valid.jsonl\"}",
+            "train_examples": 200000,
+            "max_steps": 94,
+            "optimizer_steps": 94,
+            "training_stop": "max_steps",
+            "batch_size": 512,
+            "seed": 42
+          }
+        },
+        {
+          "path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s94/test_metrics.json",
+          "size": 277,
+          "error": null,
+          "selected_fields": {
+            "model": "sasrec",
+            "dataset": "movielens-1m",
+            "split": "test",
+            "ranking.samples": 5675
+          }
+        },
+        {
+          "path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s94/valid_metrics.json",
+          "size": 282,
+          "error": null,
+          "selected_fields": {
+            "model": "sasrec",
+            "dataset": "movielens-1m",
+            "split": "validation",
+            "ranking.samples": 5675
+          }
+        }
+      ],
+      "checks": [
+        {
+          "field": "training_seed",
+          "status": "OK",
+          "expected": 42,
+          "observed": [
+            42
+          ]
+        },
+        {
+          "field": "optimizer_steps",
+          "status": "OK",
+          "expected": 94,
+          "observed": [
+            94
+          ]
+        },
+        {
+          "field": "actual_consumed_examples",
+          "status": "UNKNOWN",
+          "expected": 48128,
+          "observed": []
+        }
+      ],
+      "note": "Do not derive exposure by multiplying batch_size and steps. The frozen exposure is a comparison reference only.",
+      "status": "UNKNOWN"
+    },
+    {
+      "run_id": "S188",
+      "task": "SASRec",
+      "dataset_expected": "movielens-1m",
+      "kind": "sasrec",
+      "run_path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s188",
+      "run_path_status": "FOUND",
+      "expected_seed": 42,
+      "expected_step": 188,
+      "frozen_actual_exposure": 96256,
+      "files": {
+        "run_summary": {
+          "status": "FOUND",
+          "paths": [
+            "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s188/run_summary.json"
+          ]
+        },
+        "config_snapshot": {
+          "status": "FOUND",
+          "paths": [
+            "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s188/config_snapshot.yaml"
+          ]
+        },
+        "trainer_state": {
+          "status": "MISSING",
+          "paths": []
+        },
+        "evaluation_summary": {
+          "status": "MISSING",
+          "paths": []
+        },
+        "valid_metrics": {
+          "status": "FOUND",
+          "paths": [
+            "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s188/valid_metrics.json"
+          ]
+        },
+        "test_metrics": {
+          "status": "FOUND",
+          "paths": [
+            "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s188/test_metrics.json"
+          ]
+        }
+      },
+      "documents": [
+        {
+          "path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s188/config_snapshot.yaml",
+          "size": 7550,
+          "error": null,
+          "selected_fields": {
+            "seed": "{\"deterministic_candidates\": true, \"deterministic_splits\": true, \"random_seed\": 42}",
+            "dataset": "{\"development\": \"movielens-100k\", \"formal\": \"movielens-1m\", \"full_sequence_order\": \"timestamp_ascending\", \"history_length\": 10, \"minimum_interactions_for_eval\": 3, \"positive_rating_threshold\": 4, \"sequence_sources\": {\"auxiliary_positive_sequence\": \"statistics_and_phase_2_only\", \"primary\": \"full_sequence\"}, \"task_history_source\": {\"n_next_item\": \"full_sequence\", \"y_preference\": \"full_sequence\"}}",
+            "tasks.y.task": "yes_no_preference_prediction",
+            "tasks.n.task": "full_sequence_next_item_prediction",
+            "tasks.m.task": "y_plus_n_multitask",
+            "processed_outputs.split": "data/processed/{dataset}/split.json",
+            "split": "{\"leakage_invariants\": [\"max_history_timestamp_lt_target_timestamp\", \"target_not_in_own_history\", \"no_future_interaction_in_prompt\", \"fixed_y_validation_test_for_base_y_m_y\", \"fixed_n_validation_test_for_base_n_m_n\"], \"method\": \"timestamp_bucket_strict_history_per_task\", \"n_split\": {\"minimum_legal_next_item_samples_for_n\": 2, \"test_target\": \"last_legal_next_item_sample\", \"train_region\": \"legal_next_item_samples_before_validation_sample\", \"validation_target\": \"second_last_legal_next_item_sample\"}, \"strict_history\": \"timestamp_lt_target_timestamp\", \"timestamp_tie_policy\": {\"n\": \"skip_ambiguous_next_item_sample_only\", \"skip_entire_user_on_tie\": false, \"y\": \"same_timestamp_targets_share_strict_history\"}, \"y_split\": {\"test_target\": \"last_timestamp_bucket\", \"train_region\": \"timestamp_buckets_before_validation_bucket\", \"validation_target\": \"second_last_timestamp_bucket\"}}",
+            "model": "{\"answer_tokens_to_check\": {\"candidate_labels\": [\"A\", \"B\", \"C\", \"D\", \"E\"], \"yesno\": [\"Yes\", \"No\"]}, \"base_model\": {\"access_check_stage\": \"cloud_before_step_4\", \"local_download_required\": false, \"model_family\": \"llama\", \"name_or_path\": \"meta-llama/Llama-3.2-3B-Instruct\", \"require_instruct_chat_format\": true}, \"max_seq_length\": 2048, \"tokenization_rule\": \"use_sequence_likelihood_if_answer_is_not_single_token\"}",
+            "model.base_model": "{\"access_check_stage\": \"cloud_before_step_4\", \"local_download_required\": false, \"model_family\": \"llama\", \"name_or_path\": \"meta-llama/Llama-3.2-3B-Instruct\", \"require_instruct_chat_format\": true}",
+            "training.checkpointing.resume_from_checkpoint": true
+          }
+        },
+        {
+          "path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s188/run_summary.json",
+          "size": 1181,
+          "error": null,
+          "selected_fields": {
+            "model": "sasrec",
+            "dataset": "movielens-1m",
+            "candidate_files": "{\"test\": \"/root/llamarec/data/candidates/movielens-1m/variants/k5_popmatch_seed42/test.jsonl\", \"validation\": \"/root/llamarec/data/candidates/movielens-1m/variants/k5_popmatch_seed42/valid.jsonl\"}",
+            "train_examples": 200000,
+            "max_steps": 188,
+            "optimizer_steps": 188,
+            "training_stop": "max_steps",
+            "batch_size": 512,
+            "seed": 42
+          }
+        },
+        {
+          "path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s188/test_metrics.json",
+          "size": 277,
+          "error": null,
+          "selected_fields": {
+            "model": "sasrec",
+            "dataset": "movielens-1m",
+            "split": "test",
+            "ranking.samples": 5675
+          }
+        },
+        {
+          "path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s188/valid_metrics.json",
+          "size": 283,
+          "error": null,
+          "selected_fields": {
+            "model": "sasrec",
+            "dataset": "movielens-1m",
+            "split": "validation",
+            "ranking.samples": 5675
+          }
+        }
+      ],
+      "checks": [
+        {
+          "field": "training_seed",
+          "status": "OK",
+          "expected": 42,
+          "observed": [
+            42
+          ]
+        },
+        {
+          "field": "optimizer_steps",
+          "status": "OK",
+          "expected": 188,
+          "observed": [
+            188
+          ]
+        },
+        {
+          "field": "actual_consumed_examples",
+          "status": "UNKNOWN",
+          "expected": 96256,
+          "observed": []
+        }
+      ],
+      "note": "Do not derive exposure by multiplying batch_size and steps. The frozen exposure is a comparison reference only.",
+      "status": "UNKNOWN"
+    },
+    {
+      "run_id": "S391",
+      "task": "SASRec",
+      "dataset_expected": "movielens-1m",
+      "kind": "sasrec",
+      "run_path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s391",
+      "run_path_status": "FOUND",
+      "expected_seed": 42,
+      "expected_step": 391,
+      "frozen_actual_exposure": 200000,
+      "files": {
+        "run_summary": {
+          "status": "FOUND",
+          "paths": [
+            "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s391/run_summary.json"
+          ]
+        },
+        "config_snapshot": {
+          "status": "FOUND",
+          "paths": [
+            "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s391/config_snapshot.yaml"
+          ]
+        },
+        "trainer_state": {
+          "status": "MISSING",
+          "paths": []
+        },
+        "evaluation_summary": {
+          "status": "MISSING",
+          "paths": []
+        },
+        "valid_metrics": {
+          "status": "FOUND",
+          "paths": [
+            "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s391/valid_metrics.json"
+          ]
+        },
+        "test_metrics": {
+          "status": "FOUND",
+          "paths": [
+            "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s391/test_metrics.json"
+          ]
+        }
+      },
+      "documents": [
+        {
+          "path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s391/config_snapshot.yaml",
+          "size": 7550,
+          "error": null,
+          "selected_fields": {
+            "seed": "{\"deterministic_candidates\": true, \"deterministic_splits\": true, \"random_seed\": 42}",
+            "dataset": "{\"development\": \"movielens-100k\", \"formal\": \"movielens-1m\", \"full_sequence_order\": \"timestamp_ascending\", \"history_length\": 10, \"minimum_interactions_for_eval\": 3, \"positive_rating_threshold\": 4, \"sequence_sources\": {\"auxiliary_positive_sequence\": \"statistics_and_phase_2_only\", \"primary\": \"full_sequence\"}, \"task_history_source\": {\"n_next_item\": \"full_sequence\", \"y_preference\": \"full_sequence\"}}",
+            "tasks.y.task": "yes_no_preference_prediction",
+            "tasks.n.task": "full_sequence_next_item_prediction",
+            "tasks.m.task": "y_plus_n_multitask",
+            "processed_outputs.split": "data/processed/{dataset}/split.json",
+            "split": "{\"leakage_invariants\": [\"max_history_timestamp_lt_target_timestamp\", \"target_not_in_own_history\", \"no_future_interaction_in_prompt\", \"fixed_y_validation_test_for_base_y_m_y\", \"fixed_n_validation_test_for_base_n_m_n\"], \"method\": \"timestamp_bucket_strict_history_per_task\", \"n_split\": {\"minimum_legal_next_item_samples_for_n\": 2, \"test_target\": \"last_legal_next_item_sample\", \"train_region\": \"legal_next_item_samples_before_validation_sample\", \"validation_target\": \"second_last_legal_next_item_sample\"}, \"strict_history\": \"timestamp_lt_target_timestamp\", \"timestamp_tie_policy\": {\"n\": \"skip_ambiguous_next_item_sample_only\", \"skip_entire_user_on_tie\": false, \"y\": \"same_timestamp_targets_share_strict_history\"}, \"y_split\": {\"test_target\": \"last_timestamp_bucket\", \"train_region\": \"timestamp_buckets_before_validation_bucket\", \"validation_target\": \"second_last_timestamp_bucket\"}}",
+            "model": "{\"answer_tokens_to_check\": {\"candidate_labels\": [\"A\", \"B\", \"C\", \"D\", \"E\"], \"yesno\": [\"Yes\", \"No\"]}, \"base_model\": {\"access_check_stage\": \"cloud_before_step_4\", \"local_download_required\": false, \"model_family\": \"llama\", \"name_or_path\": \"meta-llama/Llama-3.2-3B-Instruct\", \"require_instruct_chat_format\": true}, \"max_seq_length\": 2048, \"tokenization_rule\": \"use_sequence_likelihood_if_answer_is_not_single_token\"}",
+            "model.base_model": "{\"access_check_stage\": \"cloud_before_step_4\", \"local_download_required\": false, \"model_family\": \"llama\", \"name_or_path\": \"meta-llama/Llama-3.2-3B-Instruct\", \"require_instruct_chat_format\": true}",
+            "training.checkpointing.resume_from_checkpoint": true
+          }
+        },
+        {
+          "path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s391/run_summary.json",
+          "size": 1181,
+          "error": null,
+          "selected_fields": {
+            "model": "sasrec",
+            "dataset": "movielens-1m",
+            "candidate_files": "{\"test\": \"/root/llamarec/data/candidates/movielens-1m/variants/k5_popmatch_seed42/test.jsonl\", \"validation\": \"/root/llamarec/data/candidates/movielens-1m/variants/k5_popmatch_seed42/valid.jsonl\"}",
+            "train_examples": 200000,
+            "max_steps": 391,
+            "optimizer_steps": 391,
+            "training_stop": "max_steps",
+            "batch_size": 512,
+            "seed": 42
+          }
+        },
+        {
+          "path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s391/test_metrics.json",
+          "size": 277,
+          "error": null,
+          "selected_fields": {
+            "model": "sasrec",
+            "dataset": "movielens-1m",
+            "split": "test",
+            "ranking.samples": 5675
+          }
+        },
+        {
+          "path": "/root/llamarec/outputs/baselines/movielens-1m/alignment_sasrec_s391/valid_metrics.json",
+          "size": 283,
+          "error": null,
+          "selected_fields": {
+            "model": "sasrec",
+            "dataset": "movielens-1m",
+            "split": "validation",
+            "ranking.samples": 5675
+          }
+        }
+      ],
+      "checks": [
+        {
+          "field": "training_seed",
+          "status": "OK",
+          "expected": 42,
+          "observed": [
+            42
+          ]
+        },
+        {
+          "field": "optimizer_steps",
+          "status": "OK",
+          "expected": 391,
+          "observed": [
+            391
+          ]
+        },
+        {
+          "field": "actual_consumed_examples",
+          "status": "UNKNOWN",
+          "expected": 200000,
+          "observed": []
+        }
+      ],
+      "note": "Do not derive exposure by multiplying batch_size and steps. The frozen exposure is a comparison reference only.",
+      "status": "UNKNOWN"
+    }
+  ],
+  "summary": {
+    "OK": 0,
+    "UNKNOWN": 4,
+    "MISSING": 0,
+    "CONFLICT": 0
+  }
+}

@@ -1,35 +1,50 @@
 # Discussion
 
-The results suggest that recommendation supervision should be treated as a
-semantic choice rather than a generic adaptation signal. Preference supervision
-asks whether a user is likely to like an item given the history. Next-item
-supervision asks which item is the next observed interaction among candidates.
-These objectives can be related in real recommender systems, but the
-experiments show that they do not collapse into the same scoring behavior. A
-candidate-wise P(Yes) score is not trained to resolve the same decision as a
-candidate-label next-item score.
+The main empirical lesson is that recommendation supervision is not a neutral
+adaptation signal. In this study, preference supervision and next-item
+supervision ask related but non-identical questions. The Y task asks whether a
+user is likely to like an item given the history. The N task asks which item is
+the next observed interaction among a candidate set. A deployed recommender may
+need both signals, but the experiments show that they do not collapse into the
+same scoring behavior. A candidate-wise P(Yes) score can be a useful preference
+interface without becoming a reliable substitute for candidate-label
+next-interaction ranking.
 
-The multi-task findings are best understood as a unification tradeoff. M1 keeps
-both interfaces available and is therefore operationally attractive. At the
-same time, it does not eliminate specialization: Y-K0 remains the cleaner
-preference specialist and N-K0 remains the cleaner ranking specialist in the
-completed evidence. This is not a negative result for multi-task learning. It
-is a boundary on what the current unified construction establishes. The
-evidence supports retention of both abilities, not positive transfer beyond
-both specialists.
+The M1 results place multi-task tuning in a more specific light. A single model
+can preserve both interfaces well enough to be operationally attractive, but
+the current evidence does not show that unification removes specialization.
+On MovieLens, M1 remains close to N-K0 under PopMatch-k5, yet N-K0 keeps the
+ranking advantage across all three seeds. On Amazon, the same direction appears
+under seed42, although the N-K0 margin over M1 is narrow. The supported
+interpretation is therefore a tradeoff: M1 is a compact unified adapter, while
+Y-K0 and N-K0 remain the cleaner task-specific references for their respective
+interfaces.
 
-The SASRec comparison shows why budget language has to be precise. Under
-closest N-task exposure, N-K0 is much stronger than SASRec on both MovieLens
-and Amazon. Under high sequential exposure, SASRec becomes stronger than N-K0
-on MovieLens. One possible explanation is that LLM pretraining and language-
-conditioned parameterization provide useful priors when sequential supervision
-is limited, whereas a specialized sequential model can exploit large amounts
-of repeated sequential training more effectively. This explanation is a
-hypothesis, not a causal mechanism proved by the current experiments.
+The SASRec comparison also depends on how supervision exposure is defined.
+Under closest N-task sample exposure, N-K0 is far stronger than SASRec on both
+MovieLens and Amazon. Under high sequential-supervision exposure, SASRec
+overtakes N-K0 on MovieLens. These two facts are not contradictory because they
+belong to different budget regimes. The results are consistent with the view
+that language-model pretraining and instruction-style conditioning can provide
+useful priors when task-specific sequential supervision is limited, whereas a
+specialized sequential model can benefit substantially from much larger
+sequential exposure. The current experiments support this as an interpretation
+of the observed regimes, not as a causal mechanism.
 
-Candidate construction is another source of apparent contradiction. Random-k5
-can make recommendation ranking look easier than it is, while PopMatch-k5 and
-candidate-size stress tests expose different separations between models. The
-paper therefore frames evaluation protocol as part of the empirical object. A
-leaderboard without candidate-set semantics would hide a central result of the
-study.
+Candidate construction explains another source of instability in offline
+conclusions. Random-k5 often makes ranking appear easier, while PopMatch-k5
+and candidate-size stress tests expose separations that are muted or absent
+under random negatives. This matters because the study is not only comparing
+model rows; it is comparing what different evaluation protocols allow one to
+conclude. Reporting candidate-set semantics alongside ranking metrics is
+therefore part of the evidence, especially when a model's apparent advantage
+changes with candidate difficulty.
+
+The cross-dataset results make the paper more robust, but they should not be
+overread. Amazon Musical Instruments reproduces the main ranking-side
+directions in seed42: N-K0 is above Y-K0 P(Yes)-based ranking, above M1 by a
+small margin under PopMatch-k5, and above closest-exposure SASRec by a large
+margin. It does not provide validation-calibrated binary evidence or Amazon
+multi-seed stability, and high-exposure SASRec was not run there. The second
+dataset therefore supports the scope of the empirical story without converting
+it into a universal claim about all domains or all budget regimes.

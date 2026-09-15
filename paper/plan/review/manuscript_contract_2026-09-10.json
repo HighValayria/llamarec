@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "contract_id": "post-reference-contract-2026-09-10",
+  "created": "2026-09-10",
+  "stage": "reference-test-contract-reconciliation",
+  "purpose": "Versioned current-state hash contract for formal bilingual manuscript sources and evidence/reference controls after reference and test reconciliation.",
+  "historical_baselines": [
+    {
+      "path": "paper/evidence/asset_provenance.json",
+      "sha256": "8b181266492faba242732d9016cbc718a7eb3f3c25f9c7c6948314a42a3e4e51",
+      "role": "Historical frozen-evidence export snapshot; retained unchanged and no longer treated as the current product hash contract."
+    },
+    {
+      "path": "paper/plan/review/ms96_scope_baseline.json",
+      "sha256": "b3cbaeca414dbd1546c1acd44560ebfc8958343b43d397752689c43d085ddff7",
+      "role": "Historical pre-MS96 scope snapshot; retained unchanged and no longer treated as the current manuscript hash contract."
+    }
+  ],
+  "protected": [
+    {
+      "path": "paper/modules/00_contributions.md",
+      "category": "author_source",
+      "sha256": "c61383380d45dda8ee2b01f30e8998abc7a0cd3614a60f6b12033e598f3a0989"
+    },
+    {
+      "path": "paper/modules_parts/related_work/evaluation_baselines.md",
+      "category": "author_source",
+      "sha256": "d789b7a9e87102e765f5352f70c2748321848584221e454a684b37d94bd97e81"
+    },
+    {
+      "path": "paper/modules_parts/related_work/llm_recommendation.md",
+      "category": "author_source",
+      "sha256": "da01fc0358b8c3a6d26cf0148db8b77eafde4bd0a5f10735b7a9d52ef5372a09"
+    },
+    {
+      "path": "paper/modules_parts/related_work/multitask_unification.md",
+      "category": "author_source",
+      "sha256": "52689e98ae0cb39bbd6e5b9cf4ed1e3403735b078b5d31c044c04ec85681912a"
+    },
+    {
+      "path": "paper/modules_parts/related_work/supervision_formulation.md",
+      "category": "author_source",
+      "sha256": "18ab43bc31bac3a9cdf474176e0080fce36a4ef076644570f926d5aecc0a3057"
+    },
+    {
+      "path": "paper/modules_parts/results/cross_dataset_validation.md",
+      "category": "author_source",
+      "sha256": "9def549054842bb382dcf1f8219f08877164b2bafe520a85019735d05b872f5a"
+    },
+    {
+      "path": "paper/modules_parts/results/rq1_supervision_semantics.md",
+      "category": "author_source",
+      "sha256": "2bb16ddf09a1c6dea91c3f6fd71db1450ef667d12fa3823105a3bb9456e4069b"
+    },
+    {
+      "path": "paper/modules_parts/results/rq2_exposure_response.md",
+      "category": "author_source",
+      "sha256": "cfbb41873c2fd1eb552fedea589ca4d102542f83fb0d23e80c0cb7bb347b6e23"
+    },
+    {
+      "path": "paper/modules_parts/results/rq3_multitask_unification.md",
+      "category": "author_source",
+      "sha256": "889eb5942eef034f94312224a24343bab630b650c2cc4bb58baa96bc5161a302"
+    },
+    {
+      "path": "paper/modules_parts/results/rq4_hard_candidate_robustness.md",
+      "category": "author_source",
+      "sha256": "3addd3ec8878d7005e475bded8f44aab3dd09330d4a512c7d2ef28b32235d7ee"
+    },
+    {
+      "path": "paper/modules_parts/results/rq5_sasrec_exposure.md",
+      "category": "author_source",
+      "sha256": "1460484b12851fa262265b120228a4c4fe36ed78671b506d5d9e4b1eacb4f18a"
+    },
+    {
+      "path": "paper/assembly/paper_manifest.yaml",
+      "category": "evidence_or_reference_control",
+      "sha256": "a67ffb632c8f323b10bd5975363b84cef7feb577a72f814a9441d149e6de82fe"
+    },
+    {
+      "path": "paper/evidence/bootstrap_provenance_closure.md",
+      "category": "evidence_or_reference_control",
+      "sha256": "739a91f77afb4925d0a35978c805397a753433646fc8e129ce667577cb3d05fa"
+    },
+    {
+      "path": "paper/evidence/claim_matrix.md",
+      "category": "evidence_or_reference_control",
+      "sha256": "0a3e7a905f7fe17e2994b9521dcee7a36225ab9f16aa7cab78f838f339ea9492"
+    },
+    {
+      "path": "paper/evidence/pending_evidence.md",
+      "category": "evidence_or_reference_control",
+      "sha256": "0a2c4bd1c385e88f62466acd04d4afccacba3b82d7b746fbd8ddc31d7c15a74d"
+    },
+    {
+      "path": "paper/evidence/run_metadata_ledger.md",
+      "category": "evidence_or_reference_control",
+      "sha256": "ccdac6c84e2251c754ada9cb18c4c2d44b67c85ceabee27142bf8c671f6ab6b8"
+    },
+    {
+      "path": "paper/evidence/source_of_truth.md",
+      "category": "evidence_or_reference_control",
+      "sha256": "81fdc3b17f0fac573ff060d77a1530b53315fd094ceafeade5e8f922f7de14f3"
+    },
+    {
+      "path": "paper/evidence/story_and_novelty_freeze.md",
+      "category": "evidence_or_reference_control",
+      "sha256": "abb604a194e8e6a56d11030ac9655b594669829d9a3aeea0938e44333d3b2a5b"
+    },
+    {
+      "path": "paper/references/citation_claim_map.md",
+      "category": "evidence_or_reference_control",
+      "sha256": "acdfb317a9accfc31b1ca47d40db2224386f87576ff959371759a48468d83247"
+    },
+    {
+      "path": "paper/references/citation_registry.json",
+      "category": "evidence_or_reference_control",
+      "sha256": "81fe18fe1ceaf417aba8ba7664aadc96625124e3b001d710a894bf1f3249f1e9"
+    },
+    {
+      "path": "paper/modules_parts/methods/training_setup.md",
+      "category": "author_source",
+      "sha256": "eee58e82a8e7e73ffa469b6809fea112dc9c5387e76a9178f50b5e6a384d9d9c"
+    },
+    {
+      "path": "paper/modules_parts/methods/temporal_split.md",
+      "category": "author_source",
+      "sha256": "7c8d4d891b53f5360ed9a3c07c8a8055e160b0e5abbc71a8a2e0c1710600ff7a"
+    },
+    {
+      "path": "paper/modules_parts/methods/task_definition.md",
+      "category": "author_source",
+      "sha256": "c269ac53e990e559050de1d631a0aa78459a8b032253c3e46cf43619c16648e1"
+    },
+    {
+      "path": "paper/modules_parts/methods/exposure_definition.md",
+      "category": "author_source",
+      "sha256": "160522ca7dca8cf53410ef0ce2f355678989135352319c3579ab26d7eb5a630b"
+    },
+    {
+      "path": "paper/modules/01_introduction.md",
+      "category": "author_source",
+      "sha256": "9aadf06c2e0ddfb2ab74e36ac933df75b24edba7b97f051006aa870e5f67b3ce"
+    },
+    {
+      "path": "paper/modules/02_related_work.md",
+      "category": "author_source",
+      "sha256": "dda8a5527cee53f635023824cefae2225da80534969ce39067c94b1d7f7ea2a3"
+    },
+    {
+      "path": "paper/modules/03_problem_formulation.md",
+      "category": "author_source",
+      "sha256": "0ee3f537860b8cdde6568fa05ffbee0afff6e1625944daa2925a58ad4b390c1a"
+    },
+    {
+      "path": "paper/modules/04_methodology.md",
+      "category": "author_source",
+      "sha256": "dbb7398086cf12169c5ce12fc2c4e0c917264ac75f79271a51705ff1b62a4285"
+    },
+    {
+      "path": "paper/modules/05_experimental_setup.md",
+      "category": "author_source",
+      "sha256": "07f000534c2f8014af7ff5ba3a9c46f503c3ebc61ff4dda39326c9026a4ea3d2"
+    },
+    {
+      "path": "paper/modules/06_results.md",
+      "category": "author_source",
+      "sha256": "d256f130222862de5082c1ff7732949e71b494dde70e1805af64b5e0a5261650"
+    },
+    {
+      "path": "paper/modules/07_discussion.md",
+      "category": "author_source",
+      "sha256": "fc1d7d47069cf2840a51c1841fcc4f71145df6e52ef1d4e997e98b16aedeb835"
+    },
+    {
+      "path": "paper/modules/08_limitations.md",
+      "category": "author_source",
+      "sha256": "01308a22568fff3fd54f5c5dfa35603535c96cf02d1214df75daa03b7eaa619a"
+    },
+    {
+      "path": "paper/modules/09_conclusion.md",
+      "category": "author_source",
+      "sha256": "e14eb0c275c1596f635fd8b24cd85339cc4faf21c2e5af3b7d65ed7ce63c4c54"
+    },
+    {
+      "path": "paper/references/library.bib",
+      "category": "evidence_or_reference_control",
+      "sha256": "16a80cece100edf8be186d4d7f25c368a5f388869d79279769cacd2a3169e6b3"
+    },
+    {
+      "path": "paper/modules/10_abstract.md",
+      "category": "author_source",
+      "sha256": "a3abccd9c4b1bcd57932d8d6956da9650f73a694e90eecdb22eb7d277fc51773"
+    },
+    {
+      "path": "paper/modules_parts/discussion/evaluation_protocol.md",
+      "category": "author_source",
+      "sha256": "e1e52e3917bf20bcef694cfad1250e4631d6cb0b2a814e81f66e2918fddf6d0b"
+    },
+    {
+      "path": "paper/modules_parts/discussion/exposure_aware_baselines.md",
+      "category": "author_source",
+      "sha256": "04453fda0354e59df6af4cd2fea8ea7ce7b1976f9f37e0126b8bb153a595e599"
+    },
+    {
+      "path": "paper/modules_parts/discussion/exposure_interpretation.md",
+      "category": "author_source",
+      "sha256": "fc41983d90eaea10822d9ce0f3cb35e3501e81be59f11cce3273f1119d071e7a"
+    },
+    {
+      "path": "paper/modules_parts/discussion/external_validity.md",
+      "category": "author_source",
+      "sha256": "e807c0e06d64df1de03c745234bc3531c168701b23e920244d9e136235583ba7"
+    },
+    {
+      "path": "paper/modules_parts/discussion/supervision_interface.md",
+      "category": "author_source",
+      "sha256": "976ad23174e3b1e4f65e723147da800865273a26584c46c38d3b8db7dbf6778f"
+    },
+    {
+      "path": "paper/modules_parts/methods/baseline_setup.md",
+      "category": "author_source",
+      "sha256": "a821f921549fc8ba627d4c20e15aa81dd9c21fe6d6fd842435017980fe983f34"
+    },
+    {
+      "path": "paper/modules_parts/methods/bootstrap_and_statistics.md",
+      "category": "author_source",
+      "sha256": "6fd47cabb5abeb32d09850a2588d6786d6d4766193b46d024e3f1c7ce61ce826"
+    },
+    {
+      "path": "paper/modules_parts/methods/datasets.md",
+      "category": "author_source",
+      "sha256": "e9910efcd0691580cf178eee37dd78f6c6e6b29bccc12e484660651e60222fcb"
+    },
+    {
+      "path": "paper/modules_parts/methods/evaluation_protocol.md",
+      "category": "author_source",
+      "sha256": "bc03b2d66a595ca4704af12e8e949924c73910340d38d0a3211ce115054b8dfa"
+    },
+    {
+      "path": "paper/modules_parts/discussion/conditional_unification.md",
+      "category": "author_source",
+      "sha256": "d85a14c966979eec1943e2c20f740199c1b6111c59de5b9992d5eecd5286af5a"
+    },
+    {
+      "path": "paper/references/primary_source_notes.md",
+      "category": "evidence_or_reference_control",
+      "sha256": "76064aa50c5a686694564068623d43694d2e7fd32999f7fa124f668c950fcf1d"
+    }
+  ],
+  "scope_notes": [
+    "All current Markdown author sources under paper/modules and paper/modules_parts are protected.",
+    "Current evidence and reference controls required to interpret and assemble the manuscript are protected.",
+    "Generated builds, caches, temporary files, tests, task-state files, and this self-referential contract file are excluded."
+  ]
+}

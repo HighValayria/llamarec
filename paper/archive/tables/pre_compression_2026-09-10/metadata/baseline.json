@@ -1,0 +1,12 @@
+{
+  "snapshot_date": "2026-09-10",
+  "snapshot_stage": "pre_compression",
+  "active_csv_count": 14,
+  "author_source_file_count": 37,
+  "author_source_aggregate_sha256": "2f208cb1f9d8a8db16e5f1aac81d2d8a10a25056105e67b975bd55d33aec5e9b",
+  "submission_file_count": 10,
+  "submission_aggregate_sha256": "39028b9a54081568ce4e8298feeba91bd9c85e5406adc33fcc7d65b6e0c368a9",
+  "english_pdf_path": "paper/builds/ieee_generic/en/main.pdf",
+  "english_pdf_pages": 14,
+  "purpose": "Write-boundary baseline for the table evidence audit and immutable pre-compression archive."
+}

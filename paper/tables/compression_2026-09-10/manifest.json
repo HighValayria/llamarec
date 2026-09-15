@@ -1,0 +1,32 @@
+{
+  "lineage": "paper/tables/compression_2026-09-10/lineage.csv",
+  "outputs": {
+    "hard_candidate_compact.csv": "44a7a29ef2cbd0d85e9996fca8178acc3e6b629373384e2c7ea6c9457efbdc76",
+    "lineage.csv": "c8c41de18ee86b4b6d904453903f9ffba53e42ee98af5dab2f433e606536e6d6",
+    "ms96_delta_summary_compact.csv": "622c9a477518dfe5ee6f05d53797912781f0f4f68621264e8c6ade62dab41248",
+    "supervision_semantics_compact.csv": "cfd2b1072a3b19b61530a48f931940fe412a0e35867df6639bafd2bd1a8e6e4e",
+    "training_exposure_compact.csv": "768dc965428493f47813aef65b7c3c0bab5e8f638f9b881d1de87950f554129e"
+  },
+  "row_counts": {
+    "hard_candidate_compact.csv": 18,
+    "lineage.csv": 449,
+    "ms96_delta_summary_compact.csv": 24,
+    "supervision_semantics_compact.csv": 10,
+    "training_exposure_compact.csv": 9
+  },
+  "schema_version": 1,
+  "scientific_recomputation": false,
+  "snapshot_parent": "paper/archive/manuscript/pre_compression_2026-09-10",
+  "source_files": {
+    "paper/tables/binary_exposure.csv": "b0dcf78012a4c3a70e598ae344dcc98954d3c3c0a1689074df48ae9e846c92ab",
+    "paper/tables/hard_candidate.csv": "f86abf7185bc3ec3a47ae0ada74c3d3de20e7e502916b8303ca9191af7071770",
+    "paper/tables/ms96_delta_summary.csv": "bd1f465c3dc3f165db0e2648493a69a05963149b5bafdb0aed5b507945b06ef8",
+    "paper/tables/ms96_main_test.csv": "1e8c5fb46f0d17f713d662909cb6863644b4208075837d938acb14bfe0643270",
+    "paper/tables/ms96_main_validation.csv": "f17f6dac96fcbdc908a2bc4cf9e144a4e8dba0c658c22f937ed160ba329dcbfe",
+    "paper/tables/ms96_protocol_test.csv": "c9d5c762212bc708f23ba51d519b1d4dc0da962fd1d82f7ebdb6b75ca0b21af2",
+    "paper/tables/ms96_protocol_validation.csv": "3cbef2b366e6a0043e759c565796411647a63b0eb72e7b10d02944b0416acf9a",
+    "paper/tables/semantics_bridge.csv": "7d86eef1fa8136e219714a3d7c7e70ac9170dd9a94028d7247cb71e52afce140",
+    "paper/tables/training_exposure.csv": "6d4ebdf08f8f8181d509964d2ee83fed4c085beafa88cabcf39a13acd7e9beec"
+  },
+  "transformation": "selection, panel merge, label normalization, and permitted direction/CI-status derivation only"
+}

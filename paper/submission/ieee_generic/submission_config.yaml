@@ -1,0 +1,56 @@
+version: 1
+template: ieee_generic
+template_version:
+  conference_template: "2019-10-17"
+  ieee_class: "IEEEtran V1.8b 2015-08-26"
+mode: anonymous_placeholder
+language_variants: [en, bilingual]
+paper_size: letter
+columns: 2
+title:
+  en: Recommendation Supervision Semantics and Exposure-Aware Evaluation for Recommendation-Tuned LLMs
+  zh: 推荐监督语义与面向曝光量的推荐调优 LLM 评估
+  source: existing_manuscript_metadata
+authors: []
+keywords:
+  en: []
+  zh: []
+bilingual_cjk_font: AUTO
+bilingual_cjk_font_candidates:
+  - Noto Serif CJK SC
+  - Noto Serif SC
+  - Source Han Serif SC
+  - SimSun
+table_numeric_display_precision: 5
+venue: UNKNOWN
+track: UNKNOWN
+anonymous_policy: UNKNOWN
+page_limit_reference_policy: UNKNOWN
+appendix_policy: UNKNOWN
+supplement_policy: UNKNOWN
+abstract_word_limit: UNKNOWN
+section_order:
+  - introduction
+  - related_work
+  - problem_formulation
+  - methodology
+  - experimental_setup
+  - results
+  - discussion
+  - limitations
+  - conclusion
+excluded_modules:
+  contributions: internal working contribution summary; not a submission section
+table_width_class:
+  datasets: SINGLE_COLUMN_OK
+  training_exposure_compact: NEEDS_COMPILE_CHECK
+  supervision_semantics_compact: LIKELY_DOUBLE_COLUMN
+  exposure_scaling: NEEDS_COMPILE_CHECK
+  specialist_multitask: SINGLE_COLUMN_OK
+  ms96_delta_summary_compact: LIKELY_DOUBLE_COLUMN
+  hard_candidate_compact: LIKELY_DOUBLE_COLUMN
+  n_vs_sasrec_exposure: LIKELY_DOUBLE_COLUMN
+  cross_dataset: SINGLE_COLUMN_OK
+figure_width_class:
+  n_native_exposure: NEEDS_COMPILE_CHECK
+  n_vs_sasrec_exposure: NEEDS_COMPILE_CHECK

@@ -1,0 +1,5 @@
+dataset,task,users,train,validation,test
+MovieLens-1M,Y,6040,976284,12381,11544
+MovieLens-1M,N,5675,212725,5675,5675
+Amazon Musical Instruments,Y,57439,396908,57442,57442
+Amazon Musical Instruments,N,57439,339449,57439,57439

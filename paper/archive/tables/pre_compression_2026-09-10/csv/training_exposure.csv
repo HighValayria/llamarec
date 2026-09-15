@@ -1,0 +1,10 @@
+run,optimizer_steps,effective_batch,total_exposure,Y_exposure,N_exposure,accounting
+Y24,3000,8,24000,24000,0,single-task
+Y48,6000,8,48000,48000,0,single-task
+Y96,12000,8,96000,96000,0,single-task
+N24,3000,8,24000,0,24000,single-task
+N48,6000,8,48000,0,48000,single-task
+N96,12000,8,96000,0,96000,single-task
+N200,25000,8,200000,0,200000,near-full-pool
+M1-48,12000,8,96000,48000,48000,expected-per-task-resume-caveat
+M1-96,24000,8,192000,96000,96000,expected-per-task-resume-caveat

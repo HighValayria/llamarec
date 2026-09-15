@@ -1,0 +1,200 @@
+{
+  "status": "READY_TO_RECOVER",
+  "training_started": false,
+  "run_label": "RECOVERY / REPLAY RUN",
+  "not_bitwise_reproduction": true,
+  "provenance": {
+    "original_paper_run_git_revision": "UNCONFIRMED",
+    "training_critical_code_identical_across": [
+      "dcd4b9f",
+      "3d83e0c",
+      "a9c6cd9"
+    ],
+    "remote_only_reports_exported_to_recovery_provenance": [
+      "missing_prediction_report_machine_A.md",
+      "missing_prediction_report_machine_B.md",
+      "missing_prediction_report_machine_C.md"
+    ],
+    "local_snapshot_root": "recovery/provenance/local_snapshot_20260914_172323",
+    "sha256sums": "recovery/provenance/SHA256SUMS.txt",
+    "asset_inventory": "recovery/provenance/ASSET_INVENTORY.md"
+  },
+  "shared": {
+    "dataset": "movielens-1m",
+    "base_model_path": "models/Llama-3.2-3B-Instruct",
+    "upstream_model_name": "meta-llama/Llama-3.2-3B-Instruct",
+    "dataset_construction_command": "python -m src.data.build_step2 --config configs/experiment.yaml --dataset movielens-1m",
+    "candidate_construction_command": "python -m src.eval.candidate_sets --config configs/experiment.yaml --dataset movielens-1m --candidate-num 5 --variant-name k5_popmatch_seed42 --seed 42 --candidate-method popularity_matched --output-dir data/candidates/movielens-1m/variants/k5_popmatch_seed42",
+    "candidate_assets": {
+      "validation": "data/candidates/movielens-1m/variants/k5_popmatch_seed42/valid.jsonl",
+      "test": "data/candidates/movielens-1m/variants/k5_popmatch_seed42/test.jsonl",
+      "base_seed": 42,
+      "validation_generation_seed": 143,
+      "test_generation_seed": 244
+    },
+    "max_sequence_length": 2048,
+    "lora": {
+      "r": 16,
+      "alpha": 32,
+      "dropout": 0.05,
+      "bias": "none",
+      "task_type": "CAUSAL_LM",
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ]
+    },
+    "quantization": {
+      "load_in_4bit": true,
+      "quant_type": "nf4",
+      "double_quant": true,
+      "compute_dtype": "bf16_when_supported"
+    },
+    "tokenizer_behavior": {
+      "use_fast": true,
+      "pad_token_if_missing": "eos_token",
+      "chat_template_behavior": "UNCONFIRMED"
+    },
+    "optimizer": "UNCONFIRMED",
+    "learning_rate": 0.0002,
+    "scheduler": "UNCONFIRMED",
+    "warmup": "UNCONFIRMED",
+    "per_device_train_batch_size": 1,
+    "gradient_accumulation_steps": 8,
+    "world_size": 1,
+    "effective_batch_size": 8,
+    "expected_gpu_memory": "24GB class GPU; historical notes reference RTX 4090 24GB"
+  },
+  "runs": [
+    {
+      "id": "N96_seed42",
+      "model_family": "N",
+      "entry_point": "python -m src.train.train_n",
+      "config": "configs/n_local_model.yaml",
+      "seed": 42,
+      "run_name": "recovery_replay_n96_seed42",
+      "training_command": "python -m src.train.train_n --config configs/n_local_model.yaml --dataset movielens-1m --run-name recovery_replay_n96_seed42 --seed 42 --max-train-samples 200000 --max-valid-samples 200000 --max-steps 12000 --per-device-train-batch-size 1 --gradient-accumulation-steps 8 --learning-rate 0.0002 --bf16 --eval-steps 1000000 --save-steps 3000 --disable-internal-eval",
+      "evaluation_command": "python -m src.inference.evaluate_n_adapter --config configs/n_local_model.yaml --dataset movielens-1m --adapter-dir outputs/n/movielens-1m/recovery_replay_n96_seed42/adapter --mode real --splits validation test --batch-size 1 --valid-candidates data/candidates/movielens-1m/variants/k5_popmatch_seed42/valid.jsonl --test-candidates data/candidates/movielens-1m/variants/k5_popmatch_seed42/test.jsonl --output-dir outputs/n/movielens-1m/recovery_replay_n96_seed42/popmatch_eval",
+      "target_optimizer_step": 12000,
+      "target_exposure": "96000 N examples",
+      "response_masking": "confirmed: prompt tokens ignored, answer token(s) trained",
+      "expected_output_files": [
+        "outputs/n/movielens-1m/recovery_replay_n96_seed42/adapter/",
+        "outputs/n/movielens-1m/recovery_replay_n96_seed42/checkpoints/checkpoint-3000/",
+        "outputs/n/movielens-1m/recovery_replay_n96_seed42/checkpoints/checkpoint-6000/",
+        "outputs/n/movielens-1m/recovery_replay_n96_seed42/checkpoints/checkpoint-9000/",
+        "outputs/n/movielens-1m/recovery_replay_n96_seed42/checkpoints/checkpoint-12000/",
+        "outputs/n/movielens-1m/recovery_replay_n96_seed42/popmatch_eval/"
+      ],
+      "expected_historical_metrics": {
+        "validation": {
+          "HR@1": 0.6237885463,
+          "NDCG@5": 0.8302923694,
+          "MRR": 0.7732422907
+        },
+        "test": {
+          "HR@1": 0.6100440529,
+          "NDCG@5": 0.8218966233,
+          "MRR": 0.7622026432
+        }
+      }
+    },
+    {
+      "id": "M1-96_seed42",
+      "model_family": "M1",
+      "entry_point": "python -m src.train.train_m",
+      "config": "configs/m_local_model.yaml",
+      "seed": 42,
+      "run_name": "recovery_replay_m1_96_seed42",
+      "training_command": "python -m src.train.train_m --config configs/m_local_model.yaml --dataset movielens-1m --run-name recovery_replay_m1_96_seed42 --seed 42 --max-y-train-samples 200000 --max-n-train-samples 200000 --max-y-valid-samples 200000 --max-n-valid-samples 200000 --task-ratio-y 1 --task-ratio-n 1 --max-steps 24000 --per-device-train-batch-size 1 --gradient-accumulation-steps 8 --learning-rate 0.0002 --bf16 --eval-steps 1000000 --save-steps 3000 --disable-internal-eval",
+      "evaluation_command": "python -m src.inference.evaluate_m_adapter --config configs/m_local_model.yaml --dataset movielens-1m --adapter-dir outputs/m/movielens-1m/recovery_replay_m1_96_seed42/adapter --mode real --splits validation test --batch-size 1 --valid-candidates data/candidates/movielens-1m/variants/k5_popmatch_seed42/valid.jsonl --test-candidates data/candidates/movielens-1m/variants/k5_popmatch_seed42/test.jsonl --output-dir outputs/m/movielens-1m/recovery_replay_m1_96_seed42/popmatch_eval",
+      "target_optimizer_step": 24000,
+      "target_exposure": "96000 Y examples plus 96000 N examples under 1:1 task mixing if recovered sampler behavior matches historical notes",
+      "response_masking": "N side confirmed; Y side UNCONFIRMED under strict audit",
+      "expected_output_files": [
+        "outputs/m/movielens-1m/recovery_replay_m1_96_seed42/adapter/",
+        "outputs/m/movielens-1m/recovery_replay_m1_96_seed42/checkpoints/checkpoint-3000/",
+        "outputs/m/movielens-1m/recovery_replay_m1_96_seed42/checkpoints/checkpoint-6000/",
+        "outputs/m/movielens-1m/recovery_replay_m1_96_seed42/checkpoints/checkpoint-9000/",
+        "outputs/m/movielens-1m/recovery_replay_m1_96_seed42/checkpoints/checkpoint-12000/",
+        "outputs/m/movielens-1m/recovery_replay_m1_96_seed42/checkpoints/checkpoint-15000/",
+        "outputs/m/movielens-1m/recovery_replay_m1_96_seed42/checkpoints/checkpoint-18000/",
+        "outputs/m/movielens-1m/recovery_replay_m1_96_seed42/checkpoints/checkpoint-21000/",
+        "outputs/m/movielens-1m/recovery_replay_m1_96_seed42/checkpoints/checkpoint-24000/",
+        "outputs/m/movielens-1m/recovery_replay_m1_96_seed42/popmatch_eval/"
+      ],
+      "expected_historical_metrics": {
+        "validation": {
+          "M1-Y": {
+            "AUC": 0.7868352749,
+            "F1": 0.7838427948,
+            "Accuracy": 0.7281318149
+          },
+          "M1-N": {
+            "HR@1": 0.6234361233,
+            "NDCG@5": 0.8291402759,
+            "MRR": 0.771753304
+          }
+        },
+        "test": {
+          "M1-Y": {
+            "AUC": 0.7864837284,
+            "F1": 0.7835646558,
+            "Accuracy": 0.7271309771
+          },
+          "M1-N": {
+            "HR@1": 0.5973568282,
+            "NDCG@5": 0.8162307888,
+            "MRR": 0.7546490455
+          }
+        }
+      }
+    },
+    {
+      "id": "Y96_seed42",
+      "model_family": "Y",
+      "entry_point": "python -m src.train.train_y",
+      "config": "configs/y_local_model.yaml",
+      "seed": 42,
+      "run_name": "recovery_replay_y96_seed42",
+      "training_command": "python -m src.train.train_y --config configs/y_local_model.yaml --dataset movielens-1m --run-name recovery_replay_y96_seed42 --seed 42 --max-train-samples 200000 --max-valid-samples 200000 --max-steps 12000 --per-device-train-batch-size 1 --gradient-accumulation-steps 8 --learning-rate 0.0002 --bf16 --eval-steps 1000000 --save-steps 3000 --disable-internal-eval",
+      "evaluation_command": "python -m src.inference.evaluate_y_adapter --config configs/y_local_model.yaml --dataset movielens-1m --adapter-dir outputs/y/movielens-1m/recovery_replay_y96_seed42/adapter --mode real --splits validation test --batch-size 1 --valid-candidates data/candidates/movielens-1m/variants/k5_popmatch_seed42/valid.jsonl --test-candidates data/candidates/movielens-1m/variants/k5_popmatch_seed42/test.jsonl --output-dir outputs/y/movielens-1m/recovery_replay_y96_seed42/popmatch_eval",
+      "target_optimizer_step": 12000,
+      "target_exposure": "96000 Y examples",
+      "response_masking": "UNCONFIRMED under strict audit",
+      "expected_output_files": [
+        "outputs/y/movielens-1m/recovery_replay_y96_seed42/adapter/",
+        "outputs/y/movielens-1m/recovery_replay_y96_seed42/checkpoints/checkpoint-3000/",
+        "outputs/y/movielens-1m/recovery_replay_y96_seed42/checkpoints/checkpoint-6000/",
+        "outputs/y/movielens-1m/recovery_replay_y96_seed42/checkpoints/checkpoint-9000/",
+        "outputs/y/movielens-1m/recovery_replay_y96_seed42/checkpoints/checkpoint-12000/",
+        "outputs/y/movielens-1m/recovery_replay_y96_seed42/popmatch_eval/"
+      ],
+      "expected_historical_metrics": {
+        "validation": {
+          "AUC": 0.7843504067,
+          "F1": 0.7783174665,
+          "Accuracy": 0.7235279864
+        },
+        "test": {
+          "AUC": 0.7853511126,
+          "F1": 0.7780238029,
+          "Accuracy": 0.7221067221
+        }
+      }
+    }
+  ],
+  "unconfirmed_parameters": [
+    "original_paper_run_git_revision",
+    "optimizer",
+    "scheduler",
+    "warmup",
+    "explicit_persisted_chat_template_behavior",
+    "exact_Y_side_response_masking_function_under_strict_audit"
+  ]
+}

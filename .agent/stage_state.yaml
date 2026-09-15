@@ -1,27 +1,27 @@
 stage:
-  status: active
-  name: llm-exposure-scaling-convergence-validation
-  goal: Validate whether current LLM recommendation results are undertrained artifacts by auditing and planning supervision-exposure scaling for Y-K0, N-K0, M1, and SASRec.
-  scope: MovieLens-1M seed42 exposure accounting, checkpoint/result inventory, sampler/scheduler audit, fixed protocol, scaling ladder, commands, and GPU-cost plan before any training.
-  started: 2026-08-24
-  closed: null
+  status: closed
+  name: docx-sync-system
+  goal: 建立英文MASTER到双语REVIEW的稳定DOCX同步系统并同步长期Wiki知识。
+  scope: paper/human_alter同步工具、托管DOCX、操作指南与相关Wiki状态记录。
+  started: 2026-09-12
+  closed: 2026-09-12
 
 wiki_access:
   read_authorized: false
   read_authorized_by: user
-  read_authorized_at: 2026-08-24
-  read_revoked_at: 2026-08-24
-  write_authorized: true
+  read_authorized_at: 2026-09-12
+  read_revoked_at: 2026-09-12
+  write_authorized: false
   write_authorized_by: user
-  write_authorized_at: 2026-08-23
-  write_revoked_at: null
+  write_authorized_at: 2026-09-12
+  write_revoked_at: 2026-09-12
 
 current_task: .agent/current_task.md
+
 template: .agent/templates/current_task.md
-max_current_task_chars: 12000
 
 notes:
-  - Paper Writing / Submission Package is PAUSED / WAITING_FOR_EVIDENCE, not completed, because paper drafting exposed a claim-relevant training-exposure / convergence gap.
-  - LLM Exposure Scaling & Convergence Validation opened on 2026-08-24 with one-time directly relevant wiki read authorization from the user migration directive.
-  - Stage-start wiki read was limited to index/current_state and directly relevant fair-budget, sample-efficiency, multiseed, and paper consolidation reports, then compressed into .agent/exposure_scaling/stage_context.md and revoked.
-  - Pre-existing interview-guide wiki modifications remain under the prior authorization recorded before this stage; the exposure-scaling stage itself must not add formal wiki edits and should generate wiki_update_proposal.yaml only.
+  - 用户于2026-09-12明确要求将DOCX同步系统的新知识同步到Wiki。
+  - Wiki同步范围限于index、current_state、一个直接相关guide和本月history。
+  - 不修改论文科学内容、Author或GenAI信息。
+  - Wiki同步已完成；wiki_guard为0 errors，stage_guard为0 errors。

@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "snapshot_stage": "pre_compression",
+  "snapshot_date": "2026-09-10",
+  "purpose": "Byte-for-byte preservation of every active CSV source used by Table I-XIV before any table compression decision is executed.",
+  "immutability": "DO_NOT_OVERWRITE_DELETE_OR_REGENERATE",
+  "table_count": 14,
+  "tables": [
+    {
+      "table_id": "datasets",
+      "current_pdf_table_number": "I",
+      "active_source_path": "paper/tables/datasets.csv",
+      "source_dependencies": ["paper/tables/datasets.csv"],
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/datasets.csv",
+      "sha256": "e024b08f34de57c6d56aeee87a2769fe05b6696c2b8c8ff4777a503ddf72d8b9",
+      "rows": 4,
+      "columns": 6,
+      "current_manuscript_role": "Task-specific MovieLens and Amazon dataset split statistics supporting setup, task-population boundaries, and cross-dataset scope."
+    },
+    {
+      "table_id": "training_exposure",
+      "current_pdf_table_number": "II",
+      "active_source_path": "paper/tables/training_exposure.csv",
+      "source_dependencies": ["paper/tables/training_exposure.csv"],
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/training_exposure.csv",
+      "sha256": "6d4ebdf08f8f8181d509964d2ee83fed4c085beafa88cabcf39a13acd7e9beec",
+      "rows": 9,
+      "columns": 7,
+      "current_manuscript_role": "Optimizer-step and task-sample exposure accounting for RQ2, RQ3, and RQ5 matched comparisons."
+    },
+    {
+      "table_id": "binary_exposure",
+      "current_pdf_table_number": "III",
+      "active_source_path": "paper/tables/binary_exposure.csv",
+      "source_dependencies": ["paper/tables/binary_exposure.csv"],
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/binary_exposure.csv",
+      "sha256": "b0dcf78012a4c3a70e598ae344dcc98954d3c3c0a1689074df48ae9e846c92ab",
+      "rows": 10,
+      "columns": 7,
+      "current_manuscript_role": "Seed42 Y-native and M1-Y preference metrics across exposure for RQ1-RQ3."
+    },
+    {
+      "table_id": "semantics_bridge",
+      "current_pdf_table_number": "IV",
+      "active_source_path": "paper/tables/semantics_bridge.csv",
+      "source_dependencies": ["paper/tables/semantics_bridge.csv"],
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/semantics_bridge.csv",
+      "sha256": "7d86eef1fa8136e219714a3d7c7e70ac9170dd9a94028d7247cb71e52afce140",
+      "rows": 8,
+      "columns": 8,
+      "current_manuscript_role": "Y-as-ranker bridge trajectory and N96 native-ranking contrast for RQ1 and RQ2."
+    },
+    {
+      "table_id": "exposure_scaling",
+      "current_pdf_table_number": "V",
+      "active_source_path": "paper/tables/exposure_scaling.csv",
+      "source_dependencies": ["paper/tables/exposure_scaling.csv"],
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/exposure_scaling.csv",
+      "sha256": "81ba50ab9731b39e63777df71d884ea50d3f7b43ca34c8ce06b00e9143d0a3af",
+      "rows": 12,
+      "columns": 7,
+      "current_manuscript_role": "Seed42 N exposure trajectory and M1-N matched points supporting RQ2 and RQ3."
+    },
+    {
+      "table_id": "ms96_main_validation",
+      "current_pdf_table_number": "VI",
+      "active_source_path": "paper/tables/ms96_main_validation.csv",
+      "source_dependencies": ["paper/tables/ms96_main_validation.csv"],
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/ms96_main_validation.csv",
+      "sha256": "f17f6dac96fcbdc908a2bc4cf9e144a4e8dba0c658c22f937ed160ba329dcbfe",
+      "rows": 3,
+      "columns": 13,
+      "current_manuscript_role": "Raw three-seed 96k validation metrics for Y96, M1-Y, N96, and M1-N supporting RQ3."
+    },
+    {
+      "table_id": "ms96_main_test",
+      "current_pdf_table_number": "VII",
+      "active_source_path": "paper/tables/ms96_main_test.csv",
+      "source_dependencies": ["paper/tables/ms96_main_test.csv"],
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/ms96_main_test.csv",
+      "sha256": "1e8c5fb46f0d17f713d662909cb6863644b4208075837d938acb14bfe0643270",
+      "rows": 3,
+      "columns": 13,
+      "current_manuscript_role": "Raw three-seed 96k frozen-test metrics supporting held-out RQ3 conclusions."
+    },
+    {
+      "table_id": "specialist_multitask",
+      "current_pdf_table_number": "VIII",
+      "active_source_path": "paper/tables/specialist_multitask.csv",
+      "source_dependencies": ["paper/tables/specialist_multitask.csv"],
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/specialist_multitask.csv",
+      "sha256": "348ffc1aa823d091c3d78f5ad26408dbd8033ae5775191e67c71d90b92ac5d53",
+      "rows": 6,
+      "columns": 7,
+      "current_manuscript_role": "Seed42 validation paired-bootstrap differences for Y-side preservation and k5 specialist-multitask uncertainty in RQ3."
+    },
+    {
+      "table_id": "ms96_delta_summary",
+      "current_pdf_table_number": "IX",
+      "active_source_path": "paper/tables/ms96_delta_summary.csv",
+      "source_dependencies": ["paper/tables/ms96_delta_summary.csv"],
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/ms96_delta_summary.csv",
+      "sha256": "bd1f465c3dc3f165db0e2648493a69a05963149b5bafdb0aed5b507945b06ef8",
+      "rows": 24,
+      "columns": 10,
+      "current_manuscript_role": "Three-seed mean and sample-SD delta summary across binary, k5, k20, and k50 for RQ3-RQ4."
+    },
+    {
+      "table_id": "hard_candidate",
+      "current_pdf_table_number": "X",
+      "active_source_path": "paper/tables/hard_candidate.csv",
+      "source_dependencies": ["paper/tables/hard_candidate.csv"],
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/hard_candidate.csv",
+      "sha256": "f86abf7185bc3ec3a47ae0ada74c3d3de20e7e502916b8303ca9191af7071770",
+      "rows": 18,
+      "columns": 11,
+      "current_manuscript_role": "Seed42 paired-bootstrap intervals across k5, k20, and k50 validation/test protocols for RQ3-RQ4."
+    },
+    {
+      "table_id": "ms96_protocol_validation",
+      "current_pdf_table_number": "XI",
+      "active_source_path": "paper/tables/ms96_protocol_validation.csv",
+      "source_dependencies": ["paper/tables/ms96_protocol_validation.csv"],
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/ms96_protocol_validation.csv",
+      "sha256": "3cbef2b366e6a0043e759c565796411647a63b0eb72e7b10d02944b0416acf9a",
+      "rows": 9,
+      "columns": 11,
+      "current_manuscript_role": "Raw three-seed validation metrics by k5/k20/k50 protocol underlying RQ4 summaries."
+    },
+    {
+      "table_id": "ms96_protocol_test",
+      "current_pdf_table_number": "XII",
+      "active_source_path": "paper/tables/ms96_protocol_test.csv",
+      "source_dependencies": ["paper/tables/ms96_protocol_test.csv"],
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/ms96_protocol_test.csv",
+      "sha256": "c9d5c762212bc708f23ba51d519b1d4dc0da962fd1d82f7ebdb6b75ca0b21af2",
+      "rows": 9,
+      "columns": 11,
+      "current_manuscript_role": "Raw three-seed frozen-test metrics by k5/k20/k50 protocol underlying RQ3-RQ4 summaries."
+    },
+    {
+      "table_id": "n_vs_sasrec_exposure",
+      "current_pdf_table_number": "XIII",
+      "active_source_path": "paper/tables/n_vs_sasrec_exposure.csv",
+      "source_dependencies": ["paper/tables/n_vs_sasrec_exposure.csv"],
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/n_vs_sasrec_exposure.csv",
+      "sha256": "e6b27bc4671e6ebf581fc9e98b72b54baa1ee1a7c55d1ed022d0aa6fdd7e4459",
+      "rows": 8,
+      "columns": 13,
+      "current_manuscript_role": "Four-point exposure-matched N versus SASRec validation/test HR@1 comparison for RQ5."
+    },
+    {
+      "table_id": "cross_dataset",
+      "current_pdf_table_number": "XIV",
+      "active_source_path": "paper/tables/cross_dataset.csv",
+      "source_dependencies": ["paper/tables/cross_dataset.csv"],
+      "archive_path": "paper/archive/tables/pre_compression_2026-09-10/csv/cross_dataset.csv",
+      "sha256": "fb4ae0152a44a8d70edccfbe5a42156f204c06b3a84a8384ccb1d3dc692d024d",
+      "rows": 5,
+      "columns": 8,
+      "current_manuscript_role": "Amazon seed42 full-test directional ranking comparison across base, Y, N, M, and SASRec."
+    }
+  ]
+}

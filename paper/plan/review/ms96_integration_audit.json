@@ -1,0 +1,271 @@
+{
+  "date": "2026-09-08",
+  "status": "VERIFIED",
+  "authoring": [
+    {
+      "path": "paper/modules_parts/results/rq3_multitask_unification.md",
+      "ids_unchanged": true,
+      "changed_paragraphs": [
+        "results.rq3.p01",
+        "results.rq3.p02",
+        "results.rq3.p03"
+      ],
+      "sha256": "D32311981C92C8FEA3377425BB319448487F5969154774BACE206B114F2532F8"
+    },
+    {
+      "path": "paper/modules_parts/results/rq4_hard_candidate_robustness.md",
+      "ids_unchanged": true,
+      "changed_paragraphs": [
+        "results.rq4.p01",
+        "results.rq4.p02",
+        "results.rq4.p03"
+      ],
+      "sha256": "C5D86B3F0A1AC97C2CA7422BD1A3CA579CEB1EB279E778D412D7A076A53289FC"
+    },
+    {
+      "path": "paper/modules/00_contributions.md",
+      "ids_unchanged": true,
+      "changed_paragraphs": [
+        "contributions.p02",
+        "contributions.p03"
+      ],
+      "sha256": "C61383380D45DDA8EE2B01F30E8998ABC7A0CD3614A60F6B12033E598F3A0989"
+    },
+    {
+      "path": "paper/modules/01_introduction.md",
+      "ids_unchanged": true,
+      "changed_paragraphs": [
+        "intro.p06"
+      ],
+      "sha256": "9A3B8469F38F4518B1210C1F1EA5620DE084766056543EC2AE3CDD26A109D581"
+    },
+    {
+      "path": "paper/modules/06_results.md",
+      "ids_unchanged": true,
+      "changed_paragraphs": [
+        "results.p01"
+      ],
+      "sha256": "D256F130222862DE5082C1FF7732949E71B494DDE70E1805AF64B5E0A5261650"
+    },
+    {
+      "path": "paper/modules_parts/methods/bootstrap_and_statistics.md",
+      "ids_unchanged": true,
+      "changed_paragraphs": [
+        "methods.statistics.p02"
+      ],
+      "sha256": "CA099A117B7E6C10FCC39AC6361480581B048D33C7A4D1A496B83A17449515C9"
+    },
+    {
+      "path": "paper/modules/08_limitations.md",
+      "ids_unchanged": true,
+      "changed_paragraphs": [
+        "limitations.training.p01",
+        "limitations.evaluation.p01"
+      ],
+      "sha256": "581D01AF372D018E840E12B39E9AD191C15EFC71694C8A310C1E158FCCF99F1E"
+    },
+    {
+      "path": "paper/modules_parts/discussion/conditional_unification.md",
+      "ids_unchanged": true,
+      "changed_paragraphs": [
+        "discussion.unification.p01",
+        "discussion.unification.p02"
+      ],
+      "sha256": "C68F2D86A6584630C5B048E589A09B00A4A98CFA84295DC4181A9AE3310F9F8C"
+    },
+    {
+      "path": "paper/modules_parts/discussion/evaluation_protocol.md",
+      "ids_unchanged": true,
+      "changed_paragraphs": [
+        "discussion.protocol.p01",
+        "discussion.protocol.p02"
+      ],
+      "sha256": "0C0AC9C7A253B8C67BE1151FEF9E23F5AF6289BA861CAD4D9EE85855E9BF0D8A"
+    },
+    {
+      "path": "paper/modules_parts/discussion/exposure_interpretation.md",
+      "ids_unchanged": true,
+      "changed_paragraphs": [
+        "discussion.exposure.p01"
+      ],
+      "sha256": "8189945CC9AEA23E0D92DD67E8377B3351207CE972EA365BB5D1B0DD4B19DB5F"
+    },
+    {
+      "path": "paper/modules_parts/discussion/exposure_aware_baselines.md",
+      "ids_unchanged": true,
+      "changed_paragraphs": [
+        "discussion.baseline.p01"
+      ],
+      "sha256": "2D7B654643585D14DA3D3F25F7A37E5A7212F3B904444B8FDA81BD12CB988210"
+    },
+    {
+      "path": "paper/modules_parts/results/rq5_sasrec_exposure.md",
+      "ids_unchanged": true,
+      "changed_paragraphs": [
+        "results.rq5.p01"
+      ],
+      "sha256": "34BA798B854615EE6C6F4764F5E30298672498702C14AEA4C18E895FAA10506A"
+    }
+  ],
+  "protected_files_checked": 57,
+  "protected_files_changed": 0,
+  "freeze_original_prefix_unchanged": true,
+  "tests": {
+    "total": 47,
+    "passed": 47,
+    "new_ms96": 12
+  },
+  "assembly": {
+    "modules": 11,
+    "bilingual_pairs": 78,
+    "pending_markers": 8,
+    "final_check_exit": 1,
+    "reason": "Existing method/run/bootstrap gaps, skeletons and draft statuses; no MS96/Y96_STATUS pending."
+  },
+  "style": [
+    {
+      "path": "paper/modules_parts/results/rq3_multitask_unification.md",
+      "exit_code": 0,
+      "body_lists_transitions_subjectivity_process_leakage": "No matches; EN/ZH labels and YAML spacing are format metadata."
+    },
+    {
+      "path": "paper/modules_parts/results/rq4_hard_candidate_robustness.md",
+      "exit_code": 0,
+      "body_lists_transitions_subjectivity_process_leakage": "No matches; EN/ZH labels and YAML spacing are format metadata."
+    },
+    {
+      "path": "paper/modules/00_contributions.md",
+      "exit_code": 0,
+      "body_lists_transitions_subjectivity_process_leakage": "No matches; EN/ZH labels and YAML spacing are format metadata."
+    },
+    {
+      "path": "paper/modules/01_introduction.md",
+      "exit_code": 0,
+      "body_lists_transitions_subjectivity_process_leakage": "No matches; EN/ZH labels and YAML spacing are format metadata."
+    },
+    {
+      "path": "paper/modules/06_results.md",
+      "exit_code": 0,
+      "body_lists_transitions_subjectivity_process_leakage": "No matches; EN/ZH labels and YAML spacing are format metadata."
+    },
+    {
+      "path": "paper/modules_parts/methods/bootstrap_and_statistics.md",
+      "exit_code": 0,
+      "body_lists_transitions_subjectivity_process_leakage": "No matches; EN/ZH labels and YAML spacing are format metadata."
+    },
+    {
+      "path": "paper/modules/08_limitations.md",
+      "exit_code": 0,
+      "body_lists_transitions_subjectivity_process_leakage": "No matches; EN/ZH labels and YAML spacing are format metadata."
+    },
+    {
+      "path": "paper/modules_parts/discussion/conditional_unification.md",
+      "exit_code": 0,
+      "body_lists_transitions_subjectivity_process_leakage": "No matches; EN/ZH labels and YAML spacing are format metadata."
+    },
+    {
+      "path": "paper/modules_parts/discussion/evaluation_protocol.md",
+      "exit_code": 0,
+      "body_lists_transitions_subjectivity_process_leakage": "No matches; EN/ZH labels and YAML spacing are format metadata."
+    },
+    {
+      "path": "paper/modules_parts/discussion/exposure_interpretation.md",
+      "exit_code": 0,
+      "body_lists_transitions_subjectivity_process_leakage": "No matches; EN/ZH labels and YAML spacing are format metadata."
+    },
+    {
+      "path": "paper/modules_parts/discussion/exposure_aware_baselines.md",
+      "exit_code": 0,
+      "body_lists_transitions_subjectivity_process_leakage": "No matches; EN/ZH labels and YAML spacing are format metadata."
+    },
+    {
+      "path": "paper/modules_parts/results/rq5_sasrec_exposure.md",
+      "exit_code": 0,
+      "body_lists_transitions_subjectivity_process_leakage": "No matches; EN/ZH labels and YAML spacing are format metadata."
+    }
+  ],
+  "git_import": [
+    {
+      "path": "artifacts/multiseed96/seed43/artifact_index.txt",
+      "blob": "10dd0a5233c8c17ccbd2eafc046758955db07ed8",
+      "normalized_blob": "10dd0a5233c8c17ccbd2eafc046758955db07ed8",
+      "matches": true,
+      "sha256": "D3DE87D098053C786AEA18876C924E0ABCD13F59AD0E524CCFF284DD8DDF8829"
+    },
+    {
+      "path": "artifacts/multiseed96/seed43/summary.txt",
+      "blob": "d64d6568bed3f1ca6d65d0a7475fc54105fd9815",
+      "normalized_blob": "d64d6568bed3f1ca6d65d0a7475fc54105fd9815",
+      "matches": true,
+      "sha256": "1267740DEE67B90414583B22E4E9E088360855D22AF437C7859D564AA4837673"
+    },
+    {
+      "path": "artifacts/multiseed96/seed43/validation_summary.txt",
+      "blob": "d64d6568bed3f1ca6d65d0a7475fc54105fd9815",
+      "normalized_blob": "d64d6568bed3f1ca6d65d0a7475fc54105fd9815",
+      "matches": true,
+      "sha256": "1267740DEE67B90414583B22E4E9E088360855D22AF437C7859D564AA4837673"
+    },
+    {
+      "path": "artifacts/multiseed96/seed43/test_summary.txt",
+      "blob": "8c8416d8989495fbece3a2364af8adb393fa3c55",
+      "normalized_blob": "8c8416d8989495fbece3a2364af8adb393fa3c55",
+      "matches": true,
+      "sha256": "FDA7940060EB348D6F27F316FD86CE765C9F328A2EBF32D01C48F0FCF864072A"
+    },
+    {
+      "path": "artifacts/multiseed96/seed44/artifact_index.txt",
+      "blob": "f8ca861e6323187de5ca20188e295bf277ff7915",
+      "normalized_blob": "f8ca861e6323187de5ca20188e295bf277ff7915",
+      "matches": true,
+      "sha256": "D41A704BA824E6E9A3099B66D53949478EAB565A4FE9773013D3274BBC3B0E6B"
+    },
+    {
+      "path": "artifacts/multiseed96/seed44/summary.txt",
+      "blob": "4d692297f3d9418ec3a9f7613c7a094b204f44dd",
+      "normalized_blob": "4d692297f3d9418ec3a9f7613c7a094b204f44dd",
+      "matches": true,
+      "sha256": "5FD3514D63147A2B7AB40EA6AC2A306F9D82955CF60F77FDD4260E3FF5487737"
+    },
+    {
+      "path": "artifacts/multiseed96/seed44/validation_summary.txt",
+      "blob": "4d692297f3d9418ec3a9f7613c7a094b204f44dd",
+      "normalized_blob": "4d692297f3d9418ec3a9f7613c7a094b204f44dd",
+      "matches": true,
+      "sha256": "5FD3514D63147A2B7AB40EA6AC2A306F9D82955CF60F77FDD4260E3FF5487737"
+    },
+    {
+      "path": "artifacts/multiseed96/seed44/test_summary.txt",
+      "blob": "bd5209256bc12f4ce2d6476553e4947c7a885123",
+      "normalized_blob": "bd5209256bc12f4ce2d6476553e4947c7a885123",
+      "matches": true,
+      "sha256": "5A6B5127BF43650D26B9E345F4794F925090008554F3544CE4B1D8E3B099ECB9"
+    }
+  ],
+  "git_diff_check": {
+    "exit_code": 0,
+    "line_ending_warnings": 68,
+    "other": []
+  },
+  "stage_guard": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "operations": {
+    "training": false,
+    "inference": false,
+    "new_bootstrap": false,
+    "literature_search": false,
+    "wiki_access": false,
+    "full_manuscript_build": false,
+    "prepare_assets": false,
+    "git_merge": false
+  },
+  "remaining": [
+    "RUN_METADATA",
+    "BOOTSTRAP_PROVENANCE",
+    "METHOD_CITATIONS",
+    "TEMPLATE_UNASSIGNED",
+    "Candidate exact nesting fractions supplied by user, raw audit not imported."
+  ]
+}
