@@ -1,0 +1,53 @@
+{
+  "schema": "n96_replay_comparison_v1",
+  "status": "REPLAY_ACCEPTED",
+  "note": "Structural gate must be checked separately before final acceptance.",
+  "comparisons": {
+    "validation": {
+      "HR@1": {
+        "historical": 0.6237885463,
+        "replay": 0.6311894273127753,
+        "delta": 0.007400881012775251,
+        "absolute_tolerance": 0.01,
+        "passed": true
+      },
+      "NDCG@5": {
+        "historical": 0.8302923694,
+        "replay": 0.8330488502101372,
+        "delta": 0.0027564808101372407,
+        "absolute_tolerance": 0.01,
+        "passed": true
+      },
+      "MRR": {
+        "historical": 0.7732422907,
+        "replay": 0.7769720998531573,
+        "delta": 0.0037298091531573485,
+        "absolute_tolerance": 0.01,
+        "passed": true
+      }
+    },
+    "test": {
+      "HR@1": {
+        "historical": 0.6100440529,
+        "replay": 0.6072246696035243,
+        "delta": -0.002819383296475686,
+        "absolute_tolerance": 0.01,
+        "passed": true
+      },
+      "NDCG@5": {
+        "historical": 0.8218966233,
+        "replay": 0.8211210947328922,
+        "delta": -0.0007755285671078305,
+        "absolute_tolerance": 0.01,
+        "passed": true
+      },
+      "MRR": {
+        "historical": 0.7622026432,
+        "replay": 0.7611189427312781,
+        "delta": -0.0010837004687218599,
+        "absolute_tolerance": 0.01,
+        "passed": true
+      }
+    }
+  }
+}

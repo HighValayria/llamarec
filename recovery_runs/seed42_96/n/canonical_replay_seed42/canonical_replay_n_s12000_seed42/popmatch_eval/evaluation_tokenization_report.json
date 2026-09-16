@@ -1,0 +1,42 @@
+{
+  "mode": "real",
+  "checked": true,
+  "answers": {
+    "A": {
+      "token_ids": [
+        32
+      ],
+      "token_count": 1,
+      "single_token": true
+    },
+    "B": {
+      "token_ids": [
+        33
+      ],
+      "token_count": 1,
+      "single_token": true
+    },
+    "C": {
+      "token_ids": [
+        34
+      ],
+      "token_count": 1,
+      "single_token": true
+    },
+    "D": {
+      "token_ids": [
+        35
+      ],
+      "token_count": 1,
+      "single_token": true
+    },
+    "E": {
+      "token_ids": [
+        36
+      ],
+      "token_count": 1,
+      "single_token": true
+    }
+  },
+  "use_sequence_likelihood_for": []
+}
