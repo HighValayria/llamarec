@@ -1,0 +1,14 @@
+{
+  "model": "n_k0",
+  "dataset": "movielens-1m",
+  "split": "test",
+  "adapter_dir": "/root/llamarec/recovery_runs/seed42_96/n/canonical_replay_seed42/canonical_replay_n_s12000_seed42/adapter",
+  "ranking": {
+    "HR@1": 0.6072246696035243,
+    "MRR": 0.7611189427312781,
+    "HR@5": 1.0,
+    "NDCG@5": 0.8211210947328922,
+    "samples": 5675
+  },
+  "ranking_scoring": "candidate_label_probability"
+}
