@@ -106,6 +106,45 @@ N batch
 STEP 1-8 已在 MovieLens-1M 上完成。STEP 2 的 full_sequence 数据层、STEP 3 的固定候选集与指标测试、STEP 4 的 Base zero-shot、STEP 5/6/7 的 Y-K0、N-K0、M-K0 训练与 adapter 评测、STEP 8 的统一汇总和基础 error analysis 都已具备可复现实验产物。
 
 原“实现 Y/N/M 主流程”的 MVP 任务关闭。M-K0 多任务干扰诊断第一轮已经完成，当前进入 Phase 1.5：实验口径统一、分组诊断与 Ranking 稳健性验证。暂不启动 KAR、SASRec、Hard Negative、Bootstrap、MovieLens-32M full training、7B 模型、大规模 LoRA 搜索或完整多 seed。
+## Seed42-96 Recovery 当前状态
+
+论文依赖的原始训练权重已丢失；当前 seed42-96 工作均标记为 **CANONICAL RECOVERY / REPLAY RUN**，不是原始历史 checkpoint，也不是 bitwise reproduction。原论文 frozen metrics 和历史证据不得被覆盖。
+
+N96 seed42 canonical replay 已完成训练、验证、测试、历史指标对比、独立备份和 GitHub 上传。最终训练目标为 `checkpoint-12000`，对应：
+
+```text
+12000 optimizer steps × effective batch 8 = 96000 N examples exposure
+```
+
+N96 replay 结果：
+
+```text
+validation HR@1   0.6311894273
+validation NDCG@5 0.8330488502
+validation MRR    0.7769720999
+
+test HR@1         0.6072246696
+test NDCG@5       0.8211210947
+test MRR          0.7611189427
+```
+
+与 frozen historical references 的 preregistered tolerance 为 `±0.01` absolute metric delta，比较脚本返回：
+
+```text
+N96_CANONICAL_REPLAY = REPLAY_ACCEPTED
+```
+
+关键 N96 recovery artifacts 已上传到 GitHub：
+
+```text
+recovery_runs/seed42_96/n/canonical_replay_seed42/
+recovery/seed42_96_replay_plan/n96_launch/BASE_MODEL_MANIFEST.json
+recovery/seed42_96_replay_plan/n96_launch/BASE_MODEL_SHA256SUMS.txt
+```
+
+其中包含 N96 `checkpoint-3000`、`checkpoint-6000`、`checkpoint-12000`、final adapter、PopMatch-k5 validation/test 逐样本预测、metrics 和 historical comparison。大模型二进制 artifacts 通过 Git LFS 跟踪；完整 base model 权重不上传，只保留 revision/hash manifest。
+
+当前 Y96 seed42 replay 尚未完成。Y96 启动前已修复 pinned `transformers==4.45.2` 环境下的 `dtype`/`torch_dtype` 兼容问题；服务器应先 `git pull --ff-only origin main` 到最新提交，再重新启动 Y96。M1-96 尚未启动。
 
 当前 100K 开发产物摘要：
 
