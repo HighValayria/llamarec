@@ -293,7 +293,7 @@ def _load_tokenizer_and_model(config: dict[str, Any]):
         model_name_or_path,
         quantization_config=quant_config,
         device_map="auto",
-        dtype=_torch_dtype(torch),
+        torch_dtype=_torch_dtype(torch),
         low_cpu_mem_usage=True,
     )
     model.config.use_cache = False
@@ -392,7 +392,7 @@ def _run_reload_probability_check(
         model_name_or_path,
         quantization_config=quant_config,
         device_map="auto",
-        dtype=_torch_dtype(torch),
+        torch_dtype=_torch_dtype(torch),
         low_cpu_mem_usage=True,
     )
     model = PeftModel.from_pretrained(base_model, str(adapter_dir))
