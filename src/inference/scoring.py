@@ -92,7 +92,7 @@ class RealModelScorer:
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_name_or_path,
             device_map="auto",
-            dtype=dtype,
+            torch_dtype=dtype,
             low_cpu_mem_usage=True,
         )
         self.model.eval()
@@ -468,7 +468,7 @@ class AdapterModelScorer(RealModelScorer):
             self.model_name_or_path,
             quantization_config=quant_config,
             device_map="auto",
-            dtype=dtype,
+            torch_dtype=dtype,
             low_cpu_mem_usage=True,
         )
         self.model = PeftModel.from_pretrained(base_model, str(self.adapter_dir))
