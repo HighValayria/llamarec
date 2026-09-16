@@ -1,122 +1,44 @@
-# LlamaRec MVP 工作区
+# LlamaRec Recovery Workspace
 
-当前项目已完成 MovieLens-1M MVP 主链路，后续工作重心从“验证 Y/N/M 是否有效”调整为“诊断并缓解 Y/N 多任务干扰”。主任务命名统一为 Y / N / M：
+This repository contains the LlamaRec MovieLens experiments, recovery plans, replay scripts, and accepted recovery artifacts. The current active work is **paper weight recovery**, not new model exploration.
 
-- Base
-- Y-K0：Yes/No Preference Tuning
-- N-K0：Full-sequence Next-item Tuning
-- M-K0：Y + N Multi-task Tuning
+## Current Status
 
-Y 表示 Preference Prediction，使用 target 评分得到 Yes/No 标签。
-
-N 表示基于完整交互序列的 Next-item Prediction，也可以理解为 Next-interaction Prediction。N 的 ground truth 是用户真实发生的下一次 interaction，不按评分高低筛选。
-
-M 使用同一个模型联合学习 Y 与 N，并分别以 M-Y 和 M-N 两种模式评测。
-
-## MovieLens-1M MVP 主结论
-
-MovieLens-1M 主结果已经固化到：
+As of 2026-09-16, the original paper-dependent trained weights are lost. Recovery work is therefore labeled:
 
 ```text
-outputs/results.csv
-outputs/reports/movielens-1m_mvp_report.md
-outputs/error_analysis/movielens-1m/test_error_analysis.md
-wiki/reports/movielens_1m_mvp_results.md
+CANONICAL RECOVERY / REPLAY RUN
 ```
 
-核心结果：
+These runs are **not** the original historical checkpoints and are **not** bitwise reproductions. Frozen historical metrics and preserved paper evidence must not be overwritten.
+
+### Seed42-96 Recovery Matrix
 
 ```text
-Base:  test AUC 0.6205 / test HR@1 0.3167
-Y-K0:  test AUC 0.7691 / test HR@1 0.3048
-N-K0:  test HR@1 0.7189 / test NDCG@5 0.8773 / test MRR 0.8356
-M-K0:  test AUC 0.7234 / test HR@1 0.6717 / test NDCG@5 0.8562
+N96 seed42   ACCEPTED
+Y96 seed42   READY TO RESTART AFTER LATEST PULL
+M1-96 seed42 NOT STARTED
 ```
 
-当前结论边界：
-
-- Y 与 N tuning 均明显优于 Base。
-- Y 学习 `P(Like | History, Item)`，N 学习 `P(Next Item | History, Candidate Set)`，二者语义不同。
-- Y-K0 的 `P(Yes)` 不能替代 N 的 candidate label probability。
-- M-K0 在同一个模型中同时保留两类能力，但当前是能力折中，不是超过单任务的正迁移。
-- M-Y 存在 Yes 偏置：test FP=3986、FN=156、No 样本 Mean P(Yes)=0.6054。
-- 当前 `candidate_num = 5`，HR@5 没有区分度；ranking 结论主要看 HR@1、NDCG@5、MRR、mean margin 和 rank distribution。
-
-## 数据划分原则
-
-MVP 主数据来源是 `full_sequence`。`positive_sequence` 只作为辅助统计或 Phase 2 概念保留，不参与 MVP split，不决定 N target，也不决定 N history。
-
-严格历史规则：
+N96 seed42 has completed:
 
 ```text
-history = 所有 timestamp < target_timestamp 的 interaction
+training                    YES
+checkpoint-12000 exists     YES
+validation evaluation       YES
+test evaluation             YES
+historical metric gate      PASS
+independent backup          YES
+GitHub artifact upload      YES
 ```
 
-同一 timestamp 内没有可观测先后顺序，不得用 movie_id、文件顺序或其他人为规则构造先后关系。
-
-timestamp tie 不再导致整个用户退出数据集。
-
-Y 可以在同一 timestamp 产生多个 target，这些 target 共享同一份严格历史。
-
-N 只构造严格可确定的 next-item 样本。如果下一 timestamp bucket 中有多个 interaction，则跳过该歧义 N sample，而不是跳过整个用户。
-
-当前 `344/943` 用户方案只允许用于开发阶段 smoke test，不作为正式主实验数据方案。
-
-## 公平比较口径
-
-Y 和 N 不要求拥有完全相同的用户集合：
+N96 final target:
 
 ```text
-Base-Y / Y-K0 / M-Y
-使用同一固定 Y validation/test set。
-
-Base-N / N-K0 / M-N
-使用同一固定 N validation/test set。
+12000 optimizer steps x effective batch 8 = 96000 N examples exposure
 ```
 
-不要为了强制 Y/N 用户完全一致而大量删除用户。
-
-## Multi-task Temporal Leakage
-
-M 的训练数据必须遵循：
-
-```text
-Raw interactions
--> chronological split
--> Y_train / N_train
--> multi-task training
-```
-
-禁止先从完整数据生成全部 Y/N 样本后再混合训练。
-
-只要某 interaction 已经位于该用户 validation/test 时间范围，就不得以任何形式进入 M 的训练数据。M 默认采用 Y/N 样本混合或交替训练：
-
-```text
-Y batch
-N batch
-Y batch
-N batch
-...
-```
-
-核心原则是：先切时间，再构造任务，再混合训练。
-
-## 当前状态
-
-STEP 1-8 已在 MovieLens-1M 上完成。STEP 2 的 full_sequence 数据层、STEP 3 的固定候选集与指标测试、STEP 4 的 Base zero-shot、STEP 5/6/7 的 Y-K0、N-K0、M-K0 训练与 adapter 评测、STEP 8 的统一汇总和基础 error analysis 都已具备可复现实验产物。
-
-原“实现 Y/N/M 主流程”的 MVP 任务关闭。M-K0 多任务干扰诊断第一轮已经完成，当前进入 Phase 1.5：实验口径统一、分组诊断与 Ranking 稳健性验证。暂不启动 KAR、SASRec、Hard Negative、Bootstrap、MovieLens-32M full training、7B 模型、大规模 LoRA 搜索或完整多 seed。
-## Seed42-96 Recovery 当前状态
-
-论文依赖的原始训练权重已丢失；当前 seed42-96 工作均标记为 **CANONICAL RECOVERY / REPLAY RUN**，不是原始历史 checkpoint，也不是 bitwise reproduction。原论文 frozen metrics 和历史证据不得被覆盖。
-
-N96 seed42 canonical replay 已完成训练、验证、测试、历史指标对比、独立备份和 GitHub 上传。最终训练目标为 `checkpoint-12000`，对应：
-
-```text
-12000 optimizer steps × effective batch 8 = 96000 N examples exposure
-```
-
-N96 replay 结果：
+N96 replay metrics:
 
 ```text
 validation HR@1   0.6311894273
@@ -128,154 +50,270 @@ test NDCG@5       0.8211210947
 test MRR          0.7611189427
 ```
 
-与 frozen historical references 的 preregistered tolerance 为 `±0.01` absolute metric delta，比较脚本返回：
+The preregistered N96 comparison tolerance is `+/-0.01` absolute metric delta against frozen historical references. The comparison script returned:
 
 ```text
-N96_CANONICAL_REPLAY = REPLAY_ACCEPTED
+REPLAY_ACCEPTED
 ```
 
-关键 N96 recovery artifacts 已上传到 GitHub：
+## Recovery Artifacts
+
+Accepted N96 artifacts are stored under:
 
 ```text
 recovery_runs/seed42_96/n/canonical_replay_seed42/
+```
+
+Important contents include:
+
+```text
+canonical_replay_n_s3000_seed42/checkpoints/checkpoint-3000
+canonical_replay_n_s6000_seed42/checkpoints/checkpoint-6000
+canonical_replay_n_s12000_seed42/checkpoints/checkpoint-12000
+canonical_replay_n_s12000_seed42/adapter
+canonical_replay_n_s12000_seed42/popmatch_eval
+canonical_replay_n_s12000_seed42/n96_historical_comparison.json
+```
+
+The PopMatch-k5 evaluation output includes validation/test metrics and per-sample prediction files:
+
+```text
+n_valid_predictions.jsonl
+n_test_predictions.jsonl
+valid_metrics.json
+test_metrics.json
+```
+
+Base-model provenance is preserved as manifests, not as full base-model weights:
+
+```text
 recovery/seed42_96_replay_plan/n96_launch/BASE_MODEL_MANIFEST.json
 recovery/seed42_96_replay_plan/n96_launch/BASE_MODEL_SHA256SUMS.txt
 ```
 
-其中包含 N96 `checkpoint-3000`、`checkpoint-6000`、`checkpoint-12000`、final adapter、PopMatch-k5 validation/test 逐样本预测、metrics 和 historical comparison。大模型二进制 artifacts 通过 Git LFS 跟踪；完整 base model 权重不上传，只保留 revision/hash manifest。
-
-当前 Y96 seed42 replay 尚未完成。Y96 启动前已修复 pinned `transformers==4.45.2` 环境下的 `dtype`/`torch_dtype` 兼容问题；服务器应先 `git pull --ff-only origin main` 到最新提交，再重新启动 Y96。M1-96 尚未启动。
-
-当前 100K 开发产物摘要：
+The recovered base model revision used for N96 recovery is:
 
 ```text
-Y users: 943
-N users: 902
-Y samples: train 95867 / validation 1985 / test 2148
-N samples: train 21995 / validation 902 / test 902
+0cb88a4f764b7a12671c53f0838cd831a0843b95
 ```
 
-当前 100K 固定候选集摘要：
+Large recovery binaries are tracked with Git LFS:
 
 ```text
-valid candidates: 902 records
-test candidates: 902 records
-candidate_num: 5
-files:
-  data/candidates/movielens-100k/valid.jsonl
-  data/candidates/movielens-100k/test.jsonl
+*.safetensors
+*.pt
+*.pth
+*.bin
+*.tar.gz
+*.zst
 ```
 
-当前 1M 主实验产物摘要：
+Do not commit full base-model directories such as:
 
 ```text
-Y users: 6040
-N users: 5675
-Y samples: train 976284 / validation 12381 / test 11544
-N samples: train 212725 / validation 5675 / test 5675
-candidate_num: 5
-valid candidates: 5675 records
-test candidates: 5675 records
+models/Llama-3.2-3B-Instruct/
 ```
 
-## M 多任务干扰诊断当前结论
+## Recovery Plan Entry Points
 
-M0/M1/M2 诊断已经完成，当前结果固化到：
+Canonical recovery files live under:
 
 ```text
-wiki/reports/m_multitask_interference_diagnosis_results.md
-outputs/calibration/movielens-1m/m_diagnostics/threshold_calibration.md
+recovery/seed42_96_replay_plan/
 ```
 
-诊断状态：
+Main documents:
 
 ```text
-M0: baseline，Y:N=200k:200k，max_steps=1500，已完成
-M1: 延长训练，Y:N=200k:200k，max_steps=3000，已完成，当前最佳 M 诊断版本
-M2: Y:N sampling ratio=2:1，已完成，未缓解干扰且损害 N
-M3: 暂不启动
+REPLAY_MASTER_PLAN.md
+REPLAY_ACCEPTANCE_POLICY.md
+environment_replay.md
+requirements_replay.txt
 ```
 
-M1 的 validation best-F1 threshold 为 0.3208213008。应用到 test 后，M1 的 binary 表现为 AUC=0.7669、F1=0.7818、Accuracy=0.7029，已经接近 Y-K0；M1 的 ranking 表现为 HR@1=0.6950、NDCG@5=0.8674、MRR=0.8223，明显优于 M0 但仍低于 N-K0。
-
-当前结论是：M0 的问题部分来自训练预算不足和阈值偏移；简单提高 Y 采样比例不是有效缓解方案。下一步优先做轻量 error analysis 和报告整理，不继续无目标长训练。
-
-## Phase 1.5 当前入口
-
-Phase 1.5 的执行顺序为：
+Replay configs:
 
 ```text
-STEP A 仓库检查
-STEP B 统一 binary 阈值报告
-STEP C 分组 Error Analysis
-STEP D candidate_num=20
-STEP E candidate_num=50 可行性
-STEP F 候选顺序稳健性
-STEP G 总结
+configs/n96_replay.yaml
+configs/y96_replay.yaml
+configs/m1_96_replay.yaml
 ```
 
-STEP A 已完成，结论见：
+Shared commands:
 
 ```text
-wiki/reports/phase_1_5_step_a_repository_check.md
+commands/setup_environment.sh
+commands/preflight.sh
+commands/train_y96.sh
+commands/eval_y96.sh
+commands/train_m1_96.sh
+commands/eval_m1_96.sh
 ```
 
-当前本地仓库没有 MovieLens-1M 全量云端 prediction 文件，因此正式分组分析需要先把云端 outputs 拉回本地，或将分析代码推送到 GitHub 后在云端运行。
-
-当前 32M 本地 eval-only 产物摘要，已暂停作为当前主线：
+N96 has a dedicated finalized launch package:
 
 ```text
-Y users: 200902
-N users: 193491
-Y samples: validation 314243 / test 285734
-N samples: validation 193491 / test 193491
-local_eval_only: true
+n96_launch/run_n96_preflight.sh
+n96_launch/train_n96_canonical.sh
+n96_launch/eval_n96_canonical.sh
+n96_launch/compare_n96_historical.py
+n96_launch/backup_n96.sh
 ```
 
-32M 固定候选集摘要：
+## Server Setup Notes
 
-```text
-valid candidates: 193491 records
-test candidates: 193491 records
-files:
-  data/candidates/movielens-32m/valid.jsonl
-  data/candidates/movielens-32m/test.jsonl
-```
-
-32M 本地未写完整 train JSONL；完整训练数据展开应在云服务器或更大磁盘环境中执行。MovieLens-32M Base validation/test 全量评测已在云端完成，但当前不再作为 MVP 主线。
-
-本地开发使用：
-
-```text
-C:\Users\33967\AppData\Local\Programs\Python\Python312\python.exe
-```
-
-配置中的 Llama 模型路径只作为云服务器训练/推理时的 HuggingFace 模型 ID；本地开发不需要安装或加载模型权重。
-
-## 目标 CLI 形态
-
-以下命令是后续实现后的目标形态：
+Expected repository location on the GPU server:
 
 ```bash
-python -m src.data.build_step2 --config configs/experiment.yaml --dataset movielens-100k
-python -m src.eval.candidate_sets --config configs/experiment.yaml --dataset movielens-100k
-python -m src.inference.base_zero_shot --config configs/experiment.yaml --dataset movielens-100k --mode mock --limit 20
-
-python -m src.data.build_step2 --config configs/experiment.yaml --dataset movielens-1m
-python -m src.eval.candidate_sets --config configs/experiment.yaml --dataset movielens-1m
-python -m src.inference.base_zero_shot --config configs/experiment.yaml --dataset movielens-1m --mode mock --limit 20
-
-python -m src.data.build_step2 --config configs/experiment.yaml --dataset movielens-32m --eval-only
-python -m src.eval.candidate_sets --config configs/experiment.yaml --dataset movielens-32m
-python -m src.inference.base_zero_shot --config configs/experiment.yaml --dataset movielens-32m --mode mock --limit 20
-
-python -m src.train.train_y --config configs/y.yaml
-python -m src.train.train_n --config configs/n.yaml
-python -m src.train.train_m --config configs/m.yaml
+cd /root/llamarec
 ```
 
-评测命令最终也应读取同一份固定配置和候选集：
+Expected Python environment:
 
 ```bash
-python src/eval/summarize.py --config configs/experiment.yaml
+source .venv_seed42_96_replay/bin/activate
 ```
+
+Expected pinned package versions include:
+
+```text
+Python        3.10 runtime on server
+PyTorch       2.4.1
+transformers 4.45.2
+peft          0.13.2
+bitsandbytes 0.44.1
+accelerate    0.34.2
+numpy         1.26.4
+```
+
+The server base model should be available at:
+
+```text
+/root/llamarec/models/Llama-3.2-3B-Instruct
+```
+
+The local Windows source for that model was:
+
+```text
+F:\Models\Llama-3.2-3B-Instruct
+```
+
+Before launching any recovery run on the server, pull latest main:
+
+```bash
+git pull --ff-only origin main
+```
+
+## Y96 Next Step
+
+Y96 seed42 replay previously failed before the training loop because `transformers==4.45.2` does not accept `dtype=` in `from_pretrained`. The repository now contains the compatibility fix in `src/train/train_y.py`, using `torch_dtype=` instead.
+
+After pulling latest main on the server, restart Y96 with:
+
+```bash
+cd /root/llamarec
+source .venv_seed42_96_replay/bin/activate
+
+git pull --ff-only origin main
+
+if [ -d recovery_runs/seed42_96/y/canonical_replay_seed42 ]; then
+  mkdir -p recovery_runs_failed_prestart
+  mv recovery_runs/seed42_96/y/canonical_replay_seed42 \
+     recovery_runs_failed_prestart/y_canonical_replay_seed42_failed_dtype_$(date +%Y%m%d_%H%M%S)
+fi
+
+mkdir -p logs
+nohup env \
+  PYTHONPATH=/root/llamarec \
+  RUN_REPLAY_TRAINING=1 \
+  HF_HUB_OFFLINE=1 \
+  TRANSFORMERS_OFFLINE=1 \
+  TOKENIZERS_PARALLELISM=false \
+  bash recovery/seed42_96_replay_plan/commands/train_y96.sh \
+  > logs/y96_seed42_replay.nohup.log 2>&1 &
+
+tail -f logs/y96_seed42_replay.nohup.log
+```
+
+Y96 target chain:
+
+```text
+0 -> checkpoint-1500 -> checkpoint-3000 -> checkpoint-6000 -> checkpoint-12000
+```
+
+Y96 final target:
+
+```text
+12000 optimizer steps x effective batch 8 = 96000 Y examples exposure
+```
+
+Do not start M1-96 until Y96 has completed, been evaluated, and been backed up.
+
+## Data And Candidate Assets
+
+MovieLens-1M processed data expected by recovery runs:
+
+```text
+data/processed/movielens-1m/preference_train.jsonl
+data/processed/movielens-1m/preference_valid.jsonl
+data/processed/movielens-1m/preference_test.jsonl
+data/processed/movielens-1m/next_item_train.jsonl
+data/processed/movielens-1m/next_item_valid.jsonl
+data/processed/movielens-1m/next_item_test.jsonl
+```
+
+PopMatch-k5 seed42 candidates:
+
+```text
+data/candidates/movielens-1m/variants/k5_popmatch_seed42/valid.jsonl
+data/candidates/movielens-1m/variants/k5_popmatch_seed42/test.jsonl
+```
+
+Expected hashes are recorded in:
+
+```text
+recovery/seed42_96_replay_plan/manifests/expected_data_hashes.json
+```
+
+Historical frozen metric references are recorded in:
+
+```text
+recovery/seed42_96_replay_plan/manifests/expected_historical_metrics.json
+```
+
+## Historical MVP Background
+
+The earlier MovieLens-1M MVP established the Y/N/M task framing:
+
+```text
+Y-K0: Yes/No Preference Tuning
+N-K0: Full-sequence Next-item Tuning
+M-K0: Y + N Multi-task Tuning
+```
+
+Y predicts `P(Like | History, Item)` using Yes/No labels derived from ratings. N predicts `P(Next Item | History, Candidate Set)` using strict chronological next-item targets. M combines both tasks and is evaluated separately as M-Y and M-N.
+
+Legacy MVP headline results are preserved for context only:
+
+```text
+Base: test AUC 0.6205 / test HR@1 0.3167
+Y-K0: test AUC 0.7691 / test HR@1 0.3048
+N-K0: test HR@1 0.7189 / test NDCG@5 0.8773 / test MRR 0.8356
+M-K0: test AUC 0.7234 / test HR@1 0.6717 / test NDCG@5 0.8562
+```
+
+Those older MVP numbers are not the active recovery acceptance gate. For seed42-96 recovery, use the recovery manifests, recovered artifacts, and frozen historical references listed above.
+
+## Safety Rules
+
+Do not overwrite accepted recovery artifacts.
+
+Do not modify frozen historical metrics or paper evidence.
+
+Do not commit full base-model weights.
+
+Do not start Y96, M1-96, evaluation, or retraining without an explicit run command and the correct environment variable gate.
+
+Do not treat recovery checkpoints as original historical checkpoints.
+
+When uploading recovery outputs, include checkpoint state, adapter files, metrics, per-sample predictions, provenance manifests, and hash files. Use Git LFS for binary artifacts.
