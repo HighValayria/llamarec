@@ -1,0 +1,20 @@
+{
+  "model": "y_k0",
+  "dataset": "movielens-1m",
+  "split": "test",
+  "adapter_dir": "/root/llamarec/recovery_runs/seed42_96/y/canonical_replay_seed42/canonical_replay_y_s12000_seed42/adapter",
+  "binary": {
+    "AUC": 0.7821108700940265,
+    "F1": 0.7793164608772768,
+    "Accuracy": 0.7197678447678447,
+    "samples": 11544
+  },
+  "ranking": {
+    "HR@1": 0.20775330396475772,
+    "MRR": 0.4610014684287804,
+    "HR@5": 1.0,
+    "NDCG@5": 0.5929189314479084,
+    "samples": 5675
+  },
+  "ranking_scoring": "candidate_sort_by_p_yes"
+}

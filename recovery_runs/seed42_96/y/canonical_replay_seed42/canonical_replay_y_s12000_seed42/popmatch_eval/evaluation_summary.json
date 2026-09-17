@@ -1,0 +1,30 @@
+{
+  "model": "y_k0",
+  "mode": "real",
+  "dataset": "movielens-1m",
+  "splits": [
+    "validation",
+    "test"
+  ],
+  "limit": null,
+  "batch_size": 1,
+  "adapter_dir": "/root/llamarec/recovery_runs/seed42_96/y/canonical_replay_seed42/canonical_replay_y_s12000_seed42/adapter",
+  "candidate_files": {
+    "validation": "/root/llamarec/data/candidates/movielens-1m/variants/k5_popmatch_seed42/valid.jsonl",
+    "test": "/root/llamarec/data/candidates/movielens-1m/variants/k5_popmatch_seed42/test.jsonl"
+  },
+  "counts": {
+    "validation": {
+      "y_predictions": 12381,
+      "n_predictions": 5675
+    },
+    "test": {
+      "y_predictions": 11544,
+      "n_predictions": 5675
+    }
+  },
+  "outputs_dir": "/root/llamarec/recovery_runs/seed42_96/y/canonical_replay_seed42/canonical_replay_y_s12000_seed42/popmatch_eval",
+  "created_at_utc": "2026-09-17T01:44:56.265586+00:00",
+  "real_model_loaded": true,
+  "ranking_scoring": "candidate_sort_by_p_yes"
+}

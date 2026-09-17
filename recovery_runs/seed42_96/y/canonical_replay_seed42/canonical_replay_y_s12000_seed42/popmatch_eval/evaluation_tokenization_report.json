@@ -1,0 +1,21 @@
+{
+  "mode": "real",
+  "checked": true,
+  "answers": {
+    "Yes": {
+      "token_ids": [
+        9642
+      ],
+      "token_count": 1,
+      "single_token": true
+    },
+    "No": {
+      "token_ids": [
+        2822
+      ],
+      "token_count": 1,
+      "single_token": true
+    }
+  },
+  "use_sequence_likelihood_for": []
+}

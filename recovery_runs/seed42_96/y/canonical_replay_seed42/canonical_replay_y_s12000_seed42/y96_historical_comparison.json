@@ -1,0 +1,54 @@
+{
+  "schema": "y96_replay_comparison_v1",
+  "status": "REPLAY_ACCEPTED",
+  "primary_metrics": "binary",
+  "note": "Y96 acceptance uses binary AUC/F1/Accuracy; ranking by P(Yes) is diagnostic only.",
+  "comparisons": {
+    "validation": {
+      "AUC": {
+        "historical": 0.7843504067,
+        "replay": 0.78173204299348,
+        "delta": -0.0026183637065200216,
+        "absolute_tolerance": 0.01,
+        "passed": true
+      },
+      "F1": {
+        "historical": 0.7783174665,
+        "replay": 0.7813556079831665,
+        "delta": 0.003038141483166501,
+        "absolute_tolerance": 0.01,
+        "passed": true
+      },
+      "Accuracy": {
+        "historical": 0.7235279864,
+        "replay": 0.7230433729101042,
+        "delta": -0.0004846134898958132,
+        "absolute_tolerance": 0.01,
+        "passed": true
+      }
+    },
+    "test": {
+      "AUC": {
+        "historical": 0.7853511126,
+        "replay": 0.7821108700940265,
+        "delta": -0.003240242505973545,
+        "absolute_tolerance": 0.01,
+        "passed": true
+      },
+      "F1": {
+        "historical": 0.7780238029,
+        "replay": 0.7793164608772768,
+        "delta": 0.0012926579772768454,
+        "absolute_tolerance": 0.01,
+        "passed": true
+      },
+      "Accuracy": {
+        "historical": 0.7221067221,
+        "replay": 0.7197678447678447,
+        "delta": -0.0023388773321553202,
+        "absolute_tolerance": 0.01,
+        "passed": true
+      }
+    }
+  }
+}
